@@ -10,15 +10,12 @@ import {
   Alert,
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
-import { useFonts } from "expo-font";
-
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { GlobalStyles, lightTheme } from "../../../styles/GlobalStyles";
+import { GlobalStyles, lightTheme } from "../../styles/GlobalStyles";
 
-const add = (params) => {
+const inventoryExport = (params) => {
   const { inventoryName, invetoryFormat, invetoryLayout } = params;
-
-  Alert.alert("Salvando produto ...", "");
+  Alert.alert("Exportando invetário.", "");
   console.log("Nome do inventário: ", inventoryName);
   console.log("Formato da planilha : ", invetoryFormat);
   console.log("Layout da planilha para a exportação: ", invetoryLayout);
@@ -26,10 +23,6 @@ const add = (params) => {
 };
 
 const ModalInvetoryExport = ({ isVisible, onClose }) => {
-  const [fontsLoaded] = useFonts({
-    Montserrat_Regular: require("../../../../assets/fonts/Montserrat-Regular.ttf"),
-  });
-
   const [inventoryName, setInventoryName] = useState("");
   const [invetoryFormat, setInvetoryFormat] = useState("");
   const [invetoryLayout, setInvetoryLayout] = useState("");
@@ -176,7 +169,7 @@ const ModalInvetoryExport = ({ isVisible, onClose }) => {
               <TouchableOpacity
                 style={{ ...GlobalStyles.button, marginTop: 20 }}
                 onPress={() =>
-                  add({
+                  inventoryExport({
                     inventoryName,
                     invetoryFormat,
                     invetoryLayout,

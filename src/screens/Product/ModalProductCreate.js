@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import uuid from "react-native-uuid";
 import Checkbox from "expo-checkbox";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -11,41 +12,43 @@ import {
   Alert,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { GlobalStyles, lightTheme } from "../../../styles/GlobalStyles";
+import { GlobalStyles, lightTheme } from "../../styles/GlobalStyles";
 
-const ModalProductCreate = ({ isVisible, onClose, compareInSpreadsheet, inputs }) => {
-  const [productCodebar, setProductCodebar] = useState("");
-  const [productAmount, setProductAmount] = useState("");
-  const [productName, setProductName] = useState("");
-  const [productPrice, setProductPrice] = useState("");
-  const [productInconsistency, setProductInconsistency] = useState(false);
-  const [productsInventory, setProductsInventory] = useState([]);
+// Backend
+import { Controller } from "../../utils/DB/controller";
+
+const ModalProductCreate = ({
+  isVisible,
+  onClose,
+  compareInSpreadsheet,
+  uuidInventory,
+  inputs,
+}) => {
+  const [productsSpreadsheets, setProductsSpreadsheets] = useState([]);
+
+  const [codebar, setCodebar] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [inconsistency, setInconsistency] = useState(false);
+
   const [produtoEncontrado, setProdutoEncontrado] = useState(false); // Novo estado
   const [visibleInputs, setVisibleInputs] = useState(false);
   const [disabledButton, setDisabledButton] = useState(true);
 
-  // DESABILITADA NESSA VERSÃO
-  // const codebar = inputs.codebar;
-  // const quantity = inputs.amout;
-  // const name = inputs.name;
-  // const price = inputs.price;
-  // const inconsistency = inputs.inconsistency;
-
-  // **Carregar os produtos ao abrir o modal**
+  // Buscando os produtos da planilha (simulação).
   useEffect(() => {
     if (isVisible) {
       console.log("Carregando produtos do inventário...");
-      setProductsInventory([
+      setProductsSpreadsheets([
         { codebar: "123456789", name: "Produto 1", price: 10.0 },
         { codebar: "987654321", name: "Produto 2", price: 20.0 },
       ]);
     }
   }, [isVisible]);
 
-  // **Verifica se o produto existe no inventário**
-  const verificarSeOProdutoExiste = (codebar) => {
-    // Atualiza o estado do código de barras
-    setProductCodebar(codebar);
+  const checkProductSpreadsheet = (codebar) => {
+    setCodebar(codebar);
 
     if (!codebar.trim()) {
       setProdutoEncontrado(false);
@@ -53,41 +56,59 @@ const ModalProductCreate = ({ isVisible, onClose, compareInSpreadsheet, inputs }
     }
 
     if (compareInSpreadsheet) {
-      const produto = productsInventory.find(
+      const produto = productsSpreadsheets.find(
         (item) => item.codebar.trim() === codebar.trim()
       );
 
       if (produto) {
-        // Se o campo estiver vazio, não precisa verificar
         setDisabledButton(false);
         setVisibleInputs(true);
-        setProductName(produto.name);
-        setProductPrice(produto.price.toString());
+        setName(produto.name);
+        setPrice(produto.price.toString());
         setProdutoEncontrado(true);
+        return;
       } else {
-        setProductName("");
-        setProductPrice("");
+        setName("");
+        setPrice("");
         setDisabledButton(true);
         setProdutoEncontrado(false);
         setVisibleInputs(false);
-        Alert.alert("Produto não encontrado!");
+        console.log("Produto não encontrado na planilha importada.");
+        return;
       }
-    } else {
-      console.log("Modo rápido ativado. Produto não precisa ser verificado.");
-      setVisibleInputs(true);
-      setDisabledButton(false);
+
+      return;
     }
+    // Se não for para comparar com a planilha, exibe os campos de quantidade e inconsistência
+    setVisibleInputs(true);
+    setDisabledButton(false);
   };
 
-  const add = () => {
-    console.log("Código de barras: ", productCodebar);
-    console.log("Quantidade: ", productAmount);
-    console.log("Nome do produto: ", productName);
-    console.log("Preço: ", productPrice);
-    console.log("Inconsistência: ", productInconsistency ? "Sim" : "Não");
+  // **Adiciona o produto ao inventário**
+  const create = (codebar, quantity, name, price, inconsistency) => {
+    const product = {
+      uuid: uuid.v4(),
+      codebar: codebar,
+      quantity: quantity ? parseFloat(quantity) : 0,
+      price: price ? parseFloat(price) : 0,
+      inconsistency: inconsistency ? true : false,
+    };
 
-    Alert.alert("Produto salvo no inventário!");
-    onClose();
+    Controller.Product.create(uuidInventory, product)
+      .then((product) => {
+        // Resetando os campos
+        setCodebar("");
+        setQuantity("");
+        setName("");
+        setPrice("");
+        setInconsistency(false);
+
+        console.log("Produto salvo no inventário:");
+        console.log(product);
+      })
+      .catch((error) => {
+        Alert.alert(error);
+      });
   };
 
   return (
@@ -128,8 +149,8 @@ const ModalProductCreate = ({ isVisible, onClose, compareInSpreadsheet, inputs }
                 <TextInput
                   style={GlobalStyles.input}
                   maxLength={150}
-                  value={productCodebar}
-                  onChangeText={verificarSeOProdutoExiste}
+                  value={codebar}
+                  onChangeText={checkProductSpreadsheet}
                   keyboardType="numeric"
                   placeholderTextColor="gray"
                 />
@@ -145,8 +166,8 @@ const ModalProductCreate = ({ isVisible, onClose, compareInSpreadsheet, inputs }
                     style={GlobalStyles.input}
                     maxLength={255}
                     keyboardType="numeric"
-                    value={productAmount}
-                    onChangeText={setProductAmount}
+                    value={quantity}
+                    onChangeText={setQuantity}
                     placeholderTextColor="gray"
                   />
                 </View>
@@ -163,8 +184,8 @@ const ModalProductCreate = ({ isVisible, onClose, compareInSpreadsheet, inputs }
                         !produtoEncontrado && styles.disabledInput,
                       ]}
                       maxLength={255}
-                      value={productName}
-                      onChangeText={setProductName}
+                      value={name}
+                      onChangeText={setName}
                       keyboardType="default"
                       editable={produtoEncontrado} // Bloqueia se não encontrar o produto
                       placeholderTextColor="gray"
@@ -180,8 +201,8 @@ const ModalProductCreate = ({ isVisible, onClose, compareInSpreadsheet, inputs }
                       ]}
                       maxLength={255}
                       keyboardType="decimal-pad"
-                      value={productPrice}
-                      onChangeText={setProductPrice}
+                      value={price}
+                      onChangeText={setPrice}
                       editable={produtoEncontrado} // Bloqueia se não encontrar o produto
                       placeholderTextColor="gray"
                     />
@@ -198,8 +219,8 @@ const ModalProductCreate = ({ isVisible, onClose, compareInSpreadsheet, inputs }
                     </Text>
                     <Checkbox
                       style={styles.checkbox}
-                      value={productInconsistency}
-                      onValueChange={setProductInconsistency}
+                      value={inconsistency}
+                      onValueChange={setInconsistency}
                     />
                   </View>
                   <Text style={GlobalStyles.small}>
@@ -212,8 +233,10 @@ const ModalProductCreate = ({ isVisible, onClose, compareInSpreadsheet, inputs }
               {/* Botão de adicionar */}
               <TouchableOpacity
                 style={{ ...GlobalStyles.button, marginTop: 20 }}
-                onPress={add}
-                disabled={!produtoEncontrado}
+                onPress={() => {
+                  create(codebar, quantity, name, price, inconsistency);
+                }}
+                disabled={compareInSpreadsheet === false ? false : true}
               >
                 <Text style={GlobalStyles.buttonText}>
                   Adicionar ao inventário

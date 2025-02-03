@@ -1,17 +1,20 @@
+import { StatusBar } from "expo-status-bar";
+import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { StatusBar } from "expo-status-bar";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
-import CardItemInventory from "../../components/CardInvetory/CardInventory";
-import ModalInventoryCreate from "../../screens/Home/ModalInventoryCreate/ModalInventoryCreate";
 import { GlobalStyles, lightTheme } from "../../styles/GlobalStyles";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
-import Toast from "react-native-toast-message";
-import { getAll } from "../../../DB/controllerInventories";
+// Screens
+import CardItemInventory from "../../components/CardInvetory/CardInventory";
+import ModalInventoryCreate from "../Inventory/ModalInventoryCreate";
+
+// Backend
+import { Controller } from "../../utils/DB/controller";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -28,99 +31,13 @@ const Home = () => {
   const badgeCountCompleted = inventoriesCompleted.length;
 
   useEffect(() => {
-    console.log("Carregando inventário do banco de dados ...");
+    Controller.Inventory.getStatus("progress").then((response) => {
+      setInventoriesProgress(response);
+    });
 
-    setInventoriesProgress([
-      {
-        uuid: 1,
-        title: "Semprelar Loja 1",
-        describe: "invetario da loja 1",
-        items: [1, 2, 3, 4, 5],
-        status: "Andamento",
-        date_create: "01/01/2021",
-        date_end: "",
-        compare_in_spreadsheet: false,
-        compare_price: false,
-        inputs_hability: {
-          codebar: true,
-          amout: true,
-          price: true,
-          name: true,
-          data_validade: true,
-          validade: true,
-          fornecedor: true,
-          lote: true,
-        },
-      },
-
-      {
-        uuid: 2,
-        title: "Semprelar Loja 2",
-        describe: "invetario da loja 2",
-        items: [1, 2, 3, 4, 5],
-        status: "Andamento",
-        date_create: "01/12/2024",
-        date_end: "",
-        compare_in_spreadsheet: true,
-        compare_price: false,
-        inputs_hability: {
-          codebar: true,
-          amout: true,
-          price: true,
-          name: true,
-          data_validade: true,
-          validade: true,
-          fornecedor: true,
-          lote: true,
-        },
-      },
-    ]);
-
-    setInventoriesCompleted([
-      {
-        uuid: 1,
-        title: "Semprelar Loja 1",
-        describe: "invetario da loja 1",
-        items: [1, 2, 3, 4, 5],
-        status: "Finalizado",
-        date_create: "01/01/2021",
-        date_end: "",
-        compare_in_spreadsheet: false,
-        compare_price: false,
-        inputs_hability: {
-          codebar: true,
-          amout: true,
-          price: false,
-          name: false,
-          data_validade: false,
-          validade: false,
-          fornecedor: false,
-          lote: false,
-        },
-      },
-
-      {
-        uuid: 2,
-        title: "Semprelar Loja 2",
-        describe: "invetario da loja 2",
-        items: [1, 2, 3, 4, 5],
-        status: "Finalizado",
-        date_create: "01/12/2024",
-        date_end: "",
-        compare_in_spreadsheet: false,
-        compare_price: false,
-        inputs_hability: {
-          codebar: true,
-          amout: true,
-          price: false,
-          name: false,
-          data_validade: false,
-          validade: false,
-          fornecedor: false,
-          lote: false,
-        },
-      },
-    ]);
+    Controller.Inventory.getStatus("done").then((response) => {
+      setInventoriesCompleted(response);
+    });
 
     setProfile({
       id: 1,
@@ -129,9 +46,6 @@ const Home = () => {
       phone: "",
       company: "",
     });
-
-    getAll();
-
   }, []);
 
   const logout = () => {
@@ -241,9 +155,9 @@ const Home = () => {
                   <CardItemInventory
                     key={item.uuid}
                     uuid={item.uuid}
-                    title={item.title}
+                    name={item.name}
                     describe={item.describe}
-                    items={item.items}
+                    products={item.products}
                     status={item.status}
                     date_create={item.date_create}
                     date_end={item.date_end}
@@ -265,15 +179,15 @@ const Home = () => {
                   <CardItemInventory
                     key={item.uuid}
                     uuid={item.uuid}
-                    title={item.title}
+                    name={item.name}
                     describe={item.describe}
-                    items={item.items}
+                    products={item.products}
                     status={item.status}
                     date_create={item.date_create}
                     date_end={item.date_end}
                     compare_in_spreadsheet={item.compare_in_spreadsheet}
                     compare_price={item.compare_price}
-                    inputs={item.inputs}
+                    inputs_hability={item.inputs_hability}
                   />
                 ))
               ) : (

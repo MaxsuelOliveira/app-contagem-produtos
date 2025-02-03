@@ -1,5 +1,5 @@
 import Realm from "realm";
-import { realmConfig } from "./config.js";
+import { realmConfig } from "./conn.js";
 
 const createRealm = async () => {
   const realm = await Realm.open(realmConfig);

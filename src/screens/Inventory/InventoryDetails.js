@@ -11,24 +11,28 @@ import {
 } from "react-native";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { GlobalStyles, lightTheme } from "../../../styles/GlobalStyles";
+import { GlobalStyles, lightTheme } from "../../styles/GlobalStyles";
 
 // Inventário
-import CardInvetoryDetails from "../../Inventory/CardInvetoryDetails/CardInvetoryDetails";
-import ModalInvetorySettings from "../../Login/ModalInvetorySettings/ModalInvetorySettings";
-import ModalInvetoryExport from "../../Inventory/ModalInvetoryExport/ModalInvetoryExport";
+import CardInventoryDetails from "./CardInventoryDetails";
+import ModalInvetorySettings from "./ModalInvetorySettings";
+import ModalInvetoryExport from "./ModalInvetoryExport";
 
 // Produtos
-import ModalProductCreate from "../../Product/ModalProductCreate/ModalProductCreate";
-import ModalProductUpdate from "../../Product/ModalProductUpdate/ModalProductUpdate";
+import ModalProductCreate from "../Product/ModalProductCreate";
+import ModalProductUpdate from "../Product/ModalProductUpdate";
 
-export default function Inventory() {
+import { setStatus } from "../../components/CardInvetory/CardInventory";
+
+import { Controller } from "../../utils/DB/controller";
+
+export default function InventoryDetails() {
   const route = useRoute();
   const {
     uuid,
-    title,
+    name,
     describe,
-    items,
+    products,
     status,
     date_create,
     date_end,
@@ -37,8 +41,9 @@ export default function Inventory() {
     inputs_hability,
   } = route.params;
 
-  // console.log("Inventário selecionado: ");
-  // console.log(route.params);
+  const date_create_formart = new Intl.DateTimeFormat("pt-BR").format(
+    date_create
+  );
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalProductUpdate, setModalProductUpdate] = useState(false);
@@ -46,81 +51,68 @@ export default function Inventory() {
   const [isModalVisibleExport, setModalVisibleExport] = useState(false);
   const [productsInventory, setProductsInventory] = useState([]);
 
-  useEffect(() => {
-    console.log("Carregando os produtos do inventário selecionado ...");
-    setProductsInventory([
-      {
-        uuidInventory: "1",
-        uuid: "1",
-        codebar: "123456789",
-        quantity: 1,
-        name: "Produto 1",
-        inconsistency: "Sim",
-        price: 10.0,
-      },
-      {
-        uuidInventory: "2",
-        uuid: "2",
-        codebar: "01012021",
-        quantity: 120,
-        name: "Produto 1",
-        inconsistency: "Não",
-        price: 10.0,
-      },
-    ]);
-  }, []);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const openModalProductUpdate = () => {
+  const [refresh, setRefresh] = useState(0);
+
+  const handleEditProduct = (product) => {
+    setSelectedProduct(product);
     setModalProductUpdate(true);
   };
+
+  useEffect(() => {
+    Controller.Inventory.getProducts(uuid).then((products) => {
+      setProductsInventory(products);
+    });
+  }, [refresh]);
 
   return (
     <View style={styles.card}>
       <View style={styles.cardHeader}>
-        <Text style={styles.cardTitle}>{title}</Text>
+        <Text style={styles.cardTitle}>{name}</Text>
         <Text style={styles.cardDescription}>{describe}</Text>
 
         <View style={styles.createInventarioInfo}>
           <View style={styles.createInventarioInfoItem}>
             <Text style={{ ...GlobalStyles.label, fontSize: 12 }}>Status</Text>
-            <Text style={GlobalStyles.value}>{status}</Text>
+            <Text style={GlobalStyles.value}>{setStatus(status)}</Text>
           </View>
 
           <View style={styles.createInventarioInfoItem}>
             <Text style={{ ...GlobalStyles.label, fontSize: 12 }}>Item(s)</Text>
-            <Text style={GlobalStyles.value}>{items.length}</Text>
+            <Text style={GlobalStyles.value}>{products.length}</Text>
           </View>
 
           <View style={styles.createInventarioInfoItem}>
             <Text style={{ ...GlobalStyles.label, fontSize: 12 }}>
               Iniciado
             </Text>
-            <Text style={GlobalStyles.value}>{date_create}</Text>
+            <Text style={GlobalStyles.value}>{date_create_formart}</Text>
           </View>
 
           <View style={styles.createInventarioInfoItem}>
             <Text style={{ ...GlobalStyles.label, fontSize: 12 }}>
-              Terminou
+              Planilha
             </Text>
             <Text style={GlobalStyles.value}>
-              {date_end ? date_end : "Em aberto"}
+              {compare_in_spreadsheet ? "Sim" : "Não"}
             </Text>
           </View>
         </View>
       </View>
 
-      {/* Lista de produtos cadastrados no invetário */}
       <ScrollView style={styles.cardBody}>
         {productsInventory.map((item) => (
-          <CardInvetoryDetails
+          <CardInventoryDetails
             key={item.uuid}
+            uuid_inventory={uuid}
             uuid={item.uuid}
             codebar={item.codebar}
             quantity={item.quantity}
-            name={item.name}
+            name={item.name ? item.name : ""}
             price={item.price}
             inconsistency={item.inconsistency}
-            onEdit={openModalProductUpdate} // Passando a função para o CardInvetoryDetails
+            onEdit={handleEditProduct} // Função para editar produto
           />
         ))}
       </ScrollView>
@@ -160,6 +152,13 @@ export default function Inventory() {
         </TouchableOpacity>
       </View>
 
+      <ModalProductUpdate
+        isVisible={isModalProductUpdate}
+        onClose={() => setModalProductUpdate(false)}
+        product={selectedProduct}
+        uuidInventory = {uuid}
+      />
+
       <ModalInvetoryExport
         isVisible={isModalVisibleExport}
         onClose={() => setModalVisibleExport(false)}
@@ -169,12 +168,8 @@ export default function Inventory() {
         isVisible={isModalVisible}
         onClose={() => setModalVisible(false)}
         compareInSpreadsheet={compare_in_spreadsheet}
+        uuidInventory={uuid}
         inputs={inputs_hability}
-      />
-
-      <ModalProductUpdate
-        isVisible={isModalProductUpdate}
-        onClose={() => setModalProductUpdate(false)}
       />
 
       <ModalInvetorySettings

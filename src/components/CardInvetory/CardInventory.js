@@ -1,14 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, Alert } from "react-native";
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { lightTheme } from "../../styles/GlobalStyles";
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+
+export function setStatus(status) {
+  if (status === "progress") {
+    return "Em andamento";
+  } else if (status === "done") {
+    return "Finalizado";
+  } else {
+    return "Desconhecido";
+  }
+}
 
 const CardItemInventory = ({
   uuid,
-  title,
+  name,
   describe,
-  items,
+  products,
   status,
   date_create,
   date_end,
@@ -18,37 +27,41 @@ const CardItemInventory = ({
 }) => {
   const navigation = useNavigation();
 
+  const date_create_formart = new Intl.DateTimeFormat("pt-BR").format(
+    date_create
+  );
+
   const callback = () => {
     navigation.navigate("InventoryDetails", {
       uuid: uuid,
-      title: title,
+      name: name,
       describe: describe,
-      items: items,
+      products: products,
       status: status,
       date_create: date_create,
       date_end: date_end,
       compare_in_spreadsheet: compare_in_spreadsheet,
       compare_price: compare_price,
-      inputs_hability: inputs_hability,
+      inputs_hability: inputs_hability
     });
   };
 
   return (
     <View style={styles.inventoryItem} onTouchEnd={() => callback()}>
       <View style={styles.inventoryItemContent}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title}>{name}</Text>
         <View style={styles.invetoryItemContainer}>
           <View>
             <Text style={styles.label}>Item(s)</Text>
-            <Text style={styles.value}>{items.length}</Text>
+            <Text style={styles.value}>{products.length}</Text>
           </View>
           <View>
             <Text style={styles.label}>Status</Text>
-            <Text style={styles.value}>{status}</Text>
+            <Text style={styles.value}>{setStatus(status)}</Text>
           </View>
           <View>
             <Text style={styles.label}>Data</Text>
-            <Text style={styles.value}>{date_create}</Text>
+            <Text style={styles.value}>{date_create_formart}</Text>
           </View>
         </View>
       </View>

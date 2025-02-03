@@ -13,7 +13,7 @@ import Login from "./src/screens/Login/Login";
 import Home from "./src/screens/Home/Home";
 import Profile from "./src/screens/Profile/Profile";
 import Settings from "./src/screens/Settings/Settings";
-import InventoryDetails from "./src/screens/Inventory/InventoryDetails/InventoryDetails";
+import InventoryDetails from "./src/screens/Inventory/InventoryDetails";
 import SpreadSheets from "./src/screens/SpreadSheets/SpreadSheets";
 
 const Stack = createStackNavigator();

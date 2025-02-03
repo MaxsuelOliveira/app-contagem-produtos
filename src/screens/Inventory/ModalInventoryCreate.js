@@ -1,8 +1,28 @@
 import React, { useState } from "react";
+import uuid from "react-native-uuid";
 import { StatusBar } from "expo-status-bar";
 import { Modal, View, Text, TextInput, TouchableOpacity } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { GlobalStyles, lightTheme } from "../../../styles/GlobalStyles";
+import { GlobalStyles, lightTheme } from "../../styles/GlobalStyles";
+
+// Controller
+import { create } from "../../utils/DB/controller";
+
+function createInventory(name, describe) {
+  const inventory = {
+    uuid: uuid.v4(),
+    name: name,
+    describe: describe,
+    status: "progress", // progress | done | unknown
+    date_create: new Date(),
+    date_end: new Date(),
+    products: [],
+    compare_in_spreadsheet: false,
+    compare_price: false,
+  };
+
+  create(inventory);
+}
 
 const ModalInventoryCreate = ({ isVisible, onClose }) => {
   const [inventoryName, setInventoryName] = useState("");
@@ -56,7 +76,12 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
                 onChangeText={setInventoryDescription}
               />
 
-              <TouchableOpacity style={GlobalStyles.button}>
+              <TouchableOpacity
+                style={GlobalStyles.button}
+                onPress={() => {
+                  createInventory(inventoryName, inventoryDescription);
+                }}
+              >
                 <Text style={GlobalStyles.buttonText}>Criar inventário</Text>
               </TouchableOpacity>
             </View>
