@@ -15,7 +15,10 @@ import ModalSpreadSheetsImport from "./Modal/SpreadSheetsImport";
 
 import importFile from "./importFile";
 
-// import App from "../../../DB/Model";
+import {getAllSpreadSheets} from "../../../DB/spreadsheets";
+
+
+console.log(getAllSpreadSheets());
 
 const SpreadSheets = () => {
   const [planilhas, setPlanilhas] = useState([]);
@@ -124,9 +127,9 @@ const SpreadSheets = () => {
     //   /> */}
     // </View>
 
-    <App>
-
-    </App>
+    <Text>
+      teste
+    </Text>
 
   );
 };
