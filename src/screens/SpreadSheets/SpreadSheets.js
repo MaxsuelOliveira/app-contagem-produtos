@@ -1,89 +1,26 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  StatusBar,
-} from "react-native";
+import { View, Text, ScrollView, StatusBar } from "react-native";
 
 // Icons
 import { AntDesign } from "@expo/vector-icons";
 
 // Styles
 import { GlobalStyles, colors } from "../../styles/GlobalStyles";
-import { styles } from "./styles";
 
 // Components
 import CardSpreadSheets from "./SpreadSheetsCard/SpreadSheetsCard";
 
-// Utils
-import importFile from "../../utils/importFile";
-
 // Backend
-// import {Controller} from "../../utils/DB/controller";
-// console.log(Controller.s());
+import { Controller } from "../../utils/DB/controller";
 
 const SpreadSheets = () => {
   const [planilhas, setPlanilhas] = useState([]);
+
   useEffect(() => {
-    console.log("Carregando planilhas ...");
-
-    setPlanilhas([
-      {
-        uuid: "1",
-        title: "Planilha 1",
-        describe: "Planilha de produtos",
-        products: [
-          { codebar: "123456789", quantity: 0, name: "Produto 1", price: 120 },
-          { codebar: "987654321", quantity: 0, name: "Produto 2", price: 200 },
-        ],
-        data_create: "2021-09-01 00:00:00",
-      },
-      {
-        uuid: "2",
-        title: "Planilha 2",
-        describe: "Planilha de produtos",
-        products: [
-          { codebar: "123456789", quantity: 0, name: "Produto 3", price: 150 },
-          { codebar: "987654321", quantity: 0, name: "Produto 4", price: 250 },
-        ],
-        data_create: "2021-09-01 00:00:00",
-      },
-      {
-        uuid: "3",
-        title: "Planilha 3",
-        describe: "Planilha de produtos",
-        products: [
-          { codebar: "123456789", quantity: 0, name: "Produto 1", price: 120 },
-          { codebar: "987654321", quantity: 0, name: "Produto 2", price: 200 },
-        ],
-        data_create: "2021-09-01 00:00:00",
-      },
-      {
-        uuid: "4",
-        title: "Planilha 4",
-        describe: "Planilha de produtos",
-        products: [
-          { codebar: "123456789", quantity: 0, name: "Produto 1", price: 120 },
-          { codebar: "987654321", quantity: 0, name: "Produto 2", price: 200 },
-        ],
-        data_create: "2021-09-01 00:00:00",
-      },
-      {
-        uuid: "5",
-        title: "Planilha 5",
-        describe: "Planilha de produtos",
-        products: [
-          { codebar: "123456789", quantity: 0, name: "Produto 1", price: 120 },
-          { codebar: "987654321", quantity: 0, name: "Produto 2", price: 200 },
-        ],
-        data_create: "2021-09-01 00:00:00",
-      },
-    ]);
+    Controller.SpreadSheets.getAll().then((response) => {
+      setPlanilhas(response);
+    });
   }, []);
-
-  const [data, setData] = useState([]);
 
   return (
     <View style={{ ...GlobalStyles.container, padding: 20 }}>
@@ -95,38 +32,22 @@ const SpreadSheets = () => {
 
       <View style={{ flex: 1 }}>
         <ScrollView>
-          {planilhas.map((planilha) => (
-            <CardSpreadSheets
-              key={planilha.uuid}
-              uuid={planilha.uuid}
-              title={planilha.title}
-              describe={planilha.describe}
-              products={planilha.products}
-              data_create={planilha.data_create}
-            />
-          ))}
+          {planilhas.length > 0 ? (
+            planilhas.map((planilha) => (
+              <CardSpreadSheets
+                key={planilha.uuid}
+                uuid={planilha.uuid}
+                name={planilha.name}
+                products={planilha.products.length}
+                date_create={planilha.date_create}
+              />
+            ))
+          ) : (
+            <Text style={{...GlobalStyles.cardTitle , textAlign : "left" , fontSize : 16}}>
+              😐 Nenhum planilha foi importada ! 
+            </Text>
+          )}
         </ScrollView>
-      </View>
-
-      <View>
-        <TouchableOpacity
-          style={styles.import}
-          onPress={() => importFile(setData)}
-        >
-          <AntDesign
-            name="plus"
-            size={30}
-            color={{ ...colors.primaryBackground }}
-          />
-          <Text style={{ ...GlobalStyles.label, color: colors.textPrimary }}>
-            Clique e selecione a planilha que deseja importar.
-          </Text>
-          <Text
-            style={{ ...GlobalStyles.small, color: colors.textDescription }}
-          >
-            Formatos aceitos: .xls, .xlsx, .csv
-          </Text>
-        </TouchableOpacity>
       </View>
     </View>
   );

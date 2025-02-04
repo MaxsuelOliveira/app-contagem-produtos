@@ -2,41 +2,40 @@ import React, { useState, useEffect } from "react";
 import * as Crypto from "expo-crypto";
 import * as Device from "expo-device";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  View,
-  TextInput,
-  Text,
-  Alert,
-  TouchableOpacity,
-} from "react-native";
+import { View, TextInput, Text, Alert, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { Linking } from "react-native";
 
+// Styles
 import { GlobalStyles } from "../../styles/GlobalStyles";
-import { styles } from "./styles";  
+import { styles } from "./styles";
+
+// Abrir um chat no WhatsApp
+const openWhatsApp = () => {
+  Linking.openURL("whatsapp://send?phone=5577998668304");
+};
 
 const LoginScreen = ({ navigation }) => {
-  // Função para alternar entre mostrar e esconder a senha
-  const [showPassword, setShowPassword] = useState(false); // Estado para controlar a visibilidade da senha
+  const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  // Melhorar isso aqui, usar o imei do celular! ou mac !
   const [uuid, setUuid] = useState("");
   useEffect(() => {
-    const getOrCreateUuid = async () => {
-      let storedUuid = await AsyncStorage.getItem("uuid");
+    const getOrCreateUUID = async () => {
+      let uuidDevice = await AsyncStorage.getItem("uuidDevice");
 
-      if (!storedUuid) {
-        storedUuid = Crypto.randomUUID();
+      if (!uuidDevice) {
+        uuidDevice = Crypto.randomUUID();
 
-        await AsyncStorage.setItem("uuid", storedUuid);
+        await AsyncStorage.setItem("uuidDevice", uuidDevice);
       }
 
-      setUuid(storedUuid);
+      setUuid(uuidDevice);
     };
 
-    getOrCreateUuid();
+    getOrCreateUUID();
   }, []);
 
   const [describe, setDescribe] = useState(null);
@@ -53,61 +52,55 @@ const LoginScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    const passwordMD5 = await Crypto.digestStringAsync(
+    setLoading(true);
+
+    const pass = await Crypto.digestStringAsync(
       Crypto.CryptoDigestAlgorithm.MD5,
       password
     );
 
-    if (!email || !passwordMD5) {
+    if (!email || !pass) {
       Alert.alert("Por favor, preencha todos os campos");
       return;
     }
 
-    setLoading(true);
+    const data = {
+      email: email,
+      password: pass,
+      uuid: uuid,
+      describe: describe,
+    };
 
-    try {
-      const response = await fetch(
-        "https://coletor.webart3.com/login/empresa",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email,
-            password: passwordMD5,
-            uuid: uuid,
-            describe: describe,
-          }),
-        }
-      );
+    const response = await fetch("https://coletor.webart3.com/login/empresa", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
 
-      const data = await response.json();
+    const responseLogin = await response.json();
 
-      if (data.token) {
-        // Salva o token no AsyncStorage para manter o usuário logado;
-        await AsyncStorage.setItem("token", data.token);
+    responseLogin.token
+      ? (() => {
+          AsyncStorage.setItem("token", responseLogin.token);
+          navigation.navigate("Home");
+        })()
+      : (() => {
+          Alert.alert("Erro", responseLogin.error || "Algo deu errado.");
+        })();
 
-        // Redireciona para a tela Home se o login for bem-sucedido;
-        navigation.navigate("Home");
-      } else {
-        console.log(data);
-        console.log("Erro ao fazer login:", data.error);
-        Alert.alert("Erro", data.error || "Algo deu errado.");
-      }
-    } catch (error) {
-      console.error("Erro ao enviar dados:", error);
-      Alert.alert("Erro", "Ocorreu um erro ao tentar fazer o login.");
-    } finally {
-      setLoading(false);
-    }
+    setLoading(false);
   };
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <Text style={styles.title}>EstoqueFácil</Text>
-      <Text style={styles.describe}>Faça o login para continuar.</Text>
+
+      <View style={styles.form}>
+        <Text style={styles.title}>EstoqueFácil</Text>
+        <Text style={styles.describe}>Faça o login para continuar.</Text>
+      </View>
 
       <View>
         <Text style={GlobalStyles.label}>Seu Email *</Text>
@@ -146,7 +139,7 @@ const LoginScreen = ({ navigation }) => {
 
       <View style={styles.buttonsActions}>
         <TouchableOpacity
-          style={styles.button}
+          style={GlobalStyles.button}
           title={loading ? "Carregando..." : "Entrar"}
           onPress={handleLogin}
           disabled={loading}
@@ -156,7 +149,7 @@ const LoginScreen = ({ navigation }) => {
 
         <TouchableOpacity
           style={styles.buttonForgotPassword}
-          onPress={() => navigation.navigate("ForgotPassword")}
+          onPress={() => openWhatsApp()}
         >
           <Text style={styles.buttonForgotPasswordText}>
             Esqueci minha senha
@@ -165,9 +158,6 @@ const LoginScreen = ({ navigation }) => {
       </View>
     </View>
   );
-
 };
-
-
 
 export default LoginScreen;

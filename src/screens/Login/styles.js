@@ -4,36 +4,34 @@ import { colors } from "../../styles/GlobalStyles";
 export const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.primaryBackground,
-    color: "#fff",
-    fontFamily: "Montserrat",
     flex: 1,
     justifyContent: "center",
     padding: 25,
     height: "100vh",
   },
 
+  form : {
+    marginBottom: 30,
+  },
+
   title: {
     color: colors.textPrimary,
     fontSize: 40,
-    fontWeight: "700",
-    fontFamily: "Montserrat",
+    fontFamily: "Montserrat_Bold",
     textAlign: "start",
-    marginBottom: 5,
   },
 
   describe: {
-    fontFamily: "Montserrat",
-    fontSize: 16,
+    fontFamily: "Montserrat_Medium",
+    fontSize: 14,
     textAlign: "start",
     color: colors.textSecondary,
-    marginBottom: 30,
   },
 
   containerShowPassword: {
     display: "flex",
     flexDirection: "row",
     gap: 10,
-    // alignItems: "center",
     flexDirection: "column",
   },
 
@@ -49,12 +47,12 @@ export const styles = StyleSheet.create({
 
   buttonShowPassword: {
     // width: "35%",
-    fontFamily: "Montserrat",
+    fontFamily: "Montserrat_Medium",
   },
 
   buttonShowPasswordText: {
     textAlign: "right",
-    fontFamily: "Montserrat",
+    fontFamily: "Montserrat_Medium",
     color: colors.textSecondary,
     fontSize: 14,
     marginTop: 10,
@@ -69,7 +67,7 @@ export const styles = StyleSheet.create({
   buttonForgotPasswordText: {
     color: colors.textSecondary,
     fontSize: 13,
-    fontFamily: "Montserrat",
+    fontFamily: "Montserrat_Medium",
     textAlign: "start",
     marginTop: 30,
   },

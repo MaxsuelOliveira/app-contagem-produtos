@@ -17,11 +17,16 @@ export const Model = {
 
     remover: async (uuid) => {
       const realm = await createRealm();
+
       realm.write(() => {
-        const inventory = realm
+        // Buscar o primeiro item correspondente ao UUID
+        const inventoryItem = realm
           .objects("Inventory")
-          .filtered(`uuid == "${uuid}"`);
-        realm.delete(inventory);
+          .filtered("uuid == $0", uuid)[0];
+
+        if (inventoryItem) {
+          realm.delete(inventoryItem);
+        }
       });
     },
 
@@ -37,7 +42,6 @@ export const Model = {
       realm.write(() => {
         inventory.status = status;
         inventory.date_end = date_end;
-        inventory.date_timer_end = date_end;
       });
       return inventory;
     },
@@ -46,16 +50,16 @@ export const Model = {
       const realm = await createRealm();
       const inventories = realm
         .objects("Inventory")
-        .filtered(`uuid == "${uuid_inventory}"`);
+        .filtered(`uuid == "${uuid}"`);
       if (inventories.length === 0) {
-        throw new Error(`Inventário com uuid ${uuid_inventory} não encontrado`);
+        throw new Error(`Inventário com uuid ${uuid} não encontrado`);
       }
       const inventory = inventories[0];
       return inventory.products.map((produto) => ({
-        codebar: produto.codebar,
-        quantity: produto.quantity,
-        price: produto.price,
-        inconsistency: produto.inconsistency,
+        "Código de barras": produto.codebar,
+        Quantidade: produto.quantity,
+        Preço: produto.price,
+        Iconsistência: produto.inconsistency,
       }));
     },
 
@@ -186,5 +190,51 @@ export const Model = {
     },
   },
 
-  SpreadSheets: {},
+  SpreadSheets: {
+    create: async (spreadsheet) => {
+      const realm = await createRealm();
+      realm.write(() => {
+        realm.create("SpreadSheets", spreadsheet);
+      });
+      return spreadsheet;
+    },
+
+    remove: async (id_spreadsheet) => {
+      const realm = await createRealm();
+
+      try {
+        realm.write(() => {
+          // Encontrar a spreadsheet pelo id_spreadsheet
+          const spreadsheetToDelete = realm
+            .objects("SpreadSheets")
+            .filtered(`uuid == "${id_spreadsheet}"`)[0];
+
+          if (spreadsheetToDelete) {
+            realm.delete(spreadsheetToDelete);
+            return true;
+          } else {
+            console.info("Planilha não encontrada.");
+            return false;
+          }
+        });
+      } catch (error) {
+        console.error("Erro ao remover a spreadsheet:", error);
+        return false;
+      }
+    },
+
+    getAll: async () => {
+      const realm = await createRealm();
+      const spreadsheets = realm.objects("SpreadSheets");
+      return spreadsheets;
+    },
+
+    get: async (id_spreadsheet) => {
+      const realm = await createRealm();
+      const spreadsheet = realm
+        .objects("SpreadSheets")
+        .filtered(`id_spreadsheet == "${id_spreadsheet}"`);
+      return spreadsheet;
+    },
+  },
 };

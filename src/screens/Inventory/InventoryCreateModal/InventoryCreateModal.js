@@ -1,39 +1,58 @@
 import React, { useState } from "react";
 import uuid from "react-native-uuid";
 import { StatusBar } from "expo-status-bar";
-import { Modal, View, Text, TextInput, TouchableOpacity } from "react-native";
+import {
+  Modal,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+
+// Icons
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { GlobalStyles, colors } from "../../styles/GlobalStyles";
+
+// Styles
+import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
 
 // Controller
-import { Controller } from "../../utils/DB/controller";
-
-function createInventory(name, describe) {
-
-  const inventory = {
-    uuid: uuid.v4(),
-    name: name,
-    describe: describe,
-    status: "progress", // progress | done | unknown
-    date_create: new Date(),
-    date_end: new Date(),
-    products: [],
-    compare_in_spreadsheet: false,
-    compare_price: false,
-  };
-
-  Controller.Inventory.create(inventory).then((response) => {
-    console.log("Inventário criado com sucesso !");
-  }).catch((error) => {
-    console.error("Erro ao criar o inventário !");
-    console.error(error);
-  });
-
-}
+import { Controller } from "../../../utils/DB/controller";
 
 const ModalInventoryCreate = ({ isVisible, onClose }) => {
-  const [inventoryName, setInventoryName] = useState("");
-  const [inventoryDescription, setInventoryDescription] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [focusInName, setFocusInName ] = useState(true);
+
+  function createInventory() {
+
+    if (name.length == 0 || name == "") {
+      Alert.alert("O invetário precisa de um nome !");
+      setFocusInName(true);
+      return;
+    }
+
+    const inventory = {
+      uuid: uuid.v4(),
+      name: name,
+      describe: description,
+      status: "progress", // progress | done | unknown
+      date_create: new Date(),
+      date_end: new Date(),
+      products: [],
+      compare_in_spreadsheet: false,
+      compare_price: false,
+    };
+
+    Controller.Inventory.create(inventory)
+      .then((response) => {
+        onClose();
+      })
+      .catch((error) => {
+        console.error("Erro ao criar o inventário !");
+        console.error(error);
+      });
+  }
 
   return (
     <Modal
@@ -49,16 +68,14 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
         <View style={GlobalStyles.modalContent}>
           <View style={GlobalStyles.card}>
             <View style={GlobalStyles.cardHeader}>
-              <Text style={{...GlobalStyles.cardTitle , marginTop : 0}}>Novo inventário</Text>
+              <Text style={{ ...GlobalStyles.cardTitle, marginTop: 0 }}>
+                Novo inventário
+              </Text>
               <TouchableOpacity
                 onPress={onClose}
                 style={GlobalStyles.closeButton}
               >
-                <AntDesign
-                  name="close"
-                  size={28}
-                  color={colors.colorIcons}
-                />
+                <AntDesign name="close" size={28} color={colors.colorIcons} />
               </TouchableOpacity>
             </View>
 
@@ -69,8 +86,9 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
                 style={GlobalStyles.input}
                 placeholder="Digite o nome"
                 maxLength={150}
-                value={inventoryName}
-                onChangeText={setInventoryName}
+                value={name}
+                autoFocus={focusInName}
+                onChangeText={setName}
               />
 
               <Text style={GlobalStyles.label}>Descrição do inventário*</Text>
@@ -79,14 +97,14 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
                 placeholder="Digite a descrição"
                 maxLength={255}
                 multiline
-                value={inventoryDescription}
-                onChangeText={setInventoryDescription}
+                value={description}
+                onChangeText={setDescription}
               />
 
               <TouchableOpacity
                 style={GlobalStyles.button}
                 onPress={() => {
-                  createInventory(inventoryName, inventoryDescription);
+                  createInventory();
                 }}
               >
                 <Text style={GlobalStyles.buttonText}>Criar inventário</Text>

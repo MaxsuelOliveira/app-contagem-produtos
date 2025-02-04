@@ -13,9 +13,11 @@ import Login from "./src/screens/Login/Login";
 import Home from "./src/screens/Home/Home";
 import Profile from "./src/screens/Profile/Profile";
 import Settings from "./src/screens/Settings/Settings";
-import InventoryDetails from "./src/screens/Inventory/InventoryDetails";
+import InventoryDetails from "./src/screens/Inventory/InventoryDetails/InventoryDetails";
 import SpreadSheets from "./src/screens/SpreadSheets/SpreadSheets";
 import SpreadSheetsImport from "./src/screens/SpreadSheets/SpreadSheetsImport/SpreadSheetsImport";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Stack = createStackNavigator();
@@ -28,9 +30,17 @@ export default function App() {
     Montserrat_Medium: Montserrat_500Medium,
   });
 
+  function isLogin() {
+    let token = AsyncStorage.getItem("token");
+    if (token) {
+      return "Home";
+    } 
+    return "Login";
+  }
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName={isLogin()}>
         <Stack.Screen
           name="Home"
           component={Home}

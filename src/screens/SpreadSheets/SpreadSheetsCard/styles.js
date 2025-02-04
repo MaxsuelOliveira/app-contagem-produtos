@@ -30,6 +30,17 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
+  button: {
+    width: 35,
+    height: 35,
+    backgroundColor: colors.danger,
+    borderRadius: 10,
+    padding: 5,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
   menuButttonIcon: {
     color: colors.white || "#fff",
   },
@@ -60,13 +71,6 @@ export const styles = StyleSheet.create({
     fontFamily: "Montserrat_Medium",
     color: colors.textDescription,
     marginRight: 10,
+    marginBottom: 5,
   },
-
-  // circleDivider: {
-  //   width: 5,
-  //   height: 5,
-  //   borderRadius: 100,
-  //   backgroundColor: "#C0C0C0", // Aplicado do .circle-divider
-  //   marginRight: 10,
-  // },
 });

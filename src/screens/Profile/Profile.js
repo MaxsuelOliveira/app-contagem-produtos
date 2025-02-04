@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Styles
 import { GlobalStyles } from "../../styles/GlobalStyles";
 import { styles } from "./styles";
 
-const Profile = () => {
+const Profile = async () => {
   const [company, setCompany] = useState({});
+
+  // let token = await AsyncStorage.getItem("token");
+  // alert(token);
+
   useEffect(() => {
     console.log("Carregando informações da empresa ...");
     setCompany({

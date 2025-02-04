@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet , TouchableOpacity , Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../styles/GlobalStyles";
 
@@ -24,11 +24,16 @@ const CardItemInventory = ({
   compare_in_spreadsheet,
   compare_price,
   inputs_hability,
+  onEdit
 }) => {
   const navigation = useNavigation();
 
   const date_create_formart = new Intl.DateTimeFormat("pt-BR").format(
     date_create
+  );
+
+  const date_end_formart = new Intl.DateTimeFormat("pt-BR").format(
+    date_end
   );
 
   const callback = () => {
@@ -46,8 +51,12 @@ const CardItemInventory = ({
     });
   };
 
+  function handleEdit() {
+    onEdit(uuid);
+  }
+
   return (
-    <View style={styles.inventoryItem} onTouchEnd={() => callback()}>
+    <TouchableOpacity style={styles.inventoryItem} onPress={() => callback()} onLongPress={handleEdit} delayLongPress={100} > 
       <View style={styles.inventoryItemContent}>
         <Text style={styles.title}>{name}</Text>
         <View style={styles.invetoryItemContainer}>
@@ -60,13 +69,14 @@ const CardItemInventory = ({
             <Text style={styles.value}>{setStatus(status)}</Text>
           </View>
           <View>
-            <Text style={styles.label}>Data</Text>
-            <Text style={styles.value}>{date_create_formart}</Text>
+            <Text style={styles.label}>{status === "done" ? "Finalizado em" : "Criado em"}</Text>
+            <Text style={styles.value}>{status === "done" ? date_end_formart : date_create_formart }</Text>
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
+
 };
 
 const styles = StyleSheet.create({

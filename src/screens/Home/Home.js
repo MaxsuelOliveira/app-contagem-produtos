@@ -13,7 +13,8 @@ import { styles } from "./Styles";
 
 // Components
 import CardItemInventory from "../../components/CardInvetory/CardInventory";
-import ModalInventoryCreate from "../Inventory/InventoryCreateModal";
+import ModalInventoryCreate from "../Inventory/InventoryCreateModal/InventoryCreateModal";
+import InvetoryDeleteModal from "../Inventory/InvetoryDeleteModal/InvetoryDeleteModal";
 
 // Backend
 import { Controller } from "../../utils/DB/controller";
@@ -21,8 +22,11 @@ import { Controller } from "../../utils/DB/controller";
 const Home = () => {
   const navigation = useNavigation();
 
+  const [uuidSeleced, setUuidSelected] = useState("");
+
   const [activeTab, setActiveTab] = useState("inProgress");
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalDeleteVisible, setModalDeleteVisible] = useState(false);
 
   const [inventoriesProgress, setInventoriesProgress] = useState([]);
   const [inventoriesCompleted, setInventoriesCompleted] = useState([]);
@@ -65,6 +69,12 @@ const Home = () => {
     ]);
   };
 
+  const handleEditProduct = (uuid) => {
+    // navigation.navigate("InventoryDetails", { uuid });
+    setUuidSelected(uuid);
+    setModalDeleteVisible(true);
+  };
+
   return (
     <View style={GlobalStyles.container}>
       <StatusBar style="auto" backgroundColor="transparent" />
@@ -85,7 +95,8 @@ const Home = () => {
 
             <TouchableOpacity
               style={styles.logoutButton}
-              onPress={() => logout()}>
+              onPress={() => logout()}
+            >
               <AntDesign name="logout" size={26} color={colors.colorIcons} />
             </TouchableOpacity>
           </View>
@@ -159,6 +170,7 @@ const Home = () => {
                     compare_in_spreadsheet={item.compare_in_spreadsheet}
                     compare_price={item.compare_price}
                     inputs_hability={item.inputs_hability}
+                    onEdit={handleEditProduct}
                   />
                 ))
               ) : (
@@ -183,6 +195,7 @@ const Home = () => {
                     compare_in_spreadsheet={item.compare_in_spreadsheet}
                     compare_price={item.compare_price}
                     inputs_hability={item.inputs_hability}
+                    onEdit={handleEditProduct}
                   />
                 ))
               ) : (
@@ -224,6 +237,12 @@ const Home = () => {
       <ModalInventoryCreate
         isVisible={isModalVisible}
         onClose={() => setModalVisible(false)}
+      />
+
+      <InvetoryDeleteModal
+        isVisible={isModalDeleteVisible}
+        onClose={() => setModalDeleteVisible(false)}
+        uuidInventory={uuidSeleced}
       />
     </View>
   );

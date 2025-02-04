@@ -12,6 +12,16 @@ export const Controller = {
         });
     },
 
+    remover: async (uuid) => {
+      return Model.Inventory.remover(uuid)
+        .then((inventory) => {
+          return Promise.resolve(inventory);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+
     getAll: async () => {
       return Model.Inventory.getAll()
         .then((inventarios) => {
@@ -52,7 +62,15 @@ export const Controller = {
         });
     },
 
-    update: async (uuid, status, date_end) => {},
+    update: async (uuid, status, date_end) => {
+      return Model.Inventory.update(uuid, status, date_end)
+        .then((inventario) => {
+          return inventario;
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
 
     export: async (uuid_inventory) => {
       return Model.Inventory.export(uuid_inventory)
@@ -98,5 +116,45 @@ export const Controller = {
     },
   },
 
-  SpreadSheets : {}
+  SpreadSheets: {
+    create: async (spreadsheet) => {
+      return Model.SpreadSheets.create(spreadsheet)
+        .then((spreadsheet) => {
+          return Promise.resolve(spreadsheet);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+
+    remove: async (id_spreadsheet) => {
+      return Model.SpreadSheets.remove(id_spreadsheet)
+        .then(() => {
+          return;
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+
+    getAll: async () => {
+      return Model.SpreadSheets.getAll()
+        .then((spreadsheets) => {
+          return spreadsheets;
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+
+    get: async (id_spreadsheet) => {
+      return Model.SpreadSheets.get(id_spreadsheet)
+        .then((spreadsheet) => {
+          return spreadsheet;
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+  },
 };

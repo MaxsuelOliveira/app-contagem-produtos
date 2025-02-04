@@ -33,6 +33,8 @@ const theme = (options) => {
       colorIcons: "#878e94",
       modalCover: "rgba(18, 34, 56, 0.65)",
       backgroundItem: "#ecebeb",
+      danger: "#dc3545",
+      warrning: "#ffc107",
     };
   } else {
     return {
@@ -117,8 +119,8 @@ const GlobalStyles = StyleSheet.create({
   value: {
     fontFamily: "Montserrat_Medium",
     color: colors.textPrimary,
-    // fontSize: 14,
-    fontSize: RFPercentage(2.1),
+    fontSize: 16,
+    // fontSize: RFPercentage(2.1),
   },
 
   button: {

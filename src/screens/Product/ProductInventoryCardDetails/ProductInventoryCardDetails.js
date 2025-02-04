@@ -16,13 +16,6 @@ const ProductInventoryCardDetails = ({
   const truncatedName = name.length > 20 ? name.substring(0, 20) + "..." : name;
   const inconsistencyText = inconsistency ? "Sim" : "Não";
 
-  const confirmDelete = () => {
-    Alert.alert("Excluir produto", "Deseja realmente excluir este produto?", [
-      { text: "Cancelar", style: "cancel" },
-      { text: "Excluir", onPress: () => console.log("Excluindo produto") },
-    ]);
-  };
-
   const handleEdit = () => {
     const productData = {
       uuid,

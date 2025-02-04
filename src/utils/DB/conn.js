@@ -3,7 +3,6 @@ import Realm from "realm";
 export const SpreadsheetsProductsScheme = {
   name: "Produto",
   properties: {
-    id: "string",
     codebar: "string",
     name: "string",
     price: "double",
@@ -14,7 +13,7 @@ export const SpreadsheetSchema = {
   name: "SpreadSheets",
   properties: {
     uuid: "string",
-    date_create: "string",
+    date_create: "date?",
     name: "string",
     products: "Produto[]", // Usando o ProdutoSchema para o campo products
   },
@@ -55,7 +54,7 @@ export const realmConfig = {
     InventorySchema,
     InventoryItemsSchema,
   ],
-  schemaVersion: 6, // Atualize a versão para 5
+  schemaVersion: 8, // Atualize a versão para 5
   migration: (oldRealm, newRealm) => {
     console.log("⚠️ Migração detectada.");
 

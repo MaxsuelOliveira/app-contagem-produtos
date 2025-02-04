@@ -14,5 +14,6 @@ export const styles = StyleSheet.create({
   profileItem: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginBottom: 20,
   },
 });

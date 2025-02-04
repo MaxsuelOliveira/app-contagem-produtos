@@ -1,79 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
   StatusBar,
+  Modal,
 } from "react-native";
+
+// Icons
 import { AntDesign } from "@expo/vector-icons";
+
+// Styles
 import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
 import { styles } from "./styles";
 
+// BACKEND
 import importFile from "../../../utils/importFile";
 
-// import {Controller} from "../../utils/DB/controller";
-// console.log(Controller.s());
-
 const SpreadSheetsImport = () => {
-  const [planilhas, setPlanilhas] = useState([]);
-  useEffect(() => {
-    console.log("Carregando planilhas ...");
-
-    setPlanilhas([
-      {
-        uuid: "1",
-        title: "Planilha 1",
-        describe: "Planilha de produtos",
-        products: [
-          { codebar: "123456789", quantity: 0, name: "Produto 1", price: 120 },
-          { codebar: "987654321", quantity: 0, name: "Produto 2", price: 200 },
-        ],
-        data_create: "2021-09-01 00:00:00",
-      },
-      {
-        uuid: "2",
-        title: "Planilha 2",
-        describe: "Planilha de produtos",
-        products: [
-          { codebar: "123456789", quantity: 0, name: "Produto 3", price: 150 },
-          { codebar: "987654321", quantity: 0, name: "Produto 4", price: 250 },
-        ],
-        data_create: "2021-09-01 00:00:00",
-      },
-      {
-        uuid: "3",
-        title: "Planilha 3",
-        describe: "Planilha de produtos",
-        products: [
-          { codebar: "123456789", quantity: 0, name: "Produto 1", price: 120 },
-          { codebar: "987654321", quantity: 0, name: "Produto 2", price: 200 },
-        ],
-        data_create: "2021-09-01 00:00:00",
-      },
-      {
-        uuid: "4",
-        title: "Planilha 4",
-        describe: "Planilha de produtos",
-        products: [
-          { codebar: "123456789", quantity: 0, name: "Produto 1", price: 120 },
-          { codebar: "987654321", quantity: 0, name: "Produto 2", price: 200 },
-        ],
-        data_create: "2021-09-01 00:00:00",
-      },
-      {
-        uuid: "5",
-        title: "Planilha 5",
-        describe: "Planilha de produtos",
-        products: [
-          { codebar: "123456789", quantity: 0, name: "Produto 1", price: 120 },
-          { codebar: "987654321", quantity: 0, name: "Produto 2", price: 200 },
-        ],
-        data_create: "2021-09-01 00:00:00",
-      },
-    ]);
-  }, []);
-
   const [data, setData] = useState([]);
 
   return (
@@ -94,26 +39,15 @@ const SpreadSheetsImport = () => {
 
       <ScrollView style={{ marginTop: 20 }}>
         {data.length > 0 ? (
-          // data.map((item, index) => (
-          //   <View key={index} style={{ padding: 10, borderBottomWidth: 1 }}>
-          //     <Text style={styles.label}>
-          //       Código de barras: {item.codebar}
-          //     </Text>
-          //     <Text style={styles.label}>Quantidade: {item.quantity}</Text>
-          //     <Text style={styles.label}>Nome: {item.name}</Text>
-          //     <Text style={styles.label}>Preço: {item.price}</Text>
-          //   </View>
-          // ))
-
           <View style={{ padding: 10, borderBottomWidth: 1 }}>
             <Text style={GlobalStyles.label}>
               Código de barras: {data[0].TMER_CODIGO_BARRAS_UKN}
             </Text>
             <Text style={GlobalStyles.label}>
-              Quantidade: {data[0].quantity}
+              Quantidade: {data[0].TMER_QUANTIDADE}
             </Text>
             <Text style={GlobalStyles.label}>Nome: {data[0].TMER_NOME}</Text>
-            <Text style={GlobalStyles.label}>Preço: {data[0].price}</Text>
+            <Text style={GlobalStyles.label}>Preço: {data[0].TMER_PRECO}</Text>
           </View>
         ) : (
           <Text>
