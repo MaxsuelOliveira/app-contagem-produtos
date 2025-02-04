@@ -1,6 +1,5 @@
 import Realm from "realm";
 import { realmConfig } from "./conn.js";
-
 const createRealm = async () => {
   const realm = await Realm.open(realmConfig);
   return realm;
@@ -40,7 +39,7 @@ export const Model = {
         inventory.date_end = date_end;
         inventory.date_timer_end = date_end;
       });
-      console.log("Status do inventário atualizado!");
+      return inventory;
     },
 
     export: async (uuid) => {
@@ -97,18 +96,10 @@ export const Model = {
         throw new Error(`Inventário com uuid ${uuid} não encontrado`);
       }
 
-      const inventory = inventories[0]; // Pega o inventário encontrado
-
-      console.log(
-        "Produtos do inventário antes da ordenação: ",
-        inventory.products
-      );
+      const inventory = inventories[0];
 
       // Ordena os produtos pela propriedade 'codebar'
       const sortedProducts = inventory.products.sorted("codebar", false); // true para ordem decrescente
-
-      console.log("Produtos do inventário após a ordenação: ", sortedProducts);
-
       return sortedProducts;
     },
   },
@@ -137,9 +128,7 @@ export const Model = {
 
         if (!productExists) {
           inventory.products.push(product);
-        } else {
-          ele;
-          console.log("Produto já existe no inventário");
+          return;
         }
       });
 
@@ -166,19 +155,19 @@ export const Model = {
 
         if (existingProduct) {
           // Se o produto já existe, atualiza os dados do produto
-          Object.assign(existingProduct, product); // Atualiza todas as propriedades com os dados do novo produto
-          console.log("Produto atualizado no inventário!");
+          Object.assign(existingProduct, product); // Atualiza todas as propriedades com os dados do novo produt
+          return product;
         } else {
-          throw new Error(
+          return new Error(
             `Produto com uuid ${product.uuid} não encontrado no inventário`
           );
         }
       });
 
-      return inventory;
+      return product;
     },
 
-    remover: async (uuid_inventory, uuid_product) => {
+    delete: async (uuid_inventory, uuid_product) => {
       const realm = await createRealm();
       const inventories = realm
         .objects("Inventory")
@@ -192,7 +181,10 @@ export const Model = {
           (produto) => produto.uuid !== uuid_product
         );
       });
-      console.log("Product removido do inventário!");
+
+      return inventory;
     },
   },
+
+  SpreadSheets: {},
 };

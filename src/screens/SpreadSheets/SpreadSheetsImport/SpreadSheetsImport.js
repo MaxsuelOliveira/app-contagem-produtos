@@ -6,25 +6,16 @@ import {
   TouchableOpacity,
   StatusBar,
 } from "react-native";
-
-// Icons
 import { AntDesign } from "@expo/vector-icons";
-
-// Styles
-import { GlobalStyles, colors } from "../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
 import { styles } from "./styles";
 
-// Components
-import CardSpreadSheets from "./SpreadSheetsCard/SpreadSheetsCard";
+import importFile from "../../../utils/importFile";
 
-// Utils
-import importFile from "../../utils/importFile";
-
-// Backend
 // import {Controller} from "../../utils/DB/controller";
 // console.log(Controller.s());
 
-const SpreadSheets = () => {
+const SpreadSheetsImport = () => {
   const [planilhas, setPlanilhas] = useState([]);
   useEffect(() => {
     console.log("Carregando planilhas ...");
@@ -90,23 +81,46 @@ const SpreadSheets = () => {
       <StatusBar style="auto" backgroundColor={colors.cardBackground} />
 
       <View style={{ ...GlobalStyles.cardHeader, marginBottom: 20 }}>
-        <Text style={GlobalStyles.cardTitle}>Planilhas importadas</Text>
+        <Text style={GlobalStyles.cardTitle}>
+          Importar planilhas de produtos
+        </Text>
       </View>
 
       <View style={{ flex: 1 }}>
-        <ScrollView>
-          {planilhas.map((planilha) => (
-            <CardSpreadSheets
-              key={planilha.uuid}
-              uuid={planilha.uuid}
-              title={planilha.title}
-              describe={planilha.describe}
-              products={planilha.products}
-              data_create={planilha.data_create}
-            />
-          ))}
-        </ScrollView>
+        <Text>Selecione a planilha que deseja importar para o sistema.</Text>
+        <Text>Exemplo de planilha:</Text>
+        <Text>Código de barras: 123456789</Text>
       </View>
+
+      <ScrollView style={{ marginTop: 20 }}>
+        {data.length > 0 ? (
+          // data.map((item, index) => (
+          //   <View key={index} style={{ padding: 10, borderBottomWidth: 1 }}>
+          //     <Text style={styles.label}>
+          //       Código de barras: {item.codebar}
+          //     </Text>
+          //     <Text style={styles.label}>Quantidade: {item.quantity}</Text>
+          //     <Text style={styles.label}>Nome: {item.name}</Text>
+          //     <Text style={styles.label}>Preço: {item.price}</Text>
+          //   </View>
+          // ))
+
+          <View style={{ padding: 10, borderBottomWidth: 1 }}>
+            <Text style={GlobalStyles.label}>
+              Código de barras: {data[0].TMER_CODIGO_BARRAS_UKN}
+            </Text>
+            <Text style={GlobalStyles.label}>
+              Quantidade: {data[0].quantity}
+            </Text>
+            <Text style={GlobalStyles.label}>Nome: {data[0].TMER_NOME}</Text>
+            <Text style={GlobalStyles.label}>Preço: {data[0].price}</Text>
+          </View>
+        ) : (
+          <Text>
+            {data.length === 0 ? "Nenhum dado encontrado" : "Carregando ..."}
+          </Text>
+        )}
+      </ScrollView>
 
       <View>
         <TouchableOpacity
@@ -132,4 +146,4 @@ const SpreadSheets = () => {
   );
 };
 
-export default SpreadSheets;
+export default SpreadSheetsImport;

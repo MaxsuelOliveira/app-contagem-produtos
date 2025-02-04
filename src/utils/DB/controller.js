@@ -45,7 +45,6 @@ export const Controller = {
     getProducts: async (uuid) => {
       return Model.Inventory.getProducts(uuid)
         .then((produtos) => {
-          console.log("Produtos do inventário: ", produtos);
           return produtos;
         })
         .catch((error) => {
@@ -88,14 +87,16 @@ export const Controller = {
         });
     },
 
-    remover: async (uuid_inventory, uuid_product) => {
-      return Model.Product.remover(uuid_inventory, uuid_product)
-        .then(() => {
-          return true;
+    delete: async (uuid_inventory, uuid_product) => {
+      return Model.Product.delete(uuid_inventory, uuid_product)
+        .then((inventario) => {
+          return inventario;
         })
-        .then((error) => {
+        .catch((error) => {
           return Promise.reject(error);
         });
     },
   },
+
+  SpreadSheets : {}
 };

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import Checkbox from "expo-checkbox";
 import { StatusBar } from "expo-status-bar";
 import {
   Modal,
@@ -12,7 +14,7 @@ import {
   ScrollView,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { GlobalStyles, lightTheme } from "../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
 const add = (params) => {
   const { isBuyWithModeFast, isBuyWithSpreadsheet, isBuyWithPrices } = params;
 
@@ -55,7 +57,7 @@ const ModalInvetorySettings = ({ isVisible, onClose }) => {
       transparent
       onRequestClose={onClose}
     >
-      <StatusBar style="auto" backgroundColor={lightTheme.modalCover} />
+      <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
       {/* Fundo semi-transparente para modal */}
       <View style={GlobalStyles.modalOverlay}>
@@ -73,7 +75,7 @@ const ModalInvetorySettings = ({ isVisible, onClose }) => {
                 <AntDesign
                   name="close"
                   size={28}
-                  color={lightTheme.colorIcons}
+                  color={colors.colorIcons}
                 />
               </TouchableOpacity>
             </View>
@@ -234,13 +236,13 @@ const styles = StyleSheet.create({
 
   label: {
     flex: 1,
-    color: lightTheme.colorText,
+    color: colors.colorText,
   },
 
   title: {
     fontSize: 16,
     fontFamily: "Montserrat_Medium",
-    color: lightTheme.colorText,
+    color: colors.colorText,
     marginBottom: 10,
     marginTop: 20,
   },

@@ -10,33 +10,25 @@ import {
   Alert,
 } from "react-native";
 
-// Icons
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { GlobalStyles, lightTheme } from "../../../styles/GlobalStyles";
 
-// Styles
-import { GlobalStyles, colors } from "../../styles/GlobalStyles";
-
-// Components
-import ProductInventoryCardDetails from "../Product/ProductInventoryCardDetails/ProductInventoryCardDetails";
-import ModalInvetorySettings from "./InvetorySettingsModal";
-import ModalInvetoryExport from "./InvetoryExportModal";
+// Inventário
+import CardInvetoryDetails from "../../Inventory/CardInvetoryDetails/CardInvetoryDetails";
+import ModalInvetorySettings from "../../Login/ModalInvetorySettings/ModalInvetorySettings";
+import ModalInvetoryExport from "../Modal/InvetoryExport/ModalInvetoryExport";
 
 // Produtos
-import ProductCreateModal from "../Product/ProductCreateModal/ProductCreateModal";
-import ProductUpdateModal from "../Product/ProductUpdateModal/ProductUpdateModal";
+import ProductCreateModal from "../../Product/ProductCreateModal/ProductCreateModal";
+import ProductUpdateModal from "../../Product/ProductUpdateModal/ProductUpdateModal";
 
-import { setStatus } from "../../components/CardInvetory/CardInventory";
-
-// Backend
-import { Controller } from "../../utils/DB/controller";
-
-export default function InventoryDetails() {
+export default function Inventory() {
   const route = useRoute();
   const {
     uuid,
-    name,
+    title,
     describe,
-    products,
+    items,
     status,
     date_create,
     date_end,
@@ -45,9 +37,8 @@ export default function InventoryDetails() {
     inputs_hability,
   } = route.params;
 
-  const date_create_formart = new Intl.DateTimeFormat("pt-BR").format(
-    new Date(date_create)
-  );
+  // console.log("Inventário selecionado: ");
+  // console.log(route.params);
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isProductUpdateModal, setProductUpdateModal] = useState(false);
@@ -55,67 +46,81 @@ export default function InventoryDetails() {
   const [isModalVisibleExport, setModalVisibleExport] = useState(false);
   const [productsInventory, setProductsInventory] = useState([]);
 
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [refresh, setRefresh] = useState(0);
+  useEffect(() => {
+    console.log("Carregando os produtos do inventário selecionado ...");
+    setProductsInventory([
+      {
+        uuidInventory: "1",
+        uuid: "1",
+        codebar: "123456789",
+        quantity: 1,
+        name: "Produto 1",
+        inconsistency: "Sim",
+        price: 10.0,
+      },
+      {
+        uuidInventory: "2",
+        uuid: "2",
+        codebar: "01012021",
+        quantity: 120,
+        name: "Produto 1",
+        inconsistency: "Não",
+        price: 10.0,
+      },
+    ]);
+  }, []);
 
-  const handleEditProduct = (product) => {
-    setSelectedProduct(product);
+  const openProductUpdateModal = () => {
     setProductUpdateModal(true);
   };
-
-  useEffect(() => {
-    Controller.Inventory.getProducts(uuid).then((products) => {
-      setProductsInventory(products);
-    });
-  }, [refresh]);
 
   return (
     <View style={styles.card}>
       <View style={styles.cardHeader}>
-        <Text style={styles.cardTitle}>{name}</Text>
+        <Text style={styles.cardTitle}>{title}</Text>
         <Text style={styles.cardDescription}>{describe}</Text>
 
         <View style={styles.createInventarioInfo}>
           <View style={styles.createInventarioInfoItem}>
             <Text style={{ ...GlobalStyles.label, fontSize: 12 }}>Status</Text>
-            <Text style={GlobalStyles.value}>{setStatus(status)}</Text>
+            <Text style={GlobalStyles.value}>{status}</Text>
           </View>
 
           <View style={styles.createInventarioInfoItem}>
             <Text style={{ ...GlobalStyles.label, fontSize: 12 }}>Item(s)</Text>
-            <Text style={GlobalStyles.value}>{products.length}</Text>
+            <Text style={GlobalStyles.value}>{items.length}</Text>
           </View>
 
           <View style={styles.createInventarioInfoItem}>
             <Text style={{ ...GlobalStyles.label, fontSize: 12 }}>
               Iniciado
             </Text>
-            <Text style={GlobalStyles.value}>{date_create_formart}</Text>
+            <Text style={GlobalStyles.value}>{date_create}</Text>
           </View>
 
           <View style={styles.createInventarioInfoItem}>
             <Text style={{ ...GlobalStyles.label, fontSize: 12 }}>
-              Planilha
+              Terminou
             </Text>
             <Text style={GlobalStyles.value}>
-              {compare_in_spreadsheet ? "Sim" : "Não"}
+              {date_end ? date_end : "Em aberto"}
             </Text>
           </View>
         </View>
       </View>
 
+      {/* Lista de produtos cadastrados no invetário */}
       <ScrollView style={styles.cardBody}>
         {productsInventory.map((item) => (
-          <ProductInventoryCardDetails
+          <CardInvetoryDetails
             key={item.uuid}
-            uuid_inventory={uuid}
             uuid={item.uuid}
             codebar={item.codebar}
             quantity={item.quantity}
-            name={item.name ? item.name : ""}
+            name={item.name}
             price={item.price}
             inconsistency={item.inconsistency}
-            onEdit={handleEditProduct} // Função para editar produto
+            onEdit={openProductUpdateModal} // Passando a função para o CardInvetoryDetails
           />
         ))}
       </ScrollView>
@@ -126,7 +131,7 @@ export default function InventoryDetails() {
           style={[GlobalStyles.menubarItem]}
           onPress={() => setModalVisibleExport(true)}
         >
-          <AntDesign name="export" size={26} color={colors.colorIcons} />
+          <AntDesign name="export" size={26} color={lightTheme.colorIcons} />
           <Text style={{ ...GlobalStyles.menubarText, fontSize: 10 }}>
             Exportar
           </Text>
@@ -137,7 +142,7 @@ export default function InventoryDetails() {
           style={[GlobalStyles.menubarItem]}
           onPress={() => setModalVisible(true)}
         >
-          <AntDesign name="plus" size={26} color={colors.colorIcons} />
+          <AntDesign name="plus" size={26} color={lightTheme.colorIcons} />
           <Text style={{ ...GlobalStyles.menubarText, fontSize: 10 }}>
             Adicionar
           </Text>
@@ -148,19 +153,12 @@ export default function InventoryDetails() {
           style={[GlobalStyles.menubarItem]}
           onPress={() => setModalVisibleSettings(true)}
         >
-          <AntDesign name="setting" size={26} color={colors.colorIcons} />
+          <AntDesign name="setting" size={26} color={lightTheme.colorIcons} />
           <Text style={{ ...GlobalStyles.menubarText, fontSize: 10 }}>
             Configurações
           </Text>
         </TouchableOpacity>
       </View>
-
-      <ProductUpdateModal
-        isVisible={isProductUpdateModal}
-        onClose={() => setProductUpdateModal(false)}
-        product={selectedProduct}
-        uuidInventory = {uuid}
-      />
 
       <ModalInvetoryExport
         isVisible={isModalVisibleExport}
@@ -171,8 +169,12 @@ export default function InventoryDetails() {
         isVisible={isModalVisible}
         onClose={() => setModalVisible(false)}
         compareInSpreadsheet={compare_in_spreadsheet}
-        uuidInventory={uuid}
         inputs={inputs_hability}
+      />
+
+      <ProductUpdateModal
+        isVisible={isProductUpdateModal}
+        onClose={() => setProductUpdateModal(false)}
       />
 
       <ModalInvetorySettings

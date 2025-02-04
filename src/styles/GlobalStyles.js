@@ -1,86 +1,112 @@
 import { StyleSheet } from "react-native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
-const lightTheme = {
-  primaryBackground: "#f8f9fa",
-  textPrimary: "#212529",
-  textSecondary: "#6c757d",
-  buttonBackground: "#122238",
-  inputBackground: "#ecebeb",
-  borderColor: "#8887884e",
-  menubarBackground: "#f3f2f2",
-  menubarText: "#000000",
-  textDescription: "#646363",
-  colorIcons: "#878e94",
-  modalCover: "rgba(18, 34, 56, 0.65)",
-  backgroundItem: "#f3f3f3",
+const theme = (options) => {
+  if (options) {
+    return {
+      inputBorderColor: "#f3f2f2",
+      inputBackground: "#f3f2f2",
+      inputColor: "#212529",
+
+      cardBackground: "#f8f9fa",
+      primaryBackground: "#f8f9fa",
+      textPrimary: "#212529",
+      textSecondary: "#6c757d",
+      buttonBackground: "#122238",
+
+      borderColor: "#212529",
+      menubarBackground: "#f3f2f2",
+      menubarText: "#000000",
+      textDescription: "#646363",
+      colorIcons: "#878e94",
+      modalCover: "rgba(18, 34, 56, 0.65)",
+      backgroundItem: "#ecebeb",
+      danger: "#dc3545",
+      warrning: "#ffc107",
+    };
+  } else {
+    return {
+      inputBorderColor: "#ffffff",
+      inputBackground: "transparent",
+      inputColor: "#f8f9fa",
+
+      cardBackground: "#19273a",
+      primaryBackground: "#122238",
+      textPrimary: "#ffffff",
+      textSecondary: "#adb5bd",
+      buttonBackground: "#0b5ed7",
+      inputBackground: "#162940",
+      borderColor: "#6c757d4e",
+      menubarBackground: "#132237",
+      menubarText: "#f8f9fa",
+      textDescription: "#646363",
+      colorIcons: "#878e94",
+      modalCover: "rgba(18, 34, 56, 0.65)",
+      backgroundItem: "rgb(12 22 35)",
+      danger: "#dc3545",
+      warrning: "#ffc107",
+    };
+  }
 };
 
-const darkTheme = {
-  primaryBackground: "#212529",
-  textPrimary: "#f8f9fa",
-  textSecondary: "#adb5bd",
-  buttonBackground: "#20334c",
-  inputBackground: "#162940",
-  borderColor: "#6c757d4e",
-  menubarBackground: "#132237",
-  menubarText: "#f8f9fa",
-};
+const colors = theme(true);
 
 const GlobalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: lightTheme.primaryBackground,
+    backgroundColor: colors.primaryBackground,
     paddingTop: 30,
   },
 
   textPrimary: {
-    color: lightTheme.textPrimary,
+    color: colors.textPrimary,
     fontSize: RFPercentage(2.5),
     // fontSize : 16,
   },
 
   textSecondary: {
-    color: lightTheme.textSecondary,
+    color: colors.textSecondary,
     fontSize: 14,
   },
 
   input: {
-    backgroundColor: lightTheme.inputBackground,
-    borderColor: "#f1f5f955",
+    backgroundColor: colors.inputBackground,
+    borderColor: colors.inputBackground,
+    borderWidth: 0.3,
     borderRadius: 5,
-    color: lightTheme.textPrimary,
-    fontFamily: "Montserrat_Regular",
-    fontSize: 15,
+    color: colors.inputColor,
+    fontFamily: "Montserrat_Medium",
+    fontSize: 16,
     height: 48,
-    borderWidth: 1,
     marginBottom: 10,
     paddingLeft: 8,
-    marginBottom: 20,
+    paddingTop: 3,
   },
 
   textArea: {
     height: 100,
     textAlignVertical: "top",
+    paddingLeft: 8,
+    paddingTop: 3,
   },
 
   label: {
-    fontFamily: "Montserrat_Regular",
-    color: lightTheme.textSecondary,
-    marginBottom: 5,
+    fontFamily: "Montserrat_Medium",
+    color: colors.textSecondary,
+    marginBottom: 3,
     fontSize: 14,
   },
 
   small: {
-    fontFamily: "Montserrat_Regular",
-    color: lightTheme.textDescription,
+    fontFamily: "Montserrat_Medium",
+    color: colors.textDescription,
     marginBottom: 5,
     fontSize: 12,
   },
 
   value: {
-    fontFamily: "Montserrat_Regular",
-    color: lightTheme.textPrimary,
+    fontFamily: "Montserrat_Medium",
+    color: colors.textPrimary,
     // fontSize: 14,
     fontSize: RFPercentage(2.1),
   },
@@ -93,12 +119,12 @@ const GlobalStyles = StyleSheet.create({
     borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#20334c",
-    height: 50,
+    backgroundColor: colors.buttonBackground,
+    minHeight: 65,
   },
 
   buttonText: {
-    fontFamily: "Montserrat_Regular",
+    fontFamily: "Montserrat_Medium",
     color: "#fff",
     textAlign: "center",
     fontSize: 14,
@@ -119,7 +145,7 @@ const GlobalStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: lightTheme.modalCover,
+    backgroundColor: colors.modalCover,
   },
 
   modalContainer: {
@@ -138,7 +164,7 @@ const GlobalStyles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.cardBackground,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     padding: 20,
@@ -159,9 +185,11 @@ const GlobalStyles = StyleSheet.create({
 
   cardTitle: {
     fontSize: 18,
-    fontFamily: "Montserrat_Regular",
+    fontFamily: "Montserrat_Medium",
     textAlign: "center",
     flex: 1,
+    color: colors.textPrimary,
+    marginTop : 20,
   },
 
   cardBody: {
@@ -182,11 +210,15 @@ const GlobalStyles = StyleSheet.create({
   },
 
   menubar: {
-    backgroundColor: lightTheme.menubarBackground,
-    borderRadius: "20 20 0 0",
+    backgroundColor: colors.menubarBackground,
+    borderRadius: 50,
     flexDirection: "row",
     justifyContent: "space-around",
     padding: 15,
+    position: "relative",
+    left: 0,
+    right: 0,
+    margin: 10,
   },
 
   menubarItem: {
@@ -196,10 +228,10 @@ const GlobalStyles = StyleSheet.create({
 
   menubarText: {
     textAlign: "center",
-    color: lightTheme.menubarText,
-    fontFamily: "Montserrat_Regular",
+    color: colors.menubarText,
+    fontFamily: "Montserrat_Medium",
     fontSize: 10,
   },
 });
 
-export { GlobalStyles, lightTheme, darkTheme };
+export { GlobalStyles , colors };

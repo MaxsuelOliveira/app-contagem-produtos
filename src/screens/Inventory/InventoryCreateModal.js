@@ -3,12 +3,13 @@ import uuid from "react-native-uuid";
 import { StatusBar } from "expo-status-bar";
 import { Modal, View, Text, TextInput, TouchableOpacity } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { GlobalStyles, lightTheme } from "../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "../../styles/GlobalStyles";
 
 // Controller
-import { create } from "../../utils/DB/controller";
+import { Controller } from "../../utils/DB/controller";
 
 function createInventory(name, describe) {
+
   const inventory = {
     uuid: uuid.v4(),
     name: name,
@@ -21,7 +22,13 @@ function createInventory(name, describe) {
     compare_price: false,
   };
 
-  create(inventory);
+  Controller.Inventory.create(inventory).then((response) => {
+    console.log("Inventário criado com sucesso !");
+  }).catch((error) => {
+    console.error("Erro ao criar o inventário !");
+    console.error(error);
+  });
+
 }
 
 const ModalInventoryCreate = ({ isVisible, onClose }) => {
@@ -35,7 +42,7 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
       transparent
       onRequestClose={onClose}
     >
-      <StatusBar style="auto" backgroundColor={lightTheme.modalCover} />
+      <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
       {/* Fundo semi-transparente para modal */}
       <View style={GlobalStyles.modalOverlay}>
@@ -50,7 +57,7 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
                 <AntDesign
                   name="close"
                   size={28}
-                  color={lightTheme.colorIcons}
+                  color={colors.colorIcons}
                 />
               </TouchableOpacity>
             </View>

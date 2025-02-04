@@ -41,6 +41,7 @@ export const InventoryItemsSchema = {
     uuid: "string",
     codebar: "string",
     quantity: "int",
+    name: "string",
     price: "double",
     inconsistency: "bool",
   },
@@ -54,7 +55,7 @@ export const realmConfig = {
     InventorySchema,
     InventoryItemsSchema,
   ],
-  schemaVersion: 5, // Atualize a versão para 5
+  schemaVersion: 6, // Atualize a versão para 5
   migration: (oldRealm, newRealm) => {
     console.log("⚠️ Migração detectada.");
 

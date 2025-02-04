@@ -26,6 +26,16 @@ const importFile = async (setData) => {
 
     console.log(`📂 Arquivo selecionado: ${fileUri} (${fileType})`);
 
+    // Nome do arquivo
+    const fileName = fileUri.split('/').pop();
+    console.log(`📂 Nome do arquivo: ${fileName}`)
+    
+    const fileExtension = fileName.split('.').pop();
+    console.log(`📂 Extensão do arquivo: ${fileExtension}`)
+
+    const Tamanho = result.assets[0].size;
+    console.log(`📂 Tamanho do arquivo: ${Tamanho/1024}`)
+
     // Lendo o arquivo
     const response = await FileSystem.readAsStringAsync(fileUri, {
       encoding: FileSystem.EncodingType.Base64, // Ler como base64

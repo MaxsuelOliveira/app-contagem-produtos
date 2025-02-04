@@ -7,15 +7,20 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   Alert,
 } from "react-native";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import { GlobalStyles, lightTheme } from "../../styles/GlobalStyles";
 
+// Icons
+import AntDesign from "@expo/vector-icons/AntDesign";
+
+// Styles
+import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { styles } from "./styles";
+
+// Backend
 import { Controller } from "utils/DB/controller";
 
-const ModalProductUpdate = ({ isVisible, onClose, product, uuidInventory }) => {
+const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
   const [codebar, setCodebar] = useState("");
   const [quantity, setQuantity] = useState("");
   const [name, setName] = useState("");
@@ -24,10 +29,10 @@ const ModalProductUpdate = ({ isVisible, onClose, product, uuidInventory }) => {
 
   useEffect(() => {
     if (product) {
-      setCodebar(product.codebar || "");
-      setQuantity(product.quantity || "");
-      setName(product.name || "");
-      setPrice(product.price || "");
+      setCodebar(product.codebar.toString() || "");
+      setQuantity(product.quantity.toString() || "");
+      setName(product.name.toString() || "");
+      setPrice(product.price.toString() || "");
       setInconsistency(product.inconsistency || false);
     }
   }, [product]);
@@ -37,36 +42,44 @@ const ModalProductUpdate = ({ isVisible, onClose, product, uuidInventory }) => {
       uuid: product.uuid,
       codebar: codebar,
       quantity: parseInt(quantity),
-      // name: name,
-      price: parseFloat(price),
-      inconsistency: inconsistency,
+      name: name,
+      price: parseFloat(price) || 0,
+      inconsistency: inconsistency || false,
     };
-    
-    Controller.Product.create(uuidInventory, novoProduto).then((response) => {
-      console.log("Produto atualizado com sucesso !");
-      console.log(response);
-    }).catch((error) => { 
-      console.error("Erro ao atualizar o produto !");
-      console.error(error);
-    });
 
+    Controller.Product.update(uuidInventory, novoProduto)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error("Erro ao atualizar o produto !");
+        console.error(error);
+      });
   };
 
-  // const updateProduct = () => {
+  const deleteProductConfirmed = () => {
+    Controller.Product.delete(uuidInventory, product.uuid)
+      .then((response) => {
+        onClose();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
-  //   let novoProduto = {
-  //     uuid: uuid,
-  //     codebar: codebar,
-  //     quantity: quantity,
-  //     name: name,
-  //     price: price,
-  //     inconsistency: inconsistency,
-  //   }
-
-  //   console.log("Atualizando produto");
-  //   console.log("-----------------------");
-  //   // console.log(novoProduto);
-  // };
+  const deleteProduct = () => {
+    // Modal de confirmação
+    Alert.alert("Excluir produto", "Deseja realmente excluir o produto ?", [
+      {
+        text: "Cancelar",
+        style: "cancel",
+      },
+      {
+        text: "Excluir",
+        onPress: () => deleteProductConfirmed(),
+      },
+    ]);
+  };
 
   return (
     <Modal
@@ -75,7 +88,7 @@ const ModalProductUpdate = ({ isVisible, onClose, product, uuidInventory }) => {
       transparent
       onRequestClose={onClose}
     >
-      <StatusBar style="auto" backgroundColor={lightTheme.modalCover} />
+      <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
       {/* Fundo semi-transparente para modal */}
       <View style={GlobalStyles.modalOverlay}>
@@ -89,11 +102,7 @@ const ModalProductUpdate = ({ isVisible, onClose, product, uuidInventory }) => {
                 onPress={onClose}
                 style={GlobalStyles.closeButton}
               >
-                <AntDesign
-                  name="close"
-                  size={28}
-                  color={lightTheme.colorIcons}
-                />
+                <AntDesign name="close" size={28} color={colors.colorIcons} />
               </TouchableOpacity>
             </View>
 
@@ -180,14 +189,35 @@ const ModalProductUpdate = ({ isVisible, onClose, product, uuidInventory }) => {
                 </Text>
               </View>
 
-              <TouchableOpacity
-                style={{ ...GlobalStyles.button, marginTop: 20 }}
-                onPress={() => updateProduct()}
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginTop: 20,
+                  width: "100%",
+                  gap: 10,
+                }}
               >
-                <Text style={GlobalStyles.buttonText}>
-                  Adicionar ao inventário
-                </Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    ...GlobalStyles.button,
+                    width: "100",
+                    backgroundColor: colors.danger,
+                  }}
+                  onPress={() => deleteProduct()}
+                >
+                  <Text style={GlobalStyles.buttonText}>Excluir</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{ ...GlobalStyles.button, flex: 1 }}
+                  onPress={() => updateProduct()}
+                >
+                  <Text style={GlobalStyles.buttonText}>
+                    Adicionar ao inventário
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
@@ -196,32 +226,4 @@ const ModalProductUpdate = ({ isVisible, onClose, product, uuidInventory }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  cardBody: {
-    marginTop: 10,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-
-  grid: {
-    display: "flex",
-    gap: 10,
-    marginBottom: 0,
-    marginTopp: 0,
-  },
-
-  section: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-
-  checkbox: {
-    marginRight: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-  },
-});
-
-export default ModalProductUpdate;
+export default ProductUpdateModal;

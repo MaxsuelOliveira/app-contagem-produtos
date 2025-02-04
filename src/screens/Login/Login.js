@@ -5,15 +5,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   View,
   TextInput,
-  StyleSheet,
   Text,
   Alert,
   TouchableOpacity,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
-import { GlobalStyles, lightTheme, darkTheme } from "../../styles/GlobalStyles";
-import { DarkTheme } from "@react-navigation/native";
+import { GlobalStyles } from "../../styles/GlobalStyles";
+import { styles } from "./styles";  
 
 const LoginScreen = ({ navigation }) => {
   // Função para alternar entre mostrar e esconder a senha
@@ -21,7 +20,6 @@ const LoginScreen = ({ navigation }) => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
 
   // Melhorar isso aqui, usar o imei do celular! ou mac !
   const [uuid, setUuid] = useState("");
@@ -167,80 +165,9 @@ const LoginScreen = ({ navigation }) => {
       </View>
     </View>
   );
+
 };
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: lightTheme.primaryBackground,
-    color: "#fff",
-    fontFamily: "Montserrat",
-    flex: 1,
-    justifyContent: "center",
-    padding: 25,
-    height: "100vh",
-  },
 
-  title: {
-    color: lightTheme.textPrimary,
-    fontSize: 40,
-    fontWeight: "700",
-    fontFamily: "Montserrat",
-    textAlign: "start",
-    marginBottom: 5,
-  },
-
-  describe: {
-    fontFamily: "Montserrat",
-    fontSize: 16,
-    textAlign: "start",
-    color: lightTheme.textSecondary,
-    marginBottom: 30,
-  },
-
-  containerShowPassword: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 10,
-    // alignItems: "center",
-    flexDirection: "column",
-  },
-
-  buttonsActions: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 10,
-    marginTop: 20,
-    width: "100%",
-  },
-
-  buttonShowPassword: {
-    // width: "35%",
-    fontFamily: "Montserrat",
-  },
-
-  buttonShowPasswordText: {
-    textAlign: "right",
-    fontFamily: "Montserrat",
-    color: lightTheme.textSecondary,
-    fontSize: 14,
-    marginTop: 10,
-    marginBottom: 10,
-  },
-
-  buttonForgotPassword: {
-    marginTop: 10,
-    marginBottom: 10,
-  },
-
-  buttonForgotPasswordText: {
-    color: lightTheme.textSecondary,
-    fontSize: 13,
-    fontFamily: "Montserrat",
-    textAlign: "start",
-    marginTop: 30,
-  },
-});
 
 export default LoginScreen;

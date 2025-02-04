@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
-import { GlobalStyles } from "../../styles/GlobalStyles";
+import { View, Text, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
+
+// Styles
+import { GlobalStyles } from "../../styles/GlobalStyles";
+import { styles } from "./styles";
 
 const Profile = () => {
   const [company, setCompany] = useState({});
@@ -28,7 +31,15 @@ const Profile = () => {
       <View>
         <Image
           source={{ uri: "https://placehold.co/150x150" }}
-          style={{ width: 80, height: 80, resizeMode: "contain", backgroundColor: "#f0f0f0", borderRadius: 50 , margin: "auto" , marginBottom: 20}}
+          style={{
+            width: 80,
+            height: 80,
+            resizeMode: "contain",
+            backgroundColor: "#f0f0f0",
+            borderRadius: 50,
+            margin: "auto",
+            marginBottom: 20,
+          }}
         />
         <ProfileItem label="Nome Fantasia" value={company.nomeFantasia} />
         <ProfileItem label="CNPJ" value={company.cnpj} />
@@ -51,22 +62,5 @@ const ProfileItem = ({ label, value }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  profileContainer: {
-    flexDirection: "column",
-    gap: 12,
-    padding: 16,
-    borderRadius: 10,
-    paddingTop: 30,
-    backgroundColor: "#ffffff",
-    flex: 1,
-  },
-
-  profileItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-});
 
 export default Profile;

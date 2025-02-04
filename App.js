@@ -15,6 +15,8 @@ import Profile from "./src/screens/Profile/Profile";
 import Settings from "./src/screens/Settings/Settings";
 import InventoryDetails from "./src/screens/Inventory/InventoryDetails";
 import SpreadSheets from "./src/screens/SpreadSheets/SpreadSheets";
+import SpreadSheetsImport from "./src/screens/SpreadSheets/SpreadSheetsImport/SpreadSheetsImport";
+
 
 const Stack = createStackNavigator();
 
@@ -41,7 +43,7 @@ export default function App() {
         <Stack.Screen
           name="InventoryDetails"
           component={InventoryDetails}
-          getId={({ params }) => params.id}
+          // getId={({ params }) => params.id}
           options={{
             headerTitle: () => null,
             headerShown: false,
@@ -78,6 +80,15 @@ export default function App() {
         <Stack.Screen
           name="SpreadSheets"
           component={SpreadSheets}
+          options={{
+            headerTitle: () => null,
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="SpreadSheetsImport"
+          component={SpreadSheetsImport}
           options={{
             headerTitle: () => null,
             headerShown: false,

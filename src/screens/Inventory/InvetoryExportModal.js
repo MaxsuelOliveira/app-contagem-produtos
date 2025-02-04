@@ -10,12 +10,14 @@ import {
   Alert,
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import { GlobalStyles, lightTheme } from "../../styles/GlobalStyles";
 
-const inventoryExport = (params) => {
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { GlobalStyles, colors } from "../../styles/GlobalStyles";
+
+const add = (params) => {
   const { inventoryName, invetoryFormat, invetoryLayout } = params;
-  Alert.alert("Exportando invetário.", "");
+
+  Alert.alert("Salvando produto ...", "");
   console.log("Nome do inventário: ", inventoryName);
   console.log("Formato da planilha : ", invetoryFormat);
   console.log("Layout da planilha para a exportação: ", invetoryLayout);
@@ -31,6 +33,8 @@ const ModalInvetoryExport = ({ isVisible, onClose }) => {
     title: "Selecionar *",
   };
 
+  console.log(isVisible);
+
   return (
     <Modal
       visible={isVisible}
@@ -38,7 +42,7 @@ const ModalInvetoryExport = ({ isVisible, onClose }) => {
       transparent
       onRequestClose={onClose}
     >
-      <StatusBar style="auto" backgroundColor={lightTheme.modalCover} />
+      <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
       {/* Fundo semi-transparente para modal */}
       <View style={GlobalStyles.modalOverlay}>
@@ -46,7 +50,7 @@ const ModalInvetoryExport = ({ isVisible, onClose }) => {
           <View style={GlobalStyles.card}>
             {/* Card Header */}
             <View style={GlobalStyles.cardHeader}>
-              <Text style={GlobalStyles.cardTitle}>Exportar invetário</Text>
+              <Text style={GlobalStyles.cardTitle}>Importar</Text>
               <TouchableOpacity
                 onPress={onClose}
                 style={GlobalStyles.closeButton}
@@ -54,7 +58,7 @@ const ModalInvetoryExport = ({ isVisible, onClose }) => {
                 <AntDesign
                   name="close"
                   size={28}
-                  color={lightTheme.colorIcons}
+                  color={colors.colorIcons}
                 />
               </TouchableOpacity>
             </View>
@@ -99,12 +103,12 @@ const ModalInvetoryExport = ({ isVisible, onClose }) => {
                     inputIOS: {
                       fontSize: 12, // Tamanho da fonte no Android
                       fontFamily: "Montserrat_Regular", // Fonte personalizada no Android
-                      color: lightTheme.textDescription,
+                      color: colors.textDescription,
                     },
                     inputAndroid: {
                       fontSize: 12, // Tamanho da fonte no Android
                       fontFamily: "Montserrat_Regular", // Fonte personalizada no Android
-                      color: lightTheme.textDescription,
+                      color: colors.textDescription,
                     },
                   }}
                 >
@@ -114,7 +118,7 @@ const ModalInvetoryExport = ({ isVisible, onClose }) => {
                   <AntDesign
                     name="down"
                     size={18}
-                    color={lightTheme.colorIcons}
+                    color={colors.colorIcons}
                     style={{ position: "absolute", right: 10, top: 15 }}
                   />
                 </RNPickerSelect>
@@ -145,12 +149,12 @@ const ModalInvetoryExport = ({ isVisible, onClose }) => {
                     inputIOS: {
                       fontSize: 12, // Tamanho da fonte no Android
                       fontFamily: "Montserrat_Regular", // Fonte personalizada no Android
-                      color: lightTheme.textDescription,
+                      color: colors.textDescription,
                     },
                     inputAndroid: {
                       fontSize: 12, // Tamanho da fonte no Android
                       fontFamily: "Montserrat_Regular", // Fonte personalizada no Android
-                      color: lightTheme.textDescription,
+                      color: colors.textDescription,
                     },
                   }}
                 >
@@ -160,7 +164,7 @@ const ModalInvetoryExport = ({ isVisible, onClose }) => {
                   <AntDesign
                     name="down"
                     size={18}
-                    color={lightTheme.colorIcons}
+                    color={colors.colorIcons}
                     style={{ position: "absolute", right: 10, top: 15 }}
                   />
                 </RNPickerSelect>
@@ -169,7 +173,7 @@ const ModalInvetoryExport = ({ isVisible, onClose }) => {
               <TouchableOpacity
                 style={{ ...GlobalStyles.button, marginTop: 20 }}
                 onPress={() =>
-                  inventoryExport({
+                  add({
                     inventoryName,
                     invetoryFormat,
                     invetoryLayout,
@@ -218,7 +222,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     lineHeight: 48,
-    color: lightTheme.textDescription,
+    color: colors.textDescription,
   },
 });
 

@@ -1,17 +1,19 @@
-import { StatusBar } from "expo-status-bar";
-import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { StatusBar } from "expo-status-bar";
+
+// Icons
 import AntDesign from "@expo/vector-icons/AntDesign";
 
-import { GlobalStyles, lightTheme } from "../../styles/GlobalStyles";
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+// Styles
+import { GlobalStyles, colors } from "../../styles/GlobalStyles";
+import { styles } from "./Styles";
 
-// Screens
+// Components
 import CardItemInventory from "../../components/CardInvetory/CardInventory";
-import ModalInventoryCreate from "../Inventory/ModalInventoryCreate";
+import ModalInventoryCreate from "../Inventory/InventoryCreateModal";
 
 // Backend
 import { Controller } from "../../utils/DB/controller";
@@ -71,14 +73,15 @@ const Home = () => {
         <View style={styles.header}>
           <View
             style={{
-              marginBottom: 10,
+              marginBottom: 20,
+              marginTop: 20,
               flexDirection: "row",
               justifyContent: "space-between",
             }}
           >
             <Text style={{ ...styles.textPrimary, width: "70%" }}>
               Olá. Bem vindo,{" "}
-              <Text key={profile.id} style={{ color: lightTheme.textPrimary }}>
+              <Text key={profile.id} style={{ color: colors.textPrimary }}>
                 {profile.name}
               </Text>
             </Text>
@@ -90,7 +93,7 @@ const Home = () => {
               <AntDesign
                 name="logout"
                 size={26}
-                color={lightTheme.colorIcons}
+                color={colors.colorIcons}
               />
             </TouchableOpacity>
           </View>
@@ -204,7 +207,7 @@ const Home = () => {
             style={GlobalStyles.menubarItem}
             onPress={() => navigation.navigate("Profile")}
           >
-            <AntDesign name="user" size={26} color={lightTheme.colorIcons} />
+            <AntDesign name="user" size={26} color={colors.colorIcons} />
             <Text style={GlobalStyles.menubarText}>Perfil</Text>
           </TouchableOpacity>
 
@@ -212,7 +215,7 @@ const Home = () => {
             style={GlobalStyles.menubarItem}
             onPress={() => setModalVisible(true)}
           >
-            <AntDesign name="plus" size={26} color={lightTheme.colorIcons} />
+            <AntDesign name="plus" size={26} color={colors.colorIcons} />
             <Text style={GlobalStyles.menubarText}>Novo inventário</Text>
           </TouchableOpacity>
 
@@ -220,7 +223,7 @@ const Home = () => {
             style={GlobalStyles.menubarItem}
             onPress={() => navigation.navigate("Settings")}
           >
-            <AntDesign name="setting" size={26} color={lightTheme.colorIcons} />
+            <AntDesign name="setting" size={26} color={colors.colorIcons} />
             <Text style={GlobalStyles.menubarText}>Configurações</Text>
           </TouchableOpacity>
         </View>
@@ -233,69 +236,5 @@ const Home = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  inventoryCategories: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 50,
-  },
-
-  containerInvetoryList: {
-    flex: 1,
-    paddingTop: 10,
-  },
-
-  header: {
-    padding: 20,
-    marginTop: 0,
-    paddingTop: 0,
-    paddingBottom: 0,
-  },
-
-  category: {
-    flex: 1,
-    alignItems: "center",
-    paddingBottom: 10,
-    flexDirection: "row",
-  },
-
-  activeCategory: {
-    borderBottomWidth: 1,
-    borderBottomColor: lightTheme.borderColor,
-  },
-
-  categoryText: {
-    color: "#ababab",
-    fontSize: 16,
-    fontFamily: "Montserrat_Regular",
-  },
-
-  activeBadge: {
-    backgroundColor: lightTheme.buttonBackground,
-  },
-
-  textPrimary: {
-    fontSize: RFPercentage(3.5),
-    fontFamily: "Montserrat_Bold",
-  },
-
-  inventoryContainer: {
-    flex: 1,
-    padding: 10,
-    paddingTop: 10,
-  },
-
-  inventoryItem: {
-    flex: 1,
-    width: "100%",
-    padding: 0,
-  },
-
-  inventoryItemText: {
-    fontSize: 18,
-    fontFamily: "Montserrat_Regular",
-  },
-});
 
 export default Home;

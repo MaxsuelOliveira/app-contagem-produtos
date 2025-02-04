@@ -1,30 +1,36 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { GlobalStyles, lightTheme } from "../../styles/GlobalStyles";
+import { View, Text, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, Switch } from "react-native-gesture-handler";
+
+// Icons
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+
+// Styles
+import { GlobalStyles, colors } from "../../styles/GlobalStyles";
+import { styles } from "./styles";
 
 const Settings = () => {
   const navigation = useNavigation();
+  const [toggleSwitch, setToggleSwitch] = useState(false);
+
+  const textLabelTheme = toggleSwitch ? "dark" : "light";
+
+  function setTheme() {
+    setToggleSwitch(!toggleSwitch);
+    textLabelTheme === "dark" ? "light" : "dark";
+  }
 
   return (
     <View style={styles.settingsContainer}>
-      <StatusBar style="dark" backgroundColor="#ffffff" />
+      <StatusBar style="auto" backgroundColor="#ffffff" />
 
       <View style={GlobalStyles.cardHeader}>
         <Text style={GlobalStyles.cardTitle}>Configurações</Text>
       </View>
 
       <ScrollView>
-        {/* Tema */}
-        <View style={styles.settingsItem}>
-          <Text style={[styles.title]}>Tema do app</Text>
-
-          <View>
-            <SettingsItem label="Dark" value="Não" />
-          </View>
-        </View>
 
         {/* Importar dados */}
         <View style={styles.settingsItem}>
@@ -39,65 +45,91 @@ const Settings = () => {
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("SpreadSheets");
+              navigation.navigate("SpreadSheetsImport");
             }}
             style={{
               ...GlobalStyles.button,
               backgroundColor: "transparent",
-              borderColor: lightTheme.borderColor,
+              borderColor: colors.textDescription,
               borderWidth: 1,
+              borderRadius: 10,
+              borderStyle: "dashed",
             }}
           >
-            {/* <AntDesign name="close" size={28} color={lightTheme.colorIcons} /> */}
+            <MaterialCommunityIcons
+              name="google-spreadsheet"
+              size={24}
+              color={"green"}
+            />
             <Text
               style={{
                 ...GlobalStyles.buttonText,
-                color: lightTheme.textPrimary,
+                color: colors.textDescription,
               }}
             >
               Importar planilha
             </Text>
           </TouchableOpacity>
         </View>
+
+        <View style={styles.settingsItem}>
+          <View style={{ marginBottom: 20 }}>
+            <Text style={[styles.title]}>Suas planilha importadas</Text>
+            <Text style={[GlobalStyles.small]}>
+              Lista de planilhas importadas. Clique para visualizar as
+              informações.
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("SpreadSheets");
+            }}
+            style={{
+              ...GlobalStyles.button,
+              backgroundColor: "transparent",
+              borderColor: colors.textDescription,
+              borderWidth: 1,
+              borderRadius: 10,
+              borderStyle: "dashed",
+            }}
+          >
+            <MaterialCommunityIcons
+              name="google-spreadsheet"
+              size={24}
+              color={"green"}
+            />
+            <Text
+              style={{
+                ...GlobalStyles.buttonText,
+                color: colors.textDescription,
+              }}
+            >
+              Ver planilhas importadas
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Tema */}
+        <View style={styles.settingsItem}>
+          <Text style={[styles.title]}>Tema do app</Text>
+          <View style={styles.settingsBox}>
+            <Text style={GlobalStyles.label}>{textLabelTheme}</Text>
+            <Switch
+              trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
+              thumbColor={true ? "#4d8eea" : "#bfbfbf"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={setTheme}
+              value={toggleSwitch}
+            />
+          </View>
+        </View>
+
       </ScrollView>
+
     </View>
   );
 };
 
-const SettingsItem = ({ label, value }) => {
-  return (
-    <View style={styles.settingsBox}>
-      <Text style={GlobalStyles.label}>{label}</Text>
-      <Text style={GlobalStyles.value}>{value}</Text>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  settingsContainer: {
-    flexDirection: "column",
-    gap: 12,
-    padding: 16,
-    paddingTop: 30,
-    backgroundColor: "#ffffff",
-    flex: 1,
-  },
-  settingsItem: {
-    marginBottom: 30,
-  },
-  settingsBox: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-  },
-  label: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  title: {
-    fontSize: 16,
-    fontFamily: "Montserrat_Regular",
-    marginBottom: 10,
-  },
-});
 
 export default Settings;

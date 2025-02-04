@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import uuid from "react-native-uuid";
 import Checkbox from "expo-checkbox";
 import { StatusBar } from "expo-status-bar";
@@ -11,13 +11,18 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
+
+// Icons
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { GlobalStyles, lightTheme } from "../../styles/GlobalStyles";
+
+// Styles
+import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { styles } from "./styles";
 
 // Backend
-import { Controller } from "../../utils/DB/controller";
+import { Controller } from "../../../utils/DB/controller";
 
-const ModalProductCreate = ({
+const ProductCreateModal = ({
   isVisible,
   onClose,
   compareInSpreadsheet,
@@ -25,6 +30,7 @@ const ModalProductCreate = ({
   inputs,
 }) => {
   const [productsSpreadsheets, setProductsSpreadsheets] = useState([]);
+  const [produtoEncontrado, setProdutoEncontrado] = useState(false);
 
   const [codebar, setCodebar] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -32,14 +38,13 @@ const ModalProductCreate = ({
   const [price, setPrice] = useState("");
   const [inconsistency, setInconsistency] = useState(false);
 
-  const [produtoEncontrado, setProdutoEncontrado] = useState(false); // Novo estado
   const [visibleInputs, setVisibleInputs] = useState(false);
+  const [focus, setFocus] = useState(true);
   const [disabledButton, setDisabledButton] = useState(true);
 
   // Buscando os produtos da planilha (simulação).
   useEffect(() => {
     if (isVisible) {
-      console.log("Carregando produtos do inventário...");
       setProductsSpreadsheets([
         { codebar: "123456789", name: "Produto 1", price: 10.0 },
         { codebar: "987654321", name: "Produto 2", price: 20.0 },
@@ -84,27 +89,25 @@ const ModalProductCreate = ({
     setDisabledButton(false);
   };
 
-  // **Adiciona o produto ao inventário**
   const create = (codebar, quantity, name, price, inconsistency) => {
     const product = {
       uuid: uuid.v4(),
       codebar: codebar,
       quantity: quantity ? parseFloat(quantity) : 0,
+      name: name,
       price: price ? parseFloat(price) : 0,
       inconsistency: inconsistency ? true : false,
     };
 
     Controller.Product.create(uuidInventory, product)
       .then((product) => {
-        // Resetando os campos
         setCodebar("");
         setQuantity("");
         setName("");
         setPrice("");
+        setFocus(true);
+        setVisibleInputs(false);
         setInconsistency(false);
-
-        console.log("Produto salvo no inventário:");
-        console.log(product);
       })
       .catch((error) => {
         Alert.alert(error);
@@ -118,7 +121,7 @@ const ModalProductCreate = ({
       transparent
       onRequestClose={onClose}
     >
-      <StatusBar style="auto" backgroundColor={lightTheme.modalCover} />
+      <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
       <View style={GlobalStyles.modalOverlay}>
         <View style={GlobalStyles.modalContent}>
@@ -129,16 +132,11 @@ const ModalProductCreate = ({
                 onPress={onClose}
                 style={GlobalStyles.closeButton}
               >
-                <AntDesign
-                  name="close"
-                  size={28}
-                  color={lightTheme.colorIcons}
-                />
+                <AntDesign name="close" size={28} color={colors.colorIcons} />
               </TouchableOpacity>
             </View>
 
             <View style={styles.cardBody}>
-              {/* Código de barras */}
               <View
                 style={{
                   ...styles.grid,
@@ -150,14 +148,13 @@ const ModalProductCreate = ({
                   style={GlobalStyles.input}
                   maxLength={150}
                   value={codebar}
+                  autoFocus={focus}
                   onChangeText={checkProductSpreadsheet}
                   keyboardType="numeric"
                   placeholderTextColor="gray"
                 />
               </View>
 
-              {/* Quantidade */}
-              {/* // Se o código de barras for preenchido, exibe os campos de quantidade, e inconsistência */}
               {visibleInputs ? (
                 <View style={{ ...styles.grid, width: "35%" }}>
                   <Text style={GlobalStyles.label}>Quantidade*</Text>
@@ -173,7 +170,6 @@ const ModalProductCreate = ({
                 </View>
               ) : null}
 
-              {/* Nome e Preço (aparece se comparar estiver ativo) */}
               {produtoEncontrado && (
                 <>
                   <View style={{ ...styles.grid, width: "60%" }}>
@@ -210,7 +206,6 @@ const ModalProductCreate = ({
                 </>
               )}
 
-              {/* Inconsistência */}
               {visibleInputs ? (
                 <View style={{ ...styles.grid, width: "100%" }}>
                   <View style={styles.section}>
@@ -230,7 +225,6 @@ const ModalProductCreate = ({
                 </View>
               ) : null}
 
-              {/* Botão de adicionar */}
               <TouchableOpacity
                 style={{ ...GlobalStyles.button, marginTop: 20 }}
                 onPress={() => {
@@ -250,31 +244,4 @@ const ModalProductCreate = ({
   );
 };
 
-const styles = StyleSheet.create({
-  cardBody: {
-    marginTop: 10,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-  grid: {
-    display: "flex",
-    marginBottom: 0,
-  },
-  section: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  checkbox: {
-    marginRight: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-  },
-  disabledInput: {
-    backgroundColor: "#ddd", // Cinza para indicar que está desativado
-    color: "#888", // Cinza escuro para o texto
-  },
-});
-
-export default ModalProductCreate;
+export default ProductCreateModal;
