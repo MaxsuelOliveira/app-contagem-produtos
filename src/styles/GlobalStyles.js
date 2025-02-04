@@ -4,16 +4,28 @@ import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 const theme = (options) => {
   if (options) {
     return {
+      primary: "#0d6efd",
+      primaryTextEmphasis: "#052c65",
+      secondaryTextEmphasis: "#2b2f32",
+      successTextEmphasis: "#0a3622",
+      infoTextEmphasis: "#055160",
+      warningTextEmphasis: "#664d03",
+      dangerTextEmphasis: "#58151c",
+      lightTextEmphasis: "#495057",
+      darkTextEmphasis: "#495057",
+      primaryBgSubtle: "#cfe2ff",
+      secondaryBgSubtle: "#e2e3e5",
+      successBgSubtle: "#d1e7dd",
+
       inputBorderColor: "#f3f2f2",
       inputBackground: "#f3f2f2",
       inputColor: "#212529",
-
       cardBackground: "#f8f9fa",
       primaryBackground: "#f8f9fa",
       textPrimary: "#212529",
       textSecondary: "#6c757d",
-      buttonBackground: "#122238",
-
+      // buttonBackground: "#122238",
+      buttonBackground: "#0d6efd",
       borderColor: "#212529",
       menubarBackground: "#f3f2f2",
       menubarText: "#000000",
@@ -21,15 +33,13 @@ const theme = (options) => {
       colorIcons: "#878e94",
       modalCover: "rgba(18, 34, 56, 0.65)",
       backgroundItem: "#ecebeb",
-      danger: "#dc3545",
-      warrning: "#ffc107",
     };
   } else {
     return {
+      primary: "#0d6efd",
       inputBorderColor: "#ffffff",
       inputBackground: "transparent",
       inputColor: "#f8f9fa",
-
       cardBackground: "#19273a",
       primaryBackground: "#122238",
       textPrimary: "#ffffff",
@@ -131,13 +141,15 @@ const GlobalStyles = StyleSheet.create({
   },
 
   badge: {
+    fontFamily: "Montserrat_Bold",
     marginLeft: 5,
     backgroundColor: "#ababab",
-    borderRadius: 30,
+    borderRadius: 7,
     color: "#fff",
     width: 20,
     height: 20,
-    lineHeight: 20,
+    alignItems: "center",
+    justifyContent: "center",
     textAlign: "center",
   },
 
@@ -189,7 +201,7 @@ const GlobalStyles = StyleSheet.create({
     textAlign: "center",
     flex: 1,
     color: colors.textPrimary,
-    marginTop : 20,
+    marginTop: 20,
   },
 
   cardBody: {
@@ -234,4 +246,4 @@ const GlobalStyles = StyleSheet.create({
   },
 });
 
-export { GlobalStyles , colors };
+export { GlobalStyles, colors };

@@ -79,22 +79,14 @@ const Home = () => {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ ...styles.textPrimary, width: "70%" }}>
-              Olá. Bem vindo,{" "}
-              <Text key={profile.id} style={{ color: colors.textPrimary }}>
-                {profile.name}
-              </Text>
+            <Text style={{ ...styles.textPrimary, width: "80%" }}>
+              Olá. Bem vindo(a) <Text key={profile.id}>{profile.name}</Text>
             </Text>
 
             <TouchableOpacity
-              style={{ width: "30%", alignItems: "flex-end" }}
-              onPress={() => logout()}
-            >
-              <AntDesign
-                name="logout"
-                size={26}
-                color={colors.colorIcons}
-              />
+              style={styles.logoutButton}
+              onPress={() => logout()}>
+              <AntDesign name="logout" size={26} color={colors.colorIcons} />
             </TouchableOpacity>
           </View>
 

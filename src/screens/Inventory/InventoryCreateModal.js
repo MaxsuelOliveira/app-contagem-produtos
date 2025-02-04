@@ -49,7 +49,7 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
         <View style={GlobalStyles.modalContent}>
           <View style={GlobalStyles.card}>
             <View style={GlobalStyles.cardHeader}>
-              <Text style={GlobalStyles.cardTitle}>Novo inventário</Text>
+              <Text style={{...GlobalStyles.cardTitle , marginTop : 0}}>Novo inventário</Text>
               <TouchableOpacity
                 onPress={onClose}
                 style={GlobalStyles.closeButton}

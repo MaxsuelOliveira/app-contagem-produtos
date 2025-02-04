@@ -21,16 +21,35 @@ export const styles = StyleSheet.create({
     paddingBottom: 0,
   },
 
+  logoutButton: {
+    width: "auto",
+    alignItems: "flex-end",
+    backgroundColor: colors.menubarBackground,
+    borderRadius: 30,
+    height: 40,
+    width: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
   category: {
     flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    paddingBottom: 10,
+    marginBottom: 10,
     flexDirection: "row",
+    padding: 5,
+    borderRadius: 10
   },
 
   activeCategory: {
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderColor,
+    backgroundColor: "#f5f5f5",
+
+  },
+
+  activeCategoryText: {
+    color: colors.textPrimary,
+    fontFamily: "Montserrat_Bold",
   },
 
   categoryText: {
@@ -40,7 +59,7 @@ export const styles = StyleSheet.create({
   },
 
   activeBadge: {
-    backgroundColor: colors.buttonBackground,
+    backgroundColor: colors.primary,
   },
 
   textPrimary: {
