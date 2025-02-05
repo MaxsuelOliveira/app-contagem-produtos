@@ -7,22 +7,22 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GlobalStyles } from "../../styles/GlobalStyles";
 import { styles } from "./styles";
 
-const Profile = async () => {
+import { decodeToken } from "../../utils/token";
+
+const Profile = () => {
   const [company, setCompany] = useState({});
 
-  // let token = await AsyncStorage.getItem("token");
-  // alert(token);
-
   useEffect(() => {
-    console.log("Carregando informações da empresa ...");
-    setCompany({
-      nomeFantasia: "Semprelar",
-      cnpj: "00.000.000/0000-00",
-      email: "Email@contato.com",
-      telefone: "(00) 0000-0000",
-      dispositivosLogados: 1,
-      acessos: 5,
-    });
+    const fetchToken = async () => {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
+        const decoded = decodeToken(token);
+        setCompany(decoded);
+        return;
+      }
+    };
+
+    fetchToken();
   }, []);
 
   return (
@@ -46,17 +46,14 @@ const Profile = async () => {
             marginBottom: 20,
           }}
         />
-        <ProfileItem label="Nome Fantasia" value={company.nomeFantasia} />
-        <ProfileItem label="CNPJ" value={company.cnpj} />
+        <ProfileItem label="Nome Fantasia" value={company.nome} />
+        <ProfileItem label="CNPJ" value={company.cpf_cnpj} />
         <ProfileItem label="Email" value={company.email} />
         <ProfileItem label="Telefone" value={company.telefone} />
-        <ProfileItem
-          label="Dispositivos logados"
-          value={`${company.dispositivosLogados} / ${company.acessos}`}
-        />
       </View>
     </View>
   );
+  
 };
 
 const ProfileItem = ({ label, value }) => {

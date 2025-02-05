@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState, useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
@@ -15,23 +16,23 @@ import { styles } from "./Styles";
 import CardItemInventory from "../../components/CardInvetory/CardInventory";
 import ModalInventoryCreate from "../Inventory/InventoryCreateModal/InventoryCreateModal";
 import InvetoryDeleteModal from "../Inventory/InvetoryDeleteModal/InvetoryDeleteModal";
+import LogoutModal from "../Login/LogoutModal/LogoutModal";
 
 // Backend
 import { Controller } from "../../utils/DB/controller";
+import { decodeToken } from "../../utils/token";
 
 const Home = () => {
   const navigation = useNavigation();
 
+  const [profile, setProfile] = useState({});
   const [uuidSeleced, setUuidSelected] = useState("");
-
   const [activeTab, setActiveTab] = useState("inProgress");
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalDeleteVisible, setModalDeleteVisible] = useState(false);
-
+  const [isModalLogoutVisible, setModalLogoutVisible] = useState(false);
   const [inventoriesProgress, setInventoriesProgress] = useState([]);
   const [inventoriesCompleted, setInventoriesCompleted] = useState([]);
-
-  const [profile, setProfile] = useState([]);
 
   const badgeCountInProgress = inventoriesProgress.length;
   const badgeCountCompleted = inventoriesCompleted.length;
@@ -50,27 +51,29 @@ const Home = () => {
       name: "Semprelar",
       email: "",
       phone: "",
-      company: "",
+      profile: "",
     });
   }, []);
 
+  // Profile
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
+        const decoded = decodeToken(token);
+        setProfile(decoded);
+        return;
+      }
+    };
+
+    fetchToken();
+  }, []);
+
   const logout = () => {
-    Alert.alert("Sair", "Deseja realmente sair do sistema?", [
-      {
-        text: "Cancelar",
-        style: "cancel",
-      },
-      {
-        text: "Sair",
-        onPress: () => {
-          navigation.navigate("Login");
-        },
-      },
-    ]);
+    setModalLogoutVisible(true);
   };
 
   const handleEditProduct = (uuid) => {
-    // navigation.navigate("InventoryDetails", { uuid });
     setUuidSelected(uuid);
     setModalDeleteVisible(true);
   };
@@ -90,7 +93,7 @@ const Home = () => {
             }}
           >
             <Text style={{ ...styles.textPrimary, width: "80%" }}>
-              Olá. Bem vindo(a) <Text key={profile.id}>{profile.name}</Text>
+              Olá. Bem vindo(a) <Text>{profile.nome}</Text>
             </Text>
 
             <TouchableOpacity
@@ -243,6 +246,11 @@ const Home = () => {
         isVisible={isModalDeleteVisible}
         onClose={() => setModalDeleteVisible(false)}
         uuidInventory={uuidSeleced}
+      />
+
+      <LogoutModal
+        isVisible={isModalLogoutVisible}
+        onClose={() => setModalLogoutVisible(false)}
       />
     </View>
   );

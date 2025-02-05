@@ -9,6 +9,7 @@ import { Linking } from "react-native";
 // Styles
 import { GlobalStyles } from "../../styles/GlobalStyles";
 import { styles } from "./styles";
+import { decodeToken } from "../../utils/token";
 
 // Abrir um chat no WhatsApp
 const openWhatsApp = () => {
@@ -81,10 +82,13 @@ const LoginScreen = ({ navigation }) => {
 
     const responseLogin = await response.json();
 
+
+
     responseLogin.token
       ? (() => {
+          const decode = decodeToken(responseLogin.token);
           AsyncStorage.setItem("token", responseLogin.token);
-          navigation.navigate("Home");
+          navigation.navigate("Home", { userName: decode.nome });
         })()
       : (() => {
           Alert.alert("Erro", responseLogin.error || "Algo deu errado.");

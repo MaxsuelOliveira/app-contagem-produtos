@@ -19,7 +19,6 @@ import SpreadSheetsImport from "./src/screens/SpreadSheets/SpreadSheetsImport/Sp
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -34,7 +33,7 @@ export default function App() {
     let token = AsyncStorage.getItem("token");
     if (token) {
       return "Home";
-    } 
+    }
     return "Login";
   }
 
@@ -53,7 +52,6 @@ export default function App() {
         <Stack.Screen
           name="InventoryDetails"
           component={InventoryDetails}
-          // getId={({ params }) => params.id}
           options={{
             headerTitle: () => null,
             headerShown: false,
