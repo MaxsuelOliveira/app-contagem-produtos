@@ -7,6 +7,9 @@ import { ScrollView, Switch } from "react-native-gesture-handler";
 // Icons
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
+// Backend
+import importFileSpreadSheets from "../../utils/importFileSpreadSheets";
+
 // Styles
 import { GlobalStyles, colors } from "../../styles/GlobalStyles";
 import { styles } from "./styles";
@@ -22,6 +25,9 @@ const Settings = () => {
     textLabelTheme === "dark" ? "light" : "dark";
   }
 
+  // Imports
+    const [data, setData] = useState([]);
+
   return (
     <View style={styles.settingsContainer}>
       <StatusBar style="auto" backgroundColor="#ffffff" />
@@ -32,7 +38,6 @@ const Settings = () => {
 
       <ScrollView>
 
-        {/* Importar dados */}
         <View style={styles.settingsItem}>
           <View style={{ marginBottom: 20 }}>
             <Text style={[styles.title]}>Importar planilha</Text>
@@ -44,9 +49,10 @@ const Settings = () => {
           </View>
 
           <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("SpreadSheetsImport");
-            }}
+            // onPress={() => {
+            //   navigation.navigate("SpreadSheetsImport");
+            // }}
+            onPress={() => importFileSpreadSheets(setData)}
             style={{
               ...GlobalStyles.button,
               backgroundColor: "transparent",
@@ -69,7 +75,12 @@ const Settings = () => {
             >
               Importar planilha
             </Text>
+
+            <Text style={GlobalStyles.small}>
+              Formatos aceitos: .xls, .xlsx, .csv
+            </Text>
           </TouchableOpacity>
+
         </View>
 
         <View style={styles.settingsItem}>
@@ -110,7 +121,6 @@ const Settings = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Tema */}
         <View style={styles.settingsItem}>
           <Text style={[styles.title]}>Tema do app</Text>
           <View style={styles.settingsBox}>

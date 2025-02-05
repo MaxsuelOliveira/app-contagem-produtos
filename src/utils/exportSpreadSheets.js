@@ -2,7 +2,7 @@ import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import * as XLSX from "xlsx";
 
-export const exportExcel = async (data) => {
+export const exportSpreadSheets = async (data) => {
   try {
     // Criar a planilha
     const worksheet = XLSX.utils.json_to_sheet(data);
@@ -26,16 +26,16 @@ export const exportExcel = async (data) => {
   }
 };
 
-export const downloadExcel = async (data, uuid_inventory) => {
-  const fileUri = await exportExcel(data);
+export const downloadSpreadSheet = async (data, uuid_inventory) => {
+  const fileUri = await exportSpreadSheets(data);
   if (fileUri) {
     alert("Arquivo salvo em: " + fileUri);
     callbackSuccess(uuid_inventory);
   }
 };
 
-export const shareExcel = async (data, uuid_inventory) => {
-  const fileUri = await exportExcel(data);
+export const shareSpreadSheet = async (data, uuid_inventory) => {
+  const fileUri = await exportSpreadSheets(data);
   if (fileUri) {
     await Sharing.shareAsync(fileUri);
     callbackSuccess(uuid_inventory);

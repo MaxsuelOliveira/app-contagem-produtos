@@ -8,12 +8,10 @@ import uuid from "react-native-uuid";
 
 import { Model } from "../services/backend/model";
 
-const saveSheet = async (data) => {
+const saveSpreadSheet = async (data) => {
   let productResult = [];
 
-  const date_create_formart = new Intl.DateTimeFormat("pt-BR")
-    .format(new Date())
-    .replace(/\//g, "-");
+  const date_create_formart = new Intl.DateTimeFormat("pt-BR").format(new Date()).replace(/\//g, "-");
 
   let sheet = {
     uuid: uuid.v4(),
@@ -36,18 +34,14 @@ const saveSheet = async (data) => {
 
   Model.SpreadSheets.create(sheet)
     .then((response) => {
-      Alert.alert("Sucesso", "Arquivo importado com sucesso!");
-      console.log("📄 Planilha salva com sucesso !");
+      Alert.alert("Sucesso", "📄 Planilha salva com sucesso !");
     })
     .catch((error) => {
-      console.error("❌ Erro ao salvar planilha !");
-      console.error(error);
+      console.error(`❌ Erro ao salvar planilha  : ${error} !`);
     });
 };
 
-const importFile = async (setData) => {
-  Alert.alert("Aguarde, gerando o arquivo !");
-
+const importFileSpreadSheets = async (setData) => {
   try {
     let parsedData = [];
 
@@ -74,9 +68,13 @@ const importFile = async (setData) => {
     } else if (fileType === "text/csv") {
       parsedData = Papa.parse(response, { header: true }).data;
     } else if (
-      fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+      fileType ===
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
       fileType === "application/vnd.ms-excel"
     ) {
+      // Modal de loading personalizado !
+      Alert.alert("Aguarde, gerando o arquivo !");
+
       // Converter Base64 para Buffer
       const workbook = XLSX.read(Buffer.from(response, "base64"), {
         type: "buffer",
@@ -96,7 +94,7 @@ const importFile = async (setData) => {
     }
 
     // Salvar os dados no banco de dados
-    saveSheet(parsedData);
+    saveSpreadSheet(parsedData);
 
     // Definir os dados no estado
     setData(parsedData);
@@ -105,4 +103,4 @@ const importFile = async (setData) => {
   }
 };
 
-export default importFile;
+export default importFileSpreadSheets;

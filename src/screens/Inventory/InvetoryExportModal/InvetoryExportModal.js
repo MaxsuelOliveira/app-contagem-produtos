@@ -5,7 +5,7 @@ import { Modal, View, Text, TouchableOpacity, Button } from "react-native";
 
 import DataTables from "../../../components/Tables";
 
-import ExportExcel from "../../../utils/exportExcel";
+import exportSpreadSheets from "../../../utils/exportSpreadSheets";
 
 // Icons
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -17,7 +17,10 @@ import { styles } from "./styles";
 // Backend
 import { Controller } from "../../../services/backend/controller";
 
-import { downloadExcel, shareExcel } from "../../../utils/exportExcel"; // Importando a função
+import {
+  downloadSpreadSheet,
+  shareSpreadSheet,
+} from "../../../utils/exportSpreadSheets"; // Importando a função
 
 const InvetoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
   const [products, setProducts] = useState([]);
@@ -97,11 +100,11 @@ const InvetoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
 
               <Button
                 title="Baixar Planilha"
-                onPress={() => downloadExcel(products, uuidInventory)}
+                onPress={() => downloadSpreadSheet(products, uuidInventory)}
               />
               <Button
                 title="Compartilhar Planilha"
-                onPress={() => shareExcel(products, uuidInventory)}
+                onPress={() => shareSpreadSheet(products, uuidInventory)}
               />
             </View>
           </View>

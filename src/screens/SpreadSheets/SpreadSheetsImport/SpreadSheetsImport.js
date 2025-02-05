@@ -16,7 +16,7 @@ import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
 import { styles } from "./styles";
 
 // BACKEND
-import importFile from "../../../utils/importFile";
+import importFileSpreadSheets from "../../../utils/importFileSpreadSheets";
 
 const SpreadSheetsImport = () => {
   const [data, setData] = useState([]);
@@ -59,7 +59,7 @@ const SpreadSheetsImport = () => {
       <View>
         <TouchableOpacity
           style={styles.import}
-          onPress={() => importFile(setData)}
+          onPress={() => importFileSpreadSheets(setData)}
         >
           <AntDesign
             name="plus"
