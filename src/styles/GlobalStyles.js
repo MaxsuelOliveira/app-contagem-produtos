@@ -132,7 +132,7 @@ const GlobalStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.buttonBackground,
-    minHeight: 65,
+    minHeight: 55,
   },
 
   buttonText: {

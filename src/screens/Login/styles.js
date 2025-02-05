@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
 
   title: {
     color: colors.textPrimary,
-    fontSize: 40,
+    fontSize: 35,
     fontFamily: "Montserrat_Bold",
     textAlign: "start",
   },

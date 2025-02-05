@@ -3,9 +3,13 @@ import React, { useState, useRef, useEffect, use } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Modal, View, Text, TouchableOpacity, Button } from "react-native";
 
-import DataTables from "../../../components/Tables";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
+import { Alert } from "react-native";
+import * as XLSX from "xlsx";
 
-import exportSpreadSheets from "../../../utils/exportSpreadSheets";
+
+// import DataTables from "../../../components/Tables";
 
 // Icons
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -17,12 +21,74 @@ import { styles } from "./styles";
 // Backend
 import { Controller } from "../../../services/backend/controller";
 
-import {
-  downloadSpreadSheet,
-  shareSpreadSheet,
-} from "../../../utils/exportSpreadSheets"; // Importando a função
+
+// ✅ Passando a navegação como parâmetro
+function callbackSuccess(uuid_inventory, navigation) {
+  alert(uuid_inventory);
+
+  let date_end = new Date();
+  Controller.Inventory.update(uuid_inventory, "done", date_end)
+    .then((response) => {
+      console.log(response);
+      Alert.alert("Inventário finalizado com sucesso!");
+      navigation.navigate("Home"); // ✅ Agora a navegação é passada corretamente!
+    })
+    .catch((error) => {
+      console.error("Erro ao atualizar o inventário");
+      console.error(error);
+    });
+}
+
+// Exportar planilha
+export const exportSpreadSheets = async (data) => {
+  try {
+    Alert.alert("Gerando planilha, aguarde...");
+
+    // Criar a planilha
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "EstoqueFácil");
+
+    // Converter para um arquivo binário
+    const excelBinary = XLSX.write(workbook, {
+      type: "base64",
+      bookType: "xlsx",
+    });
+
+    // Definir o caminho do arquivo
+    const fileUri = `${FileSystem.documentDirectory}planilha.xlsx`;
+
+    // Salvar o arquivo
+    await FileSystem.writeAsStringAsync(fileUri, excelBinary, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    return fileUri;
+  } catch (error) {
+    Alert.alert("Erro ao gerar a planilha:", error);
+  }
+};
+
+// ✅ Atualizado para passar a navegação corretamente
+export const downloadSpreadSheet = async (data, uuid_inventory, navigation) => {
+  const fileUri = await exportSpreadSheets(data);
+  if (fileUri) {
+    alert("Arquivo salvo em: " + fileUri);
+    callbackSuccess(uuid_inventory, navigation);
+  }
+};
+
+// ✅ Atualizado para passar a navegação corretamente
+export const shareSpreadSheet = async (data, uuid_inventory, navigation) => {
+  const fileUri = await exportSpreadSheets(data);
+  if (fileUri) {
+    await Sharing.shareAsync(fileUri);
+    callbackSuccess(uuid_inventory, navigation);
+  }
+};
 
 const InventoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
+  const navigation = useNavigation();
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -35,7 +101,7 @@ const InventoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
       .catch((error) => {
         console.error("Erro ao buscar inventário", error);
       });
-  }, []);
+  }, [uuidInventory]);
 
   return (
     <Modal
@@ -68,18 +134,20 @@ const InventoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
                     ...GlobalStyles.value,
                     textAlign: "justify",
                     marginBottom: 10,
+                    fontSize: 14,
                   }}
                 >
-                  A planilha será exportada com o seguinte layout
+                  A planilha seguira o layout :
                 </Text>
 
-                <DataTables />
+                {/* <DataTables /> */}
 
                 <Text
                   style={{
                     ...GlobalStyles.label,
                     textAlign: "justify",
                     marginTop: 10,
+                    fontSize: 13,
                   }}
                 >
                   Layout da planilha para a exportação, não se preocupe os
@@ -89,23 +157,11 @@ const InventoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
 
               <TouchableOpacity
                 style={{ ...GlobalStyles.button, marginTop: 20 }}
-                onPress={() =>
-                  exportInventory({
-                    uuidInventory,
-                  })
-                }
+                onPress={() => shareSpreadSheet(products, uuidInventory, navigation)}
               >
                 <Text style={GlobalStyles.buttonText}>Exportar inventário</Text>
               </TouchableOpacity>
 
-              <Button
-                title="Baixar Planilha"
-                onPress={() => downloadSpreadSheet(products, uuidInventory)}
-              />
-              <Button
-                title="Compartilhar Planilha"
-                onPress={() => shareSpreadSheet(products, uuidInventory)}
-              />
             </View>
           </View>
         </View>

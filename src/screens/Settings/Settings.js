@@ -59,9 +59,6 @@ const Settings = () => {
           </View>
 
           <TouchableOpacity
-            // onPress={() => {
-            //   navigation.navigate("SpreadSheetsImport");
-            // }}
             onPress={() => importFileSpreadSheets(setData)}
             style={{
               ...GlobalStyles.button,

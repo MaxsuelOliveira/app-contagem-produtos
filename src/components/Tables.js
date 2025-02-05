@@ -15,10 +15,7 @@ export default class DataTable extends Component {
     this.state = {
       tableHead: ['Código*', 'Qtn*', 'Nome' , 'Preço' , 'Incosi.'],
       tableData: [
-        ['10021', '28', '', '', 'Não'],
-        ['10021', '22', '', '', 'Sim'],
-        ['10021', '35', 'Sal', 'R$ 1,00', 'Não'],
-        ['10021', '23', 'Arroz', 'R$ 3,00', 'Sim']
+        ['100212211', '28', '', '', 'Não']
       ]
     };
   }

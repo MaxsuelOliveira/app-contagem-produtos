@@ -90,6 +90,7 @@ const LoginScreen = ({ navigation }) => {
         })()
       : (() => {
           Alert.alert("Erro", responseLogin.error || "Algo deu errado.");
+          setLoading(false);
         })();
 
     setLoading(false);
@@ -103,24 +104,23 @@ const LoginScreen = ({ navigation }) => {
         <Text style={styles.title}>EstoqueFácil</Text>
       </View>
 
-      <View style={{marginBottom: 20}}>
+      <View style={{ marginBottom: 5 }}>
         <Text style={GlobalStyles.label}>Seu email *</Text>
         <TextInput
           style={GlobalStyles.input}
           placeholder="email@email.com"
           value={email}
-          autoFocus={true}
           onChangeText={setEmail}
           keyboardType="email-address"
         />
       </View>
 
-      <View style={{marginBottom: 20}}>
+      <View style={{ marginBottom: 5 }}>
         <Text style={GlobalStyles.label}>Sua senha *</Text>
 
         <View style={styles.containerShowPassword}>
           <TextInput
-            style={[GlobalStyles.input, { width: "100%", marginBottom: 5 }]}
+            style={[GlobalStyles.input]}
             placeholder="******"
             secureTextEntry={!showPassword}
             value={password}
@@ -145,16 +145,26 @@ const LoginScreen = ({ navigation }) => {
           onPress={handleLogin}
           disabled={loading}
         >
-          <Text style={GlobalStyles.buttonText}>{loading ? "Carregando..." : "Entrar"}</Text>
+          <Text style={GlobalStyles.buttonText}>
+            {loading ? "Carregando..." : "Entrar"}
+          </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => Alert.alert("Esqueci minha senha em desenvolvimento ...")}>
+        <TouchableOpacity
+          onPress={() =>
+            Alert.alert("Esqueci minha senha em desenvolvimento ...")
+          }
+        >
           <Text style={styles.buttonForgotPasswordText}>
             Esqueci minha senha
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => Alert.alert("Criar sua conta de teste, em desenvolvimento ...")}>
+        <TouchableOpacity
+          onPress={() =>
+            Alert.alert("Criar sua conta de teste, em desenvolvimento ...")
+          }
+        >
           <Text style={styles.buttonForgotPasswordText}>
             Criar uma conta, teste grátis
           </Text>
@@ -166,7 +176,6 @@ const LoginScreen = ({ navigation }) => {
       {/* Modal para a criação de conta */}
 
       {/* Modal para recuperar a senha */}
-
     </View>
   );
 };

@@ -75,6 +75,9 @@ const importFileSpreadSheets = async (setData) => {
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
       fileType === "application/vnd.ms-excel"
     ) {
+
+      Alert.alert("⚠️ Aviso", "Aguardando a conversão do arquivo, por favor aguarde !");
+
       // Converter Base64 para Buffer
       const workbook = XLSX.read(Buffer.from(response, "base64"), {
         type: "buffer",
@@ -86,6 +89,8 @@ const importFileSpreadSheets = async (setData) => {
 
       // Converter planilha para JSON
       parsedData = XLSX.utils.sheet_to_json(sheet);
+
+      Alert.alert("👍 Tudo certo ! ", "Arquivo convertido com sucesso !");
     }
 
     if (parsedData.length === 0) {

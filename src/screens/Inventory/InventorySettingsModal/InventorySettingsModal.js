@@ -48,7 +48,7 @@ const InventorySettingsModal = ({ isVisible, onClose }) => {
           <View style={GlobalStyles.card}>
             {/* CardHeader */}
             <View style={GlobalStyles.cardHeader}>
-              <Text style={GlobalStyles.cardTitle}>
+              <Text style={{...GlobalStyles.cardTitle , marginTop : 0 , fontSize : 17}}>
                 Configurações do inventário
               </Text>
               <TouchableOpacity
@@ -80,7 +80,7 @@ const InventorySettingsModal = ({ isVisible, onClose }) => {
                     value={isBuyWithSpreadsheet}
                   />
                 </View>
-                <Text style={GlobalStyles.small}>
+                <Text style={{...GlobalStyles.small , textAlign : "justify"}}>
                   Ao habilitar, Só será possível adicionar produtos que constam
                   na planilha.
                 </Text>

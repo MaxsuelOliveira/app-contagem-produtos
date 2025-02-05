@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {  useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -15,9 +16,8 @@ import Profile from "./src/screens/Profile/Profile";
 import Settings from "./src/screens/Settings/Settings";
 import InventoryDetails from "./src/screens/Inventory/InventoryDetails/InventoryDetails";
 import SpreadSheets from "./src/screens/SpreadSheets/SpreadSheets";
-import SpreadSheetsImport from "./src/screens/SpreadSheets/SpreadSheetsImport/SpreadSheetsImport";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const Stack = createStackNavigator();
 
@@ -45,7 +45,7 @@ export default function App() {
   }, []);
 
   if (initialRoute === null) {
-    return "Login";
+    return null;
   }
 
   return (
@@ -105,14 +105,7 @@ export default function App() {
           }}
         />
 
-        <Stack.Screen
-          name="SpreadSheetsImport"
-          component={SpreadSheetsImport}
-          options={{
-            headerTitle: () => null,
-            headerShown: false,
-          }}
-        />
+       
       </Stack.Navigator>
     </NavigationContainer>
   );

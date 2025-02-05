@@ -65,7 +65,8 @@ export const Controller = {
     update: async (uuid, status, date_end) => {
       return Model.Inventory.update(uuid, status, date_end)
         .then((inventario) => {
-          return inventario;
+          console.log("Inventário atualizado com sucesso!");
+          return inventario[0];
         })
         .catch((error) => {
           return Promise.reject(error);

@@ -21,6 +21,8 @@ export const styles = StyleSheet.create({
   label: {
     flex: 1,
     color: colors.colorText,
+    fontSize: 13,
+    marginBottom: 10,
   },
 
   title: {

@@ -93,7 +93,7 @@ const Home = () => {
             }}
           >
             <Text style={{ ...styles.textPrimary, width: "80%" }}>
-              Olá. Bem vindo(a) <Text>{profile.nome}</Text>
+              Olá. Bem vindo(a) {profile.nome}
             </Text>
 
             <TouchableOpacity
