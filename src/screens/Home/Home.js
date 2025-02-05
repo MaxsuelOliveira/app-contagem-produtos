@@ -19,7 +19,7 @@ import InvetoryDeleteModal from "../Inventory/InvetoryDeleteModal/InvetoryDelete
 import LogoutModal from "../Login/LogoutModal/LogoutModal";
 
 // Backend
-import { Controller } from "../../utils/DB/controller";
+import { Controller } from "../../services/DB/controller";
 import { decodeToken } from "../../utils/token";
 
 const Home = () => {

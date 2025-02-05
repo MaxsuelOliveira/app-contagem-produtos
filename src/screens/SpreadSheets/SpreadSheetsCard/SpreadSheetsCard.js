@@ -8,7 +8,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { styles } from "./styles";
 
 // Backend
-import { Controller } from "utils/DB/controller";
+import { Controller } from "services/DB/controller";
 
 export default function CardSpreadSheets({
   uuid,

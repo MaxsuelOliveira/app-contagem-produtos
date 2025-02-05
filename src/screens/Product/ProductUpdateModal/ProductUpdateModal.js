@@ -18,7 +18,7 @@ import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
 import { styles } from "./styles";
 
 // Backend
-import { Controller } from "utils/DB/controller";
+import { Controller } from "services/DB/controller";
 
 const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
   const [codebar, setCodebar] = useState("");

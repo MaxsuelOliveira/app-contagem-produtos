@@ -11,7 +11,7 @@ import { GlobalStyles, colors } from "../../styles/GlobalStyles";
 import CardSpreadSheets from "./SpreadSheetsCard/SpreadSheetsCard";
 
 // Backend
-import { Controller } from "../../utils/DB/controller";
+import { Controller } from "../../services/DB/controller";
 
 const SpreadSheets = () => {
   const [planilhas, setPlanilhas] = useState([]);

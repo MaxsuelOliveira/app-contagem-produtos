@@ -17,7 +17,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
 
 // Controller
-import { Controller } from "../../../utils/DB/controller";
+import { Controller } from "../../../services/DB/controller";
 
 const ModalInventoryCreate = ({ isVisible, onClose }) => {
   const [name, setName] = useState("");
