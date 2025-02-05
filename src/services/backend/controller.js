@@ -65,13 +65,32 @@ export const Controller = {
     update: async (uuid, status, date_end) => {
       return Model.Inventory.update(uuid, status, date_end)
         .then((inventario) => {
-          console.log("Inventário atualizado com sucesso!");
           return inventario[0];
         })
         .catch((error) => {
           return Promise.reject(error);
         });
     },
+
+    update: async (uuid, status, date_end) => {
+      return Model.Inventory.update(uuid, status, date_end)
+        .then((inventario) => {
+          return inventario[0];
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+
+    updateCompareInSpreadSheets: async (uuid, compare_in_spreadsheet) => {
+      return Model.Inventory.updateCompareInSpreadSheets(uuid, compare_in_spreadsheet)
+        .then((inventario) => {
+          return inventario;
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    }, 
 
     export: async (uuid_inventory) => {
       return Model.Inventory.export(uuid_inventory)
@@ -91,7 +110,6 @@ export const Controller = {
           return product;
         })
         .catch((error) => {
-          console.error("Erro ao adicionar produto no inventário:", error);
           return Promise.reject(error);
         });
     },

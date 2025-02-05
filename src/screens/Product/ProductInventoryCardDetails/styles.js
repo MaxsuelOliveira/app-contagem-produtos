@@ -25,8 +25,11 @@ export const styles = StyleSheet.create({
   },
 
   inventoryItemContainer: {
+    width: "100%",
     flexDirection: "row",
     flexWrap: "wrap",
+    justifyContent: "space-between",
+    flex: 1,
   },
 
   inventoryItemContainerItem: {
@@ -58,7 +61,7 @@ export const styles = StyleSheet.create({
   value: {
     fontSize: 14,
     fontFamily: "Montserrat_Medium",
-    color: colors.textDescription,
+    color: colors.textPrimary,
   },
 
   menuButton: {

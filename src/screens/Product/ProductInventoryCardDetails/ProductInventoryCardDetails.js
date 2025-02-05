@@ -25,7 +25,7 @@ const ProductInventoryCardDetails = ({
       price,
       inconsistency,
     };
-    onEdit(productData); // Passando os dados para abrir o modal
+    onEdit(productData); 
   };
 
   return (
@@ -36,9 +36,9 @@ const ProductInventoryCardDetails = ({
           <Text style={styles.title}>{codebar}</Text>
           <View style={styles.inventoryItemContainer}>
             <InventoryDetail label="Qnt(s)" value={quantity} />
-            <InventoryDetail label="Nome" value={truncatedName} />
-            <InventoryDetail label="Preço" value={price} />
-            <InventoryDetail label="Inconsistência" value={inconsistencyText} />
+            {name ? (<InventoryDetail label="Nome" value={truncatedName}/>) : (null)}
+            {price ? (<InventoryDetail label="Preço" value={price} />) : (null)}
+            <InventoryDetail label="Inconsis." value={inconsistencyText} />
           </View>
         </View>
       </View>

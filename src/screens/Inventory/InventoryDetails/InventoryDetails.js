@@ -70,6 +70,7 @@ export default function InventoryDetails() {
         <Text style={styles.cardDescription}>{describe}</Text>
 
         <View style={styles.createInventarioInfo}>
+
           <View style={styles.createInventarioInfoItem}>
             <Text style={{ ...GlobalStyles.label, fontSize: 12 }}>Status</Text>
             <Text style={{...GlobalStyles.value , fontSize : 14}}>{setStatus(status)}</Text>
@@ -95,7 +96,9 @@ export default function InventoryDetails() {
               {compare_in_spreadsheet ? "Sim" : "Não"}
             </Text>
           </View>
+
         </View>
+        
       </View>
 
       <ScrollView style={styles.cardBody}>
@@ -174,6 +177,7 @@ export default function InventoryDetails() {
       <InventorySettingsModal
         isVisible={isModalVisibleSettings}
         onClose={() => setModalVisibleSettings(false)}
+        uuidInventory={uuid}
       />
     </View>
   );

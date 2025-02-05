@@ -119,8 +119,7 @@ const GlobalStyles = StyleSheet.create({
   value: {
     fontFamily: "Montserrat_Medium",
     color: colors.textPrimary,
-    fontSize: 16,
-    // fontSize: RFPercentage(2.1),
+    fontSize: 13,
   },
 
   button: {
@@ -245,6 +244,9 @@ const GlobalStyles = StyleSheet.create({
     color: colors.menubarText,
     fontFamily: "Montserrat_Medium",
     fontSize: 10,
+    position: "relative",
+    zIndex: 1,
+    width: "100%",
   },
 
 

@@ -38,13 +38,13 @@ const InventoryDeleteModal = ({ isVisible, onClose, uuidInventory }) => {
         <View style={GlobalStyles.modalContent}>
           <View style={[GlobalStyles.card, styles.card]}>
             <View style={GlobalStyles.cardHeader}>
-              <Text style={{ ...GlobalStyles.cardTitle, marginTop: 0 }}>
+              <Text style={{ ...GlobalStyles.cardTitle, marginTop: 0 , fontFamily : "Montserrat_Bold" }}>
                 Apagar inventário
               </Text>
             </View>
 
             <View style={GlobalStyles.cardBody}>
-              <Text style={{ ...GlobalStyles.value, marginBottom: 10 }}>
+              <Text style={{ ...GlobalStyles.value, marginBottom: 10 , fontSize : 16 }}>
                 Deseja realmente apagar o inventário ?
               </Text>
               <Text style={GlobalStyles.label}>

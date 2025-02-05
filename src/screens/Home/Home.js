@@ -7,6 +7,8 @@ import { StatusBar } from "expo-status-bar";
 
 // Icons
 import AntDesign from "@expo/vector-icons/AntDesign";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+
 
 // Styles
 import { GlobalStyles, colors } from "../../styles/GlobalStyles";
@@ -55,7 +57,6 @@ const Home = () => {
     });
   }, []);
 
-  // Profile
   useEffect(() => {
     const fetchToken = async () => {
       const token = await AsyncStorage.getItem("token");
@@ -100,24 +101,19 @@ const Home = () => {
               style={styles.logoutButton}
               onPress={() => logout()}
             >
-              <AntDesign name="logout" size={26} color={colors.colorIcons} />
+              <MaterialIcons name="logout" size={26} color={colors.colorIcons} />
+              {/* <AntDesign name="logout" size={26} color={colors.colorIcons} /> */}
             </TouchableOpacity>
           </View>
 
           <View style={styles.inventoryCategories}>
             <TouchableOpacity
-              style={[
-                styles.category,
-                activeTab === "inProgress" && styles.activeCategory,
-              ]}
+              style={[ styles.category, activeTab === "inProgress" && styles.activeCategory ]}
               onPress={() => setActiveTab("inProgress")}
             >
               <Text
-                style={[
-                  styles.categoryText,
-                  activeTab === "inProgress" && styles.activeCategoryText,
-                ]}
-              >
+                style={[ styles.categoryText, activeTab === "inProgress" && styles.activeCategoryText ]}
+                >
                 Em progresso
               </Text>
               <Text

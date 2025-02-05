@@ -37,12 +37,30 @@ export const Model = {
         .objects("Inventory")
         .filtered(`uuid == "${uuid}"`);
       if (inventories.length === 0) {
-        throw new Error(`Inventário com uuid ${uuid} não encontrado`);
+        return {
+          error: `Inventário com uuid ${uuid} não encontrado`,
+          success: false,
+        };
       }
       const inventory = inventories[0];
       realm.write(() => {
         inventory.status = status;
         inventory.date_end = date_end;
+      });
+      return inventory;
+    },
+
+    updateCompareInSpreadSheets: async (uuid, compare_in_spreadsheet) => {
+      const realm = await createRealm();
+      const inventories = realm
+        .objects("Inventory")
+        .filtered(`uuid == "${uuid}"`);
+      if (inventories.length === 0) {
+        return Promise.reject(false);
+      }
+      const inventory = inventories[0];
+      realm.write(() => {
+        inventory.compare_in_spreadsheet = compare_in_spreadsheet;
       });
       return inventory;
     },
@@ -53,7 +71,10 @@ export const Model = {
         .objects("Inventory")
         .filtered(`uuid == "${uuid}"`);
       if (inventories.length === 0) {
-        throw new Error(`Inventário com uuid ${uuid} não encontrado`);
+        return {
+          error: `Inventário com uuid ${uuid} não encontrado`,
+          success: false,
+        };
       }
       const inventory = inventories[0];
       return inventory.products.map((produto) => ({
@@ -98,7 +119,10 @@ export const Model = {
         .filtered(`uuid == "${uuid}"`);
 
       if (inventories.length === 0) {
-        throw new Error(`Inventário com uuid ${uuid} não encontrado`);
+        return {
+          error: `Inventário com uuid ${uuid} não encontrado`,
+          success: false,
+        };
       }
 
       const inventory = inventories[0];
@@ -117,7 +141,10 @@ export const Model = {
         .filtered(`uuid == "${uuid_inventory}"`);
 
       if (inventories.length === 0) {
-        throw new Error(`Inventário com uuid ${uuid_inventory} não encontrado`);
+        return {
+          error: `Inventário com uuid ${uuid_inventory} não encontrado`,
+          success: false,
+        };
       }
 
       const inventory = inventories[0];
@@ -147,7 +174,10 @@ export const Model = {
         .filtered(`uuid == "${uuid_inventory}"`);
 
       if (inventories.length === 0) {
-        throw new Error(`Inventário com uuid ${uuid_inventory} não encontrado`);
+        return {
+          error: `Inventário com uuid ${uuid_inventory} não encontrado`,
+          success: false,
+        };
       }
 
       const inventory = inventories[0];
@@ -178,7 +208,10 @@ export const Model = {
         .objects("Inventory")
         .filtered(`uuid == "${uuid_inventory}"`);
       if (inventories.length === 0) {
-        throw new Error(`Inventário com uuid ${uuid_inventory} não encontrado`);
+        return {
+          error: `Inventário com uuid ${uuid_inventory} não encontrado`,
+          success: false,
+        };
       }
       const inventory = inventories[0];
       realm.write(() => {
@@ -203,25 +236,19 @@ export const Model = {
     remove: async (id_spreadsheet) => {
       const realm = await createRealm();
 
-      try {
-        realm.write(() => {
-          // Encontrar a spreadsheet pelo id_spreadsheet
-          const spreadsheetToDelete = realm
-            .objects("SpreadSheets")
-            .filtered(`uuid == "${id_spreadsheet}"`)[0];
+      realm.write(() => {
+        // Encontrar a spreadsheet pelo id_spreadsheet
+        const spreadsheetToDelete = realm
+          .objects("SpreadSheets")
+          .filtered(`uuid == "${id_spreadsheet}"`)[0];
 
-          if (spreadsheetToDelete) {
-            realm.delete(spreadsheetToDelete);
-            return true;
-          } else {
-            console.info("Planilha não encontrada.");
-            return false;
-          }
-        });
-      } catch (error) {
-        console.error("Erro ao remover a spreadsheet:", error);
-        return false;
-      }
+        if (spreadsheetToDelete) {
+          realm.delete(spreadsheetToDelete);
+          return true;
+        } else {
+          return false;
+        }
+      });
     },
 
     getAll: async () => {
@@ -238,11 +265,10 @@ export const Model = {
       return spreadsheet;
     },
 
-    count : async () => {
+    count: async () => {
       const realm = await createRealm();
       const spreadsheets = realm.objects("SpreadSheets");
       return spreadsheets.length;
-    }
-
+    },
   },
 };

@@ -8,7 +8,6 @@ import * as Sharing from "expo-sharing";
 import { Alert } from "react-native";
 import * as XLSX from "xlsx";
 
-
 // import DataTables from "../../../components/Tables";
 
 // Icons
@@ -20,9 +19,8 @@ import { styles } from "./styles";
 
 // Backend
 import { Controller } from "../../../services/backend/controller";
+import { downloadFile } from "../../../utils/downloadFile";
 
-
-// ✅ Passando a navegação como parâmetro
 function callbackSuccess(uuid_inventory, navigation) {
   alert(uuid_inventory);
 
@@ -39,7 +37,6 @@ function callbackSuccess(uuid_inventory, navigation) {
     });
 }
 
-// Exportar planilha
 export const exportSpreadSheets = async (data) => {
   try {
     Alert.alert("Gerando planilha, aguarde...");
@@ -69,7 +66,6 @@ export const exportSpreadSheets = async (data) => {
   }
 };
 
-// ✅ Atualizado para passar a navegação corretamente
 export const downloadSpreadSheet = async (data, uuid_inventory, navigation) => {
   const fileUri = await exportSpreadSheets(data);
   if (fileUri) {
@@ -78,7 +74,6 @@ export const downloadSpreadSheet = async (data, uuid_inventory, navigation) => {
   }
 };
 
-// ✅ Atualizado para passar a navegação corretamente
 export const shareSpreadSheet = async (data, uuid_inventory, navigation) => {
   const fileUri = await exportSpreadSheets(data);
   if (fileUri) {
@@ -137,7 +132,18 @@ const InventoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
                     fontSize: 14,
                   }}
                 >
-                  A planilha seguira o layout :
+                  A planilha seguira o layout : {""}
+                  <Text
+                    onPress={() =>
+                      downloadFile(
+                        "https://estoque.webart3.com/documents/planilha-exemplov1.0.xlsx",
+                        "planilha-exemplov1.0.xlsx"
+                      )
+                    }
+                    style={GlobalStyles.link}
+                  >
+                    Clique aqui para baixar o modelo !
+                  </Text>
                 </Text>
 
                 {/* <DataTables /> */}
@@ -157,11 +163,12 @@ const InventoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
 
               <TouchableOpacity
                 style={{ ...GlobalStyles.button, marginTop: 20 }}
-                onPress={() => shareSpreadSheet(products, uuidInventory, navigation)}
+                onPress={() =>
+                  shareSpreadSheet(products, uuidInventory, navigation)
+                }
               >
                 <Text style={GlobalStyles.buttonText}>Exportar inventário</Text>
               </TouchableOpacity>
-
             </View>
           </View>
         </View>

@@ -38,7 +38,7 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
   }, [product]);
 
   const updateProduct = () => {
-    let novoProduto = {
+    const newProduct = {
       uuid: product.uuid,
       codebar: codebar,
       quantity: parseInt(quantity),
@@ -47,12 +47,13 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
       inconsistency: inconsistency || false,
     };
 
-    Controller.Product.update(uuidInventory, novoProduto)
+    Controller.Product.update(uuidInventory, newProduct)
       .then((response) => {
-        console.log(response);
+        Alert.alert("Produto atualizado com sucesso !", "");
+        onClose();
       })
       .catch((error) => {
-        console.error("Erro ao atualizar o produto !");
+        Alert.alert("Erro ao atualizar o produto !", error);
         console.error(error);
       });
   };
@@ -68,7 +69,6 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
   };
 
   const deleteProduct = () => {
-    // Modal de confirmação
     Alert.alert("Excluir produto", "Deseja realmente excluir o produto ?", [
       {
         text: "Cancelar",
@@ -90,13 +90,12 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
     >
       <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
-      {/* Fundo semi-transparente para modal */}
       <View style={GlobalStyles.modalOverlay}>
         <View style={GlobalStyles.modalContent}>
           <View style={GlobalStyles.card}>
             <View style={GlobalStyles.cardHeader}>
-              <Text style={GlobalStyles.cardTitle}>
-                Atualizar produto no inventário
+              <Text style={styles.cardTilte}>
+                Atualizar produto
               </Text>
               <TouchableOpacity
                 onPress={onClose}
@@ -108,7 +107,6 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
 
             {/* Formulário */}
             <View style={styles.cardBody}>
-              {/* Código de barras */}
               <View style={{ ...styles.grid, width: "60%" }}>
                 <View>
                   <Text style={GlobalStyles.label}>Código de barras*</Text>
@@ -124,7 +122,6 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
                 </View>
               </View>
 
-              {/* Quantidade */}
               <View style={{ ...styles.grid, width: "35%" }}>
                 <View>
                   <Text style={GlobalStyles.label}>Quantidade*</Text>
@@ -139,7 +136,6 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
                 </View>
               </View>
 
-              {/* Nome do produto */}
               <View style={{ ...styles.grid, width: "60%" }}>
                 <View>
                   <Text style={GlobalStyles.label}>Nome do produto</Text>
@@ -155,7 +151,6 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
                 </View>
               </View>
 
-              {/* Preço do produto */}
               <View style={{ ...styles.grid, width: "35%" }}>
                 <View>
                   <Text style={GlobalStyles.label}>Preço R$</Text>
@@ -171,7 +166,6 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
                 </View>
               </View>
 
-              {/* Inconsistência */}
               <View style={{ ...styles.grid, width: "100%" }}>
                 <View style={styles.section}>
                   <Text style={GlobalStyles.label}>
@@ -213,9 +207,7 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
                   style={{ ...GlobalStyles.button, flex: 1 }}
                   onPress={() => updateProduct()}
                 >
-                  <Text style={GlobalStyles.buttonText}>
-                    Adicionar ao inventário
-                  </Text>
+                  <Text style={GlobalStyles.buttonText}>Atualizar produto</Text>
                 </TouchableOpacity>
               </View>
             </View>

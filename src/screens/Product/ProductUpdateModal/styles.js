@@ -1,6 +1,12 @@
 import { StyleSheet } from "react-native";
+import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
+  cardTilte: {
+    ...GlobalStyles.cardTitle,
+    marginTop: 0,
+  },
+
   cardBody: {
     marginTop: 10,
     flexDirection: "row",
@@ -16,9 +22,11 @@ export const styles = StyleSheet.create({
   },
 
   section: {
+    justifyContent: "space-between",
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
+    marginTop: 10,
   },
 
   checkbox: {

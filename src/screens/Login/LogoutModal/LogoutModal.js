@@ -33,9 +33,7 @@ const LogoutModal = ({ isVisible, onClose, uuidInventory }) => {
         <View style={GlobalStyles.modalContent}>
           <View style={[GlobalStyles.card, styles.card]}>
             <View style={GlobalStyles.cardHeader}>
-              <Text style={{ ...GlobalStyles.cardTitle, marginTop: 0 }}>
-                Sair do EstoqueFácil
-              </Text>
+              <Text style={styles.cardTitle}>Sair do EstoqueFácil</Text>
             </View>
 
             <View style={GlobalStyles.cardBody}>
@@ -52,7 +50,9 @@ const LogoutModal = ({ isVisible, onClose, uuidInventory }) => {
                   style={{ ...styles.button, width: "30%" }}
                   onPress={onClose}
                 >
-                  <Text style={{...GlobalStyles.value , fontSize : 13}}>Cancelar</Text>
+                  <Text style={{ ...GlobalStyles.value, fontSize: 13 }}>
+                    Cancelar
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={{
@@ -88,6 +88,12 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderTopEndRadius: 30,
     borderTopStartRadius: 30,
+  },
+
+  cardTitle: {
+    ...GlobalStyles.cardTitle,
+    marginTop: 0,
+    fontFamily: "Montserrat_Bold",
   },
 
   buttons: {

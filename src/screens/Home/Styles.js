@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
   inventoryCategories: {
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: 50,
+    marginBottom: 10,
   },
 
   containerInvetoryList: {
@@ -29,18 +29,19 @@ export const styles = StyleSheet.create({
     height: 40,
     width: 40,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
 
   category: {
-    flex: 1,
+  width: "50%",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 10,
     flexDirection: "row",
     padding: 5,
     borderRadius: 10,
   },
+
+  categoryTitle : {},
 
   activeCategory: {
     backgroundColor: "#f5f5f5",

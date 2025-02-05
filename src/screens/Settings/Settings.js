@@ -45,7 +45,7 @@ const Settings = () => {
       <StatusBar style="auto" backgroundColor="#ffffff" />
 
       <View style={GlobalStyles.cardHeader}>
-        <Text style={GlobalStyles.cardTitle}>Configurações</Text>
+        <Text style={styles.cardTilte}>Configurações</Text>
       </View>
 
       <ScrollView>
@@ -91,9 +91,16 @@ const Settings = () => {
           <Text style={{ ...GlobalStyles.label, marginTop: 10 }}>
             Siga o modelo de planilha abaixo para importar os produtos.
             <TouchableOpacity
-              onPress={() => downloadFile("https://estoque.webart3.com/documents/planilha-exemplov1.0.xlsx", "planilha-exemplov1.0.xlsx")}
+              onPress={() =>
+                downloadFile(
+                  "https://estoque.webart3.com/documents/planilha-exemplov1.0.xlsx",
+                  "planilha-exemplov1.0.xlsx"
+                )
+              }
             >
-              <Text style={GlobalStyles.link}>Clique aqui para baixar o modelo !</Text>
+              <Text style={GlobalStyles.link}>
+                Clique aqui para baixar o modelo !
+              </Text>
             </TouchableOpacity>
           </Text>
         </View>

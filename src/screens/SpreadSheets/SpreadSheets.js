@@ -6,6 +6,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 // Styles
 import { GlobalStyles, colors } from "../../styles/GlobalStyles";
+import { styles } from "./styles";
 
 // Components
 import CardSpreadSheets from "./SpreadSheetsCard/SpreadSheetsCard";
@@ -27,7 +28,7 @@ const SpreadSheets = () => {
       <StatusBar style="auto" backgroundColor={colors.cardBackground} />
 
       <View style={{ ...GlobalStyles.cardHeader, marginBottom: 20 }}>
-        <Text style={GlobalStyles.cardTitle}>Planilhas importadas</Text>
+        <Text style={styles.cardTilte}>Planilhas importadas</Text>
       </View>
 
       <View style={{ flex: 1 }}>
