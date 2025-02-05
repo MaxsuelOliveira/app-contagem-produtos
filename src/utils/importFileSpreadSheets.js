@@ -6,12 +6,15 @@ import { Buffer } from "buffer";
 import { Alert } from "react-native";
 import uuid from "react-native-uuid";
 
+// Backend
 import { Model } from "../services/backend/model";
 
-const saveSpreadSheet = async (data) => {
+const saveSheet = async (data) => {
   let productResult = [];
 
-  const date_create_formart = new Intl.DateTimeFormat("pt-BR").format(new Date()).replace(/\//g, "-");
+  const date_create_formart = new Intl.DateTimeFormat("pt-BR")
+    .format(new Date())
+    .replace(/\//g, "-");
 
   let sheet = {
     uuid: uuid.v4(),
@@ -72,9 +75,6 @@ const importFileSpreadSheets = async (setData) => {
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
       fileType === "application/vnd.ms-excel"
     ) {
-      // Modal de loading personalizado !
-      Alert.alert("Aguarde, gerando o arquivo !");
-
       // Converter Base64 para Buffer
       const workbook = XLSX.read(Buffer.from(response, "base64"), {
         type: "buffer",
@@ -94,7 +94,7 @@ const importFileSpreadSheets = async (setData) => {
     }
 
     // Salvar os dados no banco de dados
-    saveSpreadSheet(parsedData);
+    saveSheet(parsedData);
 
     // Definir os dados no estado
     setData(parsedData);

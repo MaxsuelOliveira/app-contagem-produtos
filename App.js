@@ -1,4 +1,4 @@
-import React from "react";
+import React, {  useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
@@ -28,18 +28,29 @@ export default function App() {
     Montserrat_Light: Montserrat_300Light,
     Montserrat_Medium: Montserrat_500Medium,
   });
-
-  function isLogin() {
-    let token = AsyncStorage.getItem("token");
-    if (token) {
-      return "Home";
+  
+  const [initialRoute, setInitialRoute] = useState(null);
+  useEffect(() => {
+    async function checkLogin() {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        setInitialRoute(token ? "Home" : "Login");
+      } catch (error) {
+        console.error("Erro ao recuperar o token:", error);
+        setInitialRoute("Login");
+      }
     }
+
+    checkLogin();
+  }, []);
+
+  if (initialRoute === null) {
     return "Login";
   }
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={isLogin()}>
+      <Stack.Navigator initialRouteName={initialRoute}>
         <Stack.Screen
           name="Home"
           component={Home}

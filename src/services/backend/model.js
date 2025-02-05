@@ -1,5 +1,6 @@
 import Realm from "realm";
 import { realmConfig } from "./conn.js";
+r
 const createRealm = async () => {
   const realm = await Realm.open(realmConfig);
   return realm;
@@ -236,5 +237,12 @@ export const Model = {
         .filtered(`id_spreadsheet == "${id_spreadsheet}"`);
       return spreadsheet;
     },
+
+    count : async () => {
+      const realm = await createRealm();
+      const spreadsheets = realm.objects("SpreadSheets");
+      return spreadsheets.length;
+    }
+
   },
 };

@@ -15,7 +15,7 @@ import { styles } from "./Styles";
 // Components
 import CardItemInventory from "../../components/CardInvetory/CardInventory";
 import ModalInventoryCreate from "../Inventory/InventoryCreateModal/InventoryCreateModal";
-import InvetoryDeleteModal from "../Inventory/InvetoryDeleteModal/InvetoryDeleteModal";
+import InventoryDeleteModal from "../Inventory/InventoryDeleteModal/InventoryDeleteModal";
 import LogoutModal from "../Login/LogoutModal/LogoutModal";
 
 // Backend
@@ -242,7 +242,7 @@ const Home = () => {
         onClose={() => setModalVisible(false)}
       />
 
-      <InvetoryDeleteModal
+      <InventoryDeleteModal
         isVisible={isModalDeleteVisible}
         onClose={() => setModalDeleteVisible(false)}
         uuidInventory={uuidSeleced}

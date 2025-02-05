@@ -11,8 +11,8 @@ import { styles } from "./styles";
 
 // Components
 import ProductInventoryCardDetails from "../../Product/ProductInventoryCardDetails/ProductInventoryCardDetails";
-import InvetorySettingsModal from "../InvetorySettingsModal/InvetorySettingsModal";
-import InvetoryExportModal from "../InvetoryExportModal/InvetoryExportModal";
+import InventorySettingsModal from "../InventorySettingsModal/InventorySettingsModal";
+import InventoryExportModal from "../InventoryExportModal/InventoryExportModal";
 
 // Produtos
 import ProductCreateModal from "../../Product/ProductCreateModal/ProductCreateModal";
@@ -165,13 +165,13 @@ export default function InventoryDetails() {
         inputs={inputs_hability}
       />
 
-      <InvetoryExportModal
+      <InventoryExportModal
         isVisible={isModalVisibleExport}
         onClose={() => setModalVisibleExport(false)}
         uuidInventory={uuid}
       />
 
-      <InvetorySettingsModal
+      <InventorySettingsModal
         isVisible={isModalVisibleSettings}
         onClose={() => setModalVisibleSettings(false)}
       />

@@ -27,7 +27,7 @@ const add = (params) => {
   // onClose();
 };
 
-const InvetorySettingsModal = ({ isVisible, onClose }) => {
+const InventorySettingsModal = ({ isVisible, onClose }) => {
   const [isBuyWithSpreadsheet, setIsBuyWithSpreadsheet] = useState(false);
 
   const toggleSwitchSpreadsheet = () =>
@@ -108,4 +108,4 @@ const InvetorySettingsModal = ({ isVisible, onClose }) => {
   );
 };
 
-export default InvetorySettingsModal;
+export default InventorySettingsModal;

@@ -11,7 +11,7 @@ import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
 // Controller
 import { Controller } from "../../../services/backend/controller";
 
-const InvetoryDeleteModal = ({ isVisible, onClose, uuidInventory }) => {
+const InventoryDeleteModal = ({ isVisible, onClose, uuidInventory }) => {
 
   function removerInventory() {
     Controller.Inventory.remover(uuidInventory)
@@ -90,7 +90,9 @@ const styles = StyleSheet.create({
     marginLeft: "2.5%",
     marginRight: "2.5%",
     marginTop: "50%",
-    borderRadius: 50,
+    borderRadius: 30,
+    borderTopEndRadius: 30,
+    borderTopStartRadius: 30,
   },
 
   buttons: {
@@ -107,4 +109,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default InvetoryDeleteModal;
+export default InventoryDeleteModal;

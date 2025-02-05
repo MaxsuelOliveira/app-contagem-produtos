@@ -156,5 +156,15 @@ export const Controller = {
           return Promise.reject(error);
         });
     },
+
+    count: async () => {
+      return Model.SpreadSheets.count()
+        .then((count) => {
+          return count;
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
   },
 };

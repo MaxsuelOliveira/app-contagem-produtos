@@ -82,8 +82,6 @@ const LoginScreen = ({ navigation }) => {
 
     const responseLogin = await response.json();
 
-
-
     responseLogin.token
       ? (() => {
           const decode = decodeToken(responseLogin.token);
@@ -103,27 +101,27 @@ const LoginScreen = ({ navigation }) => {
 
       <View style={styles.form}>
         <Text style={styles.title}>EstoqueFácil</Text>
-        <Text style={styles.describe}>Faça o login para continuar.</Text>
       </View>
 
-      <View>
-        <Text style={GlobalStyles.label}>Seu Email *</Text>
+      <View style={{marginBottom: 20}}>
+        <Text style={GlobalStyles.label}>Seu email *</Text>
         <TextInput
           style={GlobalStyles.input}
-          placeholder="Email"
+          placeholder="email@email.com"
           value={email}
+          autoFocus={true}
           onChangeText={setEmail}
           keyboardType="email-address"
         />
       </View>
 
-      <View>
-        <Text style={GlobalStyles.label}>Senha *</Text>
+      <View style={{marginBottom: 20}}>
+        <Text style={GlobalStyles.label}>Sua senha *</Text>
 
         <View style={styles.containerShowPassword}>
           <TextInput
             style={[GlobalStyles.input, { width: "100%", marginBottom: 5 }]}
-            placeholder="Senha"
+            placeholder="******"
             secureTextEntry={!showPassword}
             value={password}
             onChangeText={setPassword}
@@ -135,7 +133,7 @@ const LoginScreen = ({ navigation }) => {
             onPress={togglePasswordVisibility}
           >
             <Text style={styles.buttonShowPasswordText}>
-              {showPassword ? "Esconder" : "Exibir"} senha
+              {showPassword ? "Ocultar" : "Exibir"} senha
             </Text>
           </TouchableOpacity>
         </View>
@@ -144,22 +142,31 @@ const LoginScreen = ({ navigation }) => {
       <View style={styles.buttonsActions}>
         <TouchableOpacity
           style={GlobalStyles.button}
-          title={loading ? "Carregando..." : "Entrar"}
           onPress={handleLogin}
           disabled={loading}
         >
-          <Text style={GlobalStyles.buttonText}>Entrar</Text>
+          <Text style={GlobalStyles.buttonText}>{loading ? "Carregando..." : "Entrar"}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.buttonForgotPassword}
-          onPress={() => openWhatsApp()}
-        >
+        <TouchableOpacity onPress={() => Alert.alert("Esqueci minha senha em desenvolvimento ...")}>
           <Text style={styles.buttonForgotPasswordText}>
             Esqueci minha senha
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => Alert.alert("Criar sua conta de teste, em desenvolvimento ...")}>
+          <Text style={styles.buttonForgotPasswordText}>
+            Criar uma conta, teste grátis
+          </Text>
+        </TouchableOpacity>
       </View>
+
+      {/* Modal de alerta customizado */}
+
+      {/* Modal para a criação de conta */}
+
+      {/* Modal para recuperar a senha */}
+
     </View>
   );
 };

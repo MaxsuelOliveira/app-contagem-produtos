@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     height: "100vh",
   },
 
-  form : {
+  form: {
     marginBottom: 30,
   },
 
@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
 
   describe: {
     fontFamily: "Montserrat_Medium",
-    fontSize: 14,
+    fontSize: 15,
     textAlign: "start",
     color: colors.textSecondary,
   },
@@ -41,7 +41,6 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
-    marginTop: 20,
     width: "100%",
   },
 
@@ -59,16 +58,11 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
-  buttonForgotPassword: {
-    marginTop: 10,
-    marginBottom: 10,
-  },
-
   buttonForgotPasswordText: {
     color: colors.textSecondary,
     fontSize: 13,
     fontFamily: "Montserrat_Medium",
     textAlign: "start",
-    marginTop: 30,
+    marginTop: 10,
   },
 });

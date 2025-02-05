@@ -52,7 +52,7 @@ const LogoutModal = ({ isVisible, onClose, uuidInventory }) => {
                   style={{ ...styles.button, width: "30%" }}
                   onPress={onClose}
                 >
-                  <Text style={GlobalStyles.value}>Cancelar</Text>
+                  <Text style={{...GlobalStyles.value , fontSize : 13}}>Cancelar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={{
@@ -85,7 +85,9 @@ const styles = StyleSheet.create({
     marginLeft: "2.5%",
     marginRight: "2.5%",
     marginTop: "50%",
-    borderRadius: 50,
+    borderRadius: 30,
+    borderTopEndRadius: 30,
+    borderTopStartRadius: 30,
   },
 
   buttons: {

@@ -246,6 +246,17 @@ const GlobalStyles = StyleSheet.create({
     fontFamily: "Montserrat_Medium",
     fontSize: 10,
   },
+
+
+  link : {
+    fontFamily: "Montserrat_Medium",
+    color: colors.primary,
+    fontSize: 12,
+    borderBottomColor: colors.primary,
+    borderBottomWidth: 0.3,
+    marginLeft: 10,
+    marginTop: 5,
+  }
 });
 
 export { GlobalStyles, colors };

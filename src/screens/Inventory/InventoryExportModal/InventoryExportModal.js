@@ -22,7 +22,7 @@ import {
   shareSpreadSheet,
 } from "../../../utils/exportSpreadSheets"; // Importando a função
 
-const InvetoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
+const InventoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -114,4 +114,4 @@ const InvetoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
   );
 };
 
-export default InvetoryExportModal;
+export default InventoryExportModal;
