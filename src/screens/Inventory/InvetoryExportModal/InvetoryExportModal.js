@@ -15,7 +15,7 @@ import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
 import { styles } from "./styles";
 
 // Backend
-import { Controller } from "../../../services/DB/controller";
+import { Controller } from "../../../services/backend/controller";
 
 import { downloadExcel, shareExcel } from "../../../utils/exportExcel"; // Importando a função
 

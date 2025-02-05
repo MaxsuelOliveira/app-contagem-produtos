@@ -6,7 +6,7 @@ import { Buffer } from "buffer";
 import { Alert } from "react-native";
 import uuid from "react-native-uuid";
 
-import { Model } from "../services/DB/model";
+import { Model } from "../services/backend/model";
 
 const saveSheet = async (data) => {
   let productResult = [];

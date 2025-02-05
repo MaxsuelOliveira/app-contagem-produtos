@@ -9,7 +9,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
 
 // Controller
-import { Controller } from "../../../services/DB/controller";
+import { Controller } from "../../../services/backend/controller";
 
 const InvetoryDeleteModal = ({ isVisible, onClose, uuidInventory }) => {
 

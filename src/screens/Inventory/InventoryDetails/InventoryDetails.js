@@ -22,7 +22,7 @@ import ProductUpdateModal from "../../Product/ProductUpdateModal/ProductUpdateMo
 import { setStatus } from "../../../components/CardInvetory/CardInventory";
 
 // Backend
-import { Controller } from "../../../services/DB/controller";
+import { Controller } from "../../../services/backend/controller";
 
 export default function InventoryDetails() {
   const route = useRoute();
