@@ -88,7 +88,7 @@ const GlobalStyles = StyleSheet.create({
     borderRadius: 5,
     color: colors.inputColor,
     fontFamily: "Montserrat_Medium",
-    fontSize: 16,
+    fontSize: 14,
     height: 48,
     marginBottom: 10,
     paddingLeft: 8,
@@ -103,7 +103,7 @@ const GlobalStyles = StyleSheet.create({
   },
 
   label: {
-    fontFamily: "Montserrat_Medium",
+    fontFamily: "Montserrat_SemiBold",
     color: colors.textSecondary,
     marginBottom: 3,
     fontSize: 14,
@@ -143,15 +143,14 @@ const GlobalStyles = StyleSheet.create({
 
   badge: {
     fontFamily: "Montserrat_Bold",
-    marginLeft: 5,
     backgroundColor: "#ababab",
     borderRadius: 7,
     color: "#fff",
     width: 20,
     height: 20,
-    alignItems: "center",
-    justifyContent: "center",
     textAlign: "center",
+    position: "absolute",
+    right: 10,
   },
 
   modalOverlay: {
@@ -253,7 +252,7 @@ const GlobalStyles = StyleSheet.create({
   link : {
     fontFamily: "Montserrat_Medium",
     color: colors.primary,
-    fontSize: 12,
+    fontSize: 14,
     borderBottomColor: colors.primary,
     borderBottomWidth: 0.3,
     marginLeft: 10,

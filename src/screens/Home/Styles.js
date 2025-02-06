@@ -21,6 +21,19 @@ export const styles = StyleSheet.create({
     paddingBottom: 0,
   },
 
+  headerTabs: {
+    marginBottom: 20,
+    marginTop: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
+  headerTitle: {
+    fontFamily: "Montserrat_Bold",
+    fontSize: RFPercentage(3.5),
+    width: "80%",
+  },
+
   logoutButton: {
     width: "auto",
     alignItems: "flex-end",
@@ -29,11 +42,11 @@ export const styles = StyleSheet.create({
     height: 40,
     width: 40,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
 
   category: {
-  width: "50%",
+    width: "50%",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
@@ -41,30 +54,26 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
   },
 
-  categoryTitle : {},
+  categoryTitle: {},
 
   activeCategory: {
     backgroundColor: "#f5f5f5",
   },
 
   activeCategoryText: {
-    color: colors.textPrimary,
-    fontFamily: "Montserrat_Bold",
+    // color: colors.textPrimary,
+    // fontFamily: "Montserrat_Bold",
   },
 
   categoryText: {
+    flex : 1,
     color: "#ababab",
     fontSize: 15,
-    fontFamily: "Montserrat_Regular",
+    fontFamily: "Montserrat_Medium",
   },
 
   activeBadge: {
     backgroundColor: colors.primary,
-  },
-
-  textPrimary: {
-    fontSize: RFPercentage(3.5),
-    fontFamily: "Montserrat_Bold",
   },
 
   inventoryContainer: {

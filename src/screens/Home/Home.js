@@ -7,8 +7,7 @@ import { StatusBar } from "expo-status-bar";
 
 // Icons
 import AntDesign from "@expo/vector-icons/AntDesign";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 // Styles
 import { GlobalStyles, colors } from "../../styles/GlobalStyles";
@@ -85,15 +84,8 @@ const Home = () => {
 
       <View style={styles.containerInvetoryList}>
         <View style={styles.header}>
-          <View
-            style={{
-              marginBottom: 20,
-              marginTop: 20,
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ ...styles.textPrimary, width: "80%" }}>
+          <View style={styles.headerTabs}>
+            <Text style={styles.headerTitle}>
               Olá. Bem vindo(a) {profile.nome}
             </Text>
 
@@ -101,19 +93,28 @@ const Home = () => {
               style={styles.logoutButton}
               onPress={() => logout()}
             >
-              <MaterialIcons name="logout" size={26} color={colors.colorIcons} />
-              {/* <AntDesign name="logout" size={26} color={colors.colorIcons} /> */}
+              <MaterialIcons
+                name="logout"
+                size={26}
+                color={colors.colorIcons}
+              />
             </TouchableOpacity>
           </View>
 
           <View style={styles.inventoryCategories}>
             <TouchableOpacity
-              style={[ styles.category, activeTab === "inProgress" && styles.activeCategory ]}
+              style={[
+                styles.category,
+                activeTab === "inProgress" && styles.activeCategory,
+              ]}
               onPress={() => setActiveTab("inProgress")}
             >
               <Text
-                style={[ styles.categoryText, activeTab === "inProgress" && styles.activeCategoryText ]}
-                >
+                style={[
+                  styles.categoryText,
+                  activeTab === "inProgress" && styles.activeCategoryText,
+                ]}
+              >
                 Em progresso
               </Text>
               <Text
@@ -174,7 +175,7 @@ const Home = () => {
                 ))
               ) : (
                 <Text style={styles.inventoryItemText}>
-                  Não há inventários em andamento.
+                  Não há inventários em progresso.
                 </Text>
               )}
             </View>

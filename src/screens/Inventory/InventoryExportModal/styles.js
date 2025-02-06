@@ -1,7 +1,17 @@
 import { StyleSheet } from "react-native";
-import { colors } from "../../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
+  cardHeader: {
+    ...GlobalStyles.cardHeader,
+    marginTop: 0,
+  },
+
+  cardTitle: {
+    ...GlobalStyles.cardTitle,
+    marginTop: 0,
+  },
+
   cardBody: {
     marginTop: 10,
     flexDirection: "row",
@@ -11,6 +21,7 @@ export const styles = StyleSheet.create({
 
   grid: {
     display: "flex",
+    width: "100%",
   },
 
   section: {
@@ -20,7 +31,6 @@ export const styles = StyleSheet.create({
   },
 
   checkbox: {
-    // marginRight: 10,
     borderWidth: 1,
     borderRadius: 5,
   },
@@ -34,20 +44,35 @@ export const styles = StyleSheet.create({
     color: colors.textDescription,
   },
 
-  
   triggerStyle: {
     height: 40,
     backgroundColor: colors.primary,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     width: 100,
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,
   },
+
   triggerText: {
     fontSize: 16,
     color: "#fff",
-  }
+  },
+
+  value: {
+    ...GlobalStyles.value,
+    textAlign: "justify",
+    marginBottom: 10,
+    fontSize: 14,
+  },
+
+  label: {
+    ...GlobalStyles.label,
+    textAlign: "justify",
+    fontSize: 14,
+  },
+
+  button: { ...GlobalStyles.button, marginTop: 20 },
 });

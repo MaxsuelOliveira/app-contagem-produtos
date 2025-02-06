@@ -23,6 +23,7 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const [uuid, setUuid] = useState("");
+  
   useEffect(() => {
     const getOrCreateUUID = async () => {
       let uuidDevice = await AsyncStorage.getItem("uuidDevice");

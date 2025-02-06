@@ -4,11 +4,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-// Icons
-import AntDesign from "@expo/vector-icons/AntDesign";
-
 // Styles
 import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { styles } from "./styles";
 
 const LogoutModal = ({ isVisible, onClose, uuidInventory }) => {
   const navigation = useNavigation();
@@ -28,42 +26,28 @@ const LogoutModal = ({ isVisible, onClose, uuidInventory }) => {
     >
       <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
-      {/* Fundo semi-transparente para modal */}
       <View style={GlobalStyles.modalOverlay}>
         <View style={GlobalStyles.modalContent}>
-          <View style={[GlobalStyles.card, styles.card]}>
+          <View style={styles.card}>
             <View style={GlobalStyles.cardHeader}>
               <Text style={styles.cardTitle}>Sair do EstoqueFácil</Text>
             </View>
 
             <View style={GlobalStyles.cardBody}>
-              <Text style={{ ...GlobalStyles.value, marginBottom: 10 }}>
+              <Text style={styles.value}>
                 Deseja realmente sair do EstoqueFácil ?
-              </Text>
-              <Text style={GlobalStyles.label}>
-                Atenção ! Você será desconectado e terá que fazer login
-                novamente.
               </Text>
 
               <View style={styles.buttons}>
                 <TouchableOpacity
-                  style={{ ...styles.button, width: "30%" }}
+                  style={styles.buttonCancelar}
                   onPress={onClose}
                 >
-                  <Text style={{ ...GlobalStyles.value, fontSize: 13 }}>
-                    Cancelar
-                  </Text>
+                  <Text style={styles.value}>Cancelar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    ...GlobalStyles.button,
-                    backgroundColor: colors.danger,
-                    width: "70%",
-                  }}
-                  onPress={logout}
-                >
+                <TouchableOpacity style={styles.buttonDanger} onPress={logout}>
                   <Text style={GlobalStyles.buttonText}>
-                    Sair do EstoqueFácil
+                    Sair
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -74,40 +58,5 @@ const LogoutModal = ({ isVisible, onClose, uuidInventory }) => {
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  card: {
-    width: "95%",
-    display: "flex",
-    alignContent: "center",
-    justifyContent: "center",
-    position: "relative",
-    marginLeft: "2.5%",
-    marginRight: "2.5%",
-    marginTop: "50%",
-    borderRadius: 30,
-    borderTopEndRadius: 30,
-    borderTopStartRadius: 30,
-  },
-
-  cardTitle: {
-    ...GlobalStyles.cardTitle,
-    marginTop: 0,
-    fontFamily: "Montserrat_Bold",
-  },
-
-  buttons: {
-    marginTop: 20,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 10,
-  },
-
-  button: {
-    ...GlobalStyles.button,
-    backgroundColor: colors.light,
-    width: "100%",
-  },
-});
 
 export default LogoutModal;

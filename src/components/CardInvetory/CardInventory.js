@@ -1,7 +1,9 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { colors } from "../../styles/GlobalStyles";
+
+// Styles
+import { styles } from "./styles";
 
 export function setStatus(status) {
   if (status === "progress") {
@@ -84,47 +86,5 @@ const CardItemInventory = ({
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  inventoryItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 15,
-    backgroundColor: colors.backgroundItem,
-    margin: 10,
-    marginBottom: 15,
-    padding: 10,
-    borderRadius: 15,
-  },
-
-  inventoryItemContent: {
-    padding: 5,
-    gap: 5,
-  },
-
-  invetoryItemContainer: {
-    flexDirection: "row",
-    gap: 30,
-  },
-
-  title: {
-    fontSize: 16,
-    fontFamily: "Montserrat_Medium",
-    color: colors.textPrimary,
-  },
-
-  label: {
-    fontSize: 12,
-    fontFamily: "Montserrat_Regular",
-    color: colors.textDescription,
-  },
-
-  value: {
-    fontSize: 13,
-    // fontSize: RFPercentage(2.3),
-    color: colors.textPrimary,
-    fontFamily: "Montserrat_Medium",
-  },
-});
 
 export default CardItemInventory;

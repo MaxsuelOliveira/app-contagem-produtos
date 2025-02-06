@@ -8,8 +8,6 @@ import * as Sharing from "expo-sharing";
 import { Alert } from "react-native";
 import * as XLSX from "xlsx";
 
-// import DataTables from "../../../components/Tables";
-
 // Icons
 import AntDesign from "@expo/vector-icons/AntDesign";
 
@@ -108,12 +106,13 @@ const InventoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
       <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
       <View style={GlobalStyles.modalOverlay}>
+
         <View style={GlobalStyles.modalContent}>
+
           <View style={GlobalStyles.card}>
-            <View style={{ ...GlobalStyles.cardHeader, marginTop: 0 }}>
-              <Text style={{ ...GlobalStyles.cardTitle, marginTop: 0 }}>
-                Exportar inventário
-              </Text>
+
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardTitle}>Exportar inventário</Text>
               <TouchableOpacity
                 onPress={onClose}
                 style={GlobalStyles.closeButton}
@@ -123,16 +122,11 @@ const InventoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
             </View>
 
             <View style={styles.cardBody}>
-              <View style={{ ...styles.grid, width: "100%" }}>
-                <Text
-                  style={{
-                    ...GlobalStyles.value,
-                    textAlign: "justify",
-                    marginBottom: 10,
-                    fontSize: 14,
-                  }}
-                >
-                  A planilha seguira o layout : {""}
+
+              <View style={styles.grid}>
+
+                <Text style={styles.value}>
+                  A planilha seguira o modelo abaixo, clique para {""}
                   <Text
                     onPress={() =>
                       downloadFile(
@@ -142,32 +136,22 @@ const InventoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
                     }
                     style={GlobalStyles.link}
                   >
-                    Clique aqui para baixar o modelo !
+                    baixar o modelo.
                   </Text>
                 </Text>
 
-                {/* <DataTables /> */}
-
-                <Text
-                  style={{
-                    ...GlobalStyles.label,
-                    textAlign: "justify",
-                    marginTop: 10,
-                    fontSize: 13,
-                  }}
-                >
-                  Layout da planilha para a exportação, não se preocupe os
-                  campos não precisam ser preenchidos totalmente.
+                <Text style={styles.label}>
+                  Ao exportar o inventário, o mesmo será finalizado. Deseja
+                  continuar ?
                 </Text>
+
               </View>
 
               <TouchableOpacity
-                style={{ ...GlobalStyles.button, marginTop: 20 }}
-                onPress={() =>
-                  shareSpreadSheet(products, uuidInventory, navigation)
-                }
-              >
-                <Text style={GlobalStyles.buttonText}>Exportar inventário</Text>
+                style={styles.button}
+                onPress={() => shareSpreadSheet(products, uuidInventory, navigation)}
+                disabled={false}>
+                <Text style={GlobalStyles.buttonText}>Exporta Inventário</Text>
               </TouchableOpacity>
             </View>
           </View>

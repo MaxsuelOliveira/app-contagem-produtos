@@ -70,35 +70,30 @@ export default function InventoryDetails() {
         <Text style={styles.cardDescription}>{describe}</Text>
 
         <View style={styles.createInventarioInfo}>
-
           <View style={styles.createInventarioInfoItem}>
-            <Text style={{ ...GlobalStyles.label, fontSize: 12 }}>Status</Text>
-            <Text style={{...GlobalStyles.value , fontSize : 14}}>{setStatus(status)}</Text>
+            <Text style={styles.label}>Status</Text>
+            <Text style={styles.value}>{setStatus(status)}</Text>
           </View>
 
           <View style={styles.createInventarioInfoItem}>
-            <Text style={{ ...GlobalStyles.label, fontSize: 12 }}>Item(s)</Text>
-            <Text style={{...GlobalStyles.value , fontSize : 14}}>{products.length}</Text>
+            <Text style={styles.label}>Item(s)</Text>
+            <Text style={styles.value}>{products.length}</Text>
           </View>
 
           <View style={styles.createInventarioInfoItem}>
-            <Text style={{ ...GlobalStyles.label, fontSize: 12 }}>
+            <Text style={styles.label}>
               {status === "done" ? "Finalizado em" : "Criado em"}
             </Text>
-            <Text style={{...GlobalStyles.value , fontSize : 14}}>{date_create_formart}</Text>
+            <Text style={styles.value}>{date_create_formart}</Text>
           </View>
 
           <View style={styles.createInventarioInfoItem}>
-            <Text style={{ ...GlobalStyles.label, fontSize: 12 }}>
-              Impr. Planilha
-            </Text>
-            <Text style={{...GlobalStyles.value , fontSize : 14}}>
+            <Text style={styles.label}>Impr. Planilha</Text>
+            <Text style={styles.value}>
               {compare_in_spreadsheet ? "Sim" : "Não"}
             </Text>
           </View>
-
         </View>
-        
       </View>
 
       <ScrollView style={styles.cardBody}>
@@ -117,15 +112,13 @@ export default function InventoryDetails() {
         ))}
       </ScrollView>
 
-      <View style={{ ...GlobalStyles.menubar }}>
+      <View style={GlobalStyles.menubar}>
         <TouchableOpacity
-          style={[GlobalStyles.menubarItem]}
+          style={GlobalStyles.menubarItem}
           onPress={() => setModalVisibleExport(true)}
         >
           <AntDesign name="export" size={26} color={colors.colorIcons} />
-          <Text style={{ ...GlobalStyles.menubarText, fontSize: 10 }}>
-            Exportar
-          </Text>
+          <Text style={styles.menuText}>Exportar</Text>
         </TouchableOpacity>
 
         {status === "progress" ? (
@@ -135,9 +128,7 @@ export default function InventoryDetails() {
               onPress={() => setModalProductCreate(true)}
             >
               <AntDesign name="plus" size={26} color={colors.colorIcons} />
-              <Text style={{ ...GlobalStyles.menubarText, fontSize: 10 }}>
-                Adicionar
-              </Text>
+              <Text style={styles.menuText}>Adicionar</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -145,9 +136,7 @@ export default function InventoryDetails() {
               onPress={() => setModalVisibleSettings(true)}
             >
               <AntDesign name="setting" size={26} color={colors.colorIcons} />
-              <Text style={{ ...GlobalStyles.menubarText, fontSize: 10 }}>
-                Configurações
-              </Text>
+              <Text style={styles.menuText}>Configurações</Text>
             </TouchableOpacity>
           </>
         ) : null}

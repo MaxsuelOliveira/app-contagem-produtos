@@ -1,26 +1,30 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
-
-// Icons
-import AntDesign from "@expo/vector-icons/AntDesign";
+import {
+  Modal,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
 
 // Styles
 import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { styles } from "./styles";
 
 // Controller
 import { Controller } from "../../../services/backend/controller";
 
 const InventoryDeleteModal = ({ isVisible, onClose, uuidInventory }) => {
-
   function removerInventory() {
     Controller.Inventory.remover(uuidInventory)
       .then((response) => {
+        Alert.alert("Inventário apagado com sucesso !");
         onClose();
       })
       .catch((error) => {
-        console.error("Erro ao apagar o inventário !");
-        console.error(error);
+        console.error("Erro ao apagar o inventário. : " + error);
       });
   }
 
@@ -33,18 +37,15 @@ const InventoryDeleteModal = ({ isVisible, onClose, uuidInventory }) => {
     >
       <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
-      {/* Fundo semi-transparente para modal */}
       <View style={GlobalStyles.modalOverlay}>
         <View style={GlobalStyles.modalContent}>
-          <View style={[GlobalStyles.card, styles.card]}>
+          <View style={styles.card}>
             <View style={GlobalStyles.cardHeader}>
-              <Text style={{ ...GlobalStyles.cardTitle, marginTop: 0 , fontFamily : "Montserrat_Bold" }}>
-                Apagar inventário
-              </Text>
+              <Text style={styles.cardTitle}>Apagar inventário</Text>
             </View>
 
             <View style={GlobalStyles.cardBody}>
-              <Text style={{ ...GlobalStyles.value, marginBottom: 10 , fontSize : 16 }}>
+              <Text style={styles.textConfirm}>
                 Deseja realmente apagar o inventário ?
               </Text>
               <Text style={GlobalStyles.label}>
@@ -54,10 +55,10 @@ const InventoryDeleteModal = ({ isVisible, onClose, uuidInventory }) => {
 
               <View style={styles.buttons}>
                 <TouchableOpacity
-                  style={{ ...styles.button , width: "30%" }}
+                  style={{ ...styles.button, width: "30%" }}
                   onPress={onClose}
                 >
-                  <Text  style={GlobalStyles.value}>Cancelar</Text>
+                  <Text style={GlobalStyles.value}>Cancelar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={{
@@ -79,34 +80,5 @@ const InventoryDeleteModal = ({ isVisible, onClose, uuidInventory }) => {
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  card: {
-    width: "95%",
-    display: "flex",
-    alignContent: "center",
-    justifyContent: "center",
-    position: "relative",
-    marginLeft: "2.5%",
-    marginRight: "2.5%",
-    marginTop: "50%",
-    borderRadius: 30,
-    borderTopEndRadius: 30,
-    borderTopStartRadius: 30,
-  },
-
-  buttons: {
-    marginTop: 20,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 10,
-  },
-
-  button : {
-    ...GlobalStyles.button,
-    backgroundColor: colors.light,
-    width: "100%"
-  }
-});
 
 export default InventoryDeleteModal;

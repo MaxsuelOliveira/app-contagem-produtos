@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { GlobalStyles } from "../../../styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
   card: {
@@ -133,4 +134,8 @@ export const styles = StyleSheet.create({
   textBreak: {
     flexWrap: "wrap",
   },
+
+  label: { ...GlobalStyles.label, fontSize: 12 },
+  value: { ...GlobalStyles.value, fontSize: 14 },
+  menuText: { ...GlobalStyles.menubarText, fontSize: 10 },
 });
