@@ -11,19 +11,24 @@ import { GlobalStyles } from "../../styles/GlobalStyles";
 import { styles } from "./styles";
 import { decodeToken } from "../../utils/token";
 
+// Components
+// import CreateAccount from "./CreateAccount/CreateAccount";
+
 // Abrir um chat no WhatsApp
 const openWhatsApp = () => {
   Linking.openURL("whatsapp://send?phone=5577998668304");
 };
 
 const LoginScreen = ({ navigation }) => {
+  const [showModalForgotPassword, setShowModalForgotPassword] = useState(false);
+
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   const [uuid, setUuid] = useState("");
-  
+
   useEffect(() => {
     const getOrCreateUUID = async () => {
       let uuidDevice = await AsyncStorage.getItem("uuidDevice");
@@ -161,11 +166,7 @@ const LoginScreen = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() =>
-            Alert.alert("Criar sua conta de teste, em desenvolvimento ...")
-          }
-        >
+        <TouchableOpacity onPress={() => navigation.navigate("CreateAccount")}>
           <Text style={styles.buttonForgotPasswordText}>
             Criar uma conta, teste grátis
           </Text>

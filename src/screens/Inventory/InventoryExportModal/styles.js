@@ -72,6 +72,7 @@ export const styles = StyleSheet.create({
     ...GlobalStyles.label,
     textAlign: "justify",
     fontSize: 14,
+    fontFamily: "Montserrat_Medium",
   },
 
   button: { ...GlobalStyles.button, marginTop: 20 },

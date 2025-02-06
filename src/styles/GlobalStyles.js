@@ -103,7 +103,7 @@ const GlobalStyles = StyleSheet.create({
   },
 
   label: {
-    fontFamily: "Montserrat_SemiBold",
+    fontFamily: "Montserrat_Medium",
     color: colors.textSecondary,
     marginBottom: 3,
     fontSize: 14,
