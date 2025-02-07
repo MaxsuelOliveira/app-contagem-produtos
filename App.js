@@ -17,7 +17,7 @@ import Profile from "./src/screens/Profile/Profile";
 import Settings from "./src/screens/Settings/Settings";
 import InventoryDetails from "./src/screens/Inventory/InventoryDetails/InventoryDetails";
 import SpreadSheets from "./src/screens/SpreadSheets/SpreadSheets";
-import CreateAccount from "./src/screens/CreateAccount/CreateAccount";
+import CreateAccount from "./src/screens/Login/CreateAccount/CreateAccount";
 import RecoverPassword from "./src/screens/Login/RecoverPassword/RecoverPassword";
 
 const Stack = createStackNavigator();
