@@ -47,6 +47,8 @@ export const styles = StyleSheet.create({
   buttonShowPassword: {
     // width: "35%",
     fontFamily: "Montserrat_Medium",
+    marginTop: 0,
+    marginBottom: 10,
   },
 
   buttonShowPasswordText: {

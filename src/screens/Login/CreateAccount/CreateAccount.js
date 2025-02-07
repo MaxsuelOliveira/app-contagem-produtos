@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import uuid from "react-native-uuid";
 import { StatusBar } from "expo-status-bar";
 import {
   View,
@@ -9,9 +8,6 @@ import {
   Alert,
   ScrollView,
 } from "react-native";
-
-// Icons
-import AntDesign from "@expo/vector-icons/AntDesign";
 
 // Styles
 import { GlobalStyles, colors } from "../../styles/GlobalStyles";
@@ -93,8 +89,7 @@ const CreateAccount = () => {
         <View
           style={{
             ...GlobalStyles.cardBody,
-            alignItems: "center",
-            justifyContent: "center",
+
             flex: 1,
           }}
         >
