@@ -135,6 +135,8 @@ const GlobalStyles = StyleSheet.create({
   },
 
   buttonText: {
+    position: "relative",
+    width: "100%",
     fontFamily: "Montserrat_Medium",
     color: "#fff",
     textAlign: "center",

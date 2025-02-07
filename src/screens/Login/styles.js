@@ -61,6 +61,7 @@ export const styles = StyleSheet.create({
   },
 
   buttonForgotPasswordText: {
+    width: "100%",
     color: colors.textSecondary,
     fontSize: 13,
     fontFamily: "Montserrat_Medium",
