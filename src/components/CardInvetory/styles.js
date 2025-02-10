@@ -25,19 +25,18 @@ export const styles = StyleSheet.create({
 
   title: {
     fontSize: 16,
-    fontFamily: "Montserrat_Medium",
+    fontFamily: "Montserrat_Bold",
     color: colors.textPrimary,
   },
 
   label: {
     fontSize: 12,
-    fontFamily: "Montserrat_Regular",
+    fontFamily: "Montserrat_Medium",
     color: colors.textDescription,
   },
 
   value: {
     fontSize: 13,
-    // fontSize: RFPercentage(2.3),
     color: colors.textPrimary,
     fontFamily: "Montserrat_Medium",
   },

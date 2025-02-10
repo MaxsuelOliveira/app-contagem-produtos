@@ -1,25 +1,174 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
+import {
+  View,
+  TextInput,
+  Text,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import * as Crypto from "expo-crypto";
 import * as Device from "expo-device";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { View, TextInput, Text, Alert, TouchableOpacity, Linking } from "react-native";
 import { StatusBar } from "expo-status-bar";
-
-// Styles
 import { GlobalStyles } from "../../styles/GlobalStyles";
 import { styles } from "./styles";
-import { decodeToken } from "../../utils/token";
 import ModalCustom from "../../utils/ModalCustom/Modal";
+import { decodeToken } from "../../utils/token";
+import { ScrollView } from "react-native-gesture-handler";
 
-const WHATSAPP_NUMBER = "5577998668304"; // Definição de constante reutilizável
+const LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [uuid, setUuid] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalInfo, setModalInfo] = useState({});
 
-// Abrir WhatsApp
-const openWhatsApp = () => {
-  Linking.openURL(`whatsapp://send?phone=${WHATSAPP_NUMBER}`);
+  useEffect(() => {
+    (async () => {
+      try {
+        let storedUUID = await AsyncStorage.getItem("uuid");
+
+        Alert.alert("Você possui um uuid", storedUUID);
+
+        if (!storedUUID) {
+          storedUUID = Crypto.randomUUID();
+          await AsyncStorage.setItem("uuid", storedUUID);
+        }
+
+        setUuid(storedUUID);
+      } catch (error) {
+        Alert.alert("Erro ao recuperar UUID:", error.message);
+      }
+    })();
+  }, []);
+
+  const handleLogin = useCallback(async () => {
+    if (!email || !password) {
+      return showAlert("error", "Atenção", "Preencha todos os campos.");
+    }
+
+    setLoading(true);
+
+    try {
+      const hashedPass = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.MD5,
+        password
+      );
+
+      const response = await fetch(
+        "https://coletor.webart3.com/login/empresa",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            password: hashedPass,
+            uuid,
+            describe: Device.modelName,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.token) {
+        const decoded = decodeToken(data.token);
+        await AsyncStorage.setItem("token", data.token);
+        await AsyncStorage.setItem("login", "true");
+        navigation.navigate("Home", { userName: decoded.nome });
+      } else {
+        if (data.error === "Limite de dispositivos atingido") {
+          showAlert("error", "Login não realizado!", data.error, "OK");
+
+          return;
+        }
+      }
+    } catch (error) {
+      showAlert("error", "Erro", "Ocorreu um erro inesperado.");
+    } finally {
+      setLoading(false);
+    }
+  }, [email, password, uuid, navigation]);
+
+  const showAlert = (type, title, text) => {
+    setModalInfo({
+      type,
+      title,
+      text,
+      confirmText: "OK",
+      onConfirm: () => setShowModal(false),
+    });
+    setShowModal(true);
+  };
+
+  return (
+    <ScrollView style={styles.container}>
+      <StatusBar style="auto" />
+      <View style={styles.form}>
+        <Text style={styles.title}>EstoqueFácil</Text>
+
+        <InputField
+          label="Seu email *"
+          value={email}
+          onChangeText={setEmail}
+          placeholder="email@email.com"
+          keyboardType="email-address"
+        />
+        <PasswordField
+          value={password}
+          onChangeText={setPassword}
+          showPassword={showPassword}
+          togglePassword={() => setShowPassword(!showPassword)}
+        />
+
+        <View style={styles.buttonsActions}>
+          <TouchableOpacity
+            style={GlobalStyles.button}
+            onPress={handleLogin}
+            disabled={loading}
+          >
+            <Text style={GlobalStyles.buttonText}>
+              {loading ? "Carregando..." : "Entrar"}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("RecoverPassword")}
+          >
+            <Text style={styles.buttonForgotPasswordText}>
+              Esqueci minha senha
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("CreateAccount")}
+          >
+            <Text style={styles.buttonForgotPasswordText}>
+              Criar uma conta, teste grátis
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <ModalCustom
+          isVisible={showModal}
+          onClose={() => setShowModal(false)}
+          dataModal={modalInfo}
+        />
+      </View>
+    </ScrollView>
+  );
+  
 };
 
-// Componente para input com label
-const InputField = ({ label, value, onChangeText, placeholder, keyboardType = "default", secureTextEntry }) => (
+const InputField = ({
+  label,
+  value,
+  onChangeText,
+  placeholder,
+  keyboardType,
+}) => (
   <View style={{ marginBottom: 5 }}>
     <Text style={GlobalStyles.label}>{label}</Text>
     <TextInput
@@ -28,14 +177,17 @@ const InputField = ({ label, value, onChangeText, placeholder, keyboardType = "d
       value={value}
       onChangeText={onChangeText}
       keyboardType={keyboardType}
-      secureTextEntry={secureTextEntry}
       autoCapitalize="none"
     />
   </View>
 );
 
-// Componente para alternar visibilidade da senha
-const PasswordField = ({ value, onChangeText, showPassword, togglePasswordVisibility }) => (
+const PasswordField = ({
+  value,
+  onChangeText,
+  showPassword,
+  togglePassword,
+}) => (
   <View style={{ marginBottom: 5 }}>
     <Text style={GlobalStyles.label}>Sua senha *</Text>
     <View style={styles.containerShowPassword}>
@@ -47,7 +199,10 @@ const PasswordField = ({ value, onChangeText, showPassword, togglePasswordVisibi
         onChangeText={onChangeText}
         autoCapitalize="none"
       />
-      <TouchableOpacity style={styles.buttonShowPassword} onPress={togglePasswordVisibility}>
+      <TouchableOpacity
+        style={styles.buttonShowPassword}
+        onPress={togglePassword}
+      >
         <Text style={styles.buttonShowPasswordText}>
           {showPassword ? "Ocultar" : "Exibir"} senha
         </Text>
@@ -55,127 +210,5 @@ const PasswordField = ({ value, onChangeText, showPassword, togglePasswordVisibi
     </View>
   </View>
 );
-
-const LoginScreen = ({ navigation }) => {
-  const [state, setState] = useState({
-    email: "",
-    password: "",
-    loading: false,
-    showPassword: false,
-    uuid: "",
-    describe: "",
-    showModalCustom: false,
-    modalInfo: {},
-  });
-
-  useEffect(() => {
-    const initializeDeviceData = async () => {
-      try {
-        let uuidDevice = await AsyncStorage.getItem("uuidDevice");
-
-        if (!uuidDevice) {
-          uuidDevice = Crypto.randomUUID();
-          await AsyncStorage.setItem("uuidDevice", uuidDevice);
-        }
-
-        setState((prev) => ({ ...prev, uuid: uuidDevice, describe: Device.modelName }));
-      } catch (error) {
-        console.error("Erro ao recuperar UUID do dispositivo:", error);
-      }
-    };
-
-    initializeDeviceData();
-  }, []);
-
-  // Alternar visibilidade da senha
-  const togglePasswordVisibility = () => {
-    setState((prev) => ({ ...prev, showPassword: !prev.showPassword }));
-  };
-
-  // Exibir modal de alerta
-  const showAlertModal = (type, title, text, confirmText, onConfirm) => {
-    setState((prev) => ({
-      ...prev,
-      showModalCustom: true,
-      modalInfo: { type, title, text, confirmText, onConfirm },
-    }));
-  };
-
-  const handleLogin = useCallback(async () => {
-    if (!state.email || !state.password) {
-      showAlertModal("error", "Atenção", "Por favor, preencha todos os campos.", "Certo !", () =>
-        setState((prev) => ({ ...prev, showModalCustom: false }))
-      );
-      return;
-    }
-
-    setState((prev) => ({ ...prev, loading: true }));
-
-    try {
-      const pass = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.MD5, state.password);
-
-      const response = await fetch("https://coletor.webart3.com/login/empresa", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: state.email,
-          password: pass,
-          uuid: state.uuid,
-          describe: state.describe,
-        }),
-      });
-
-      const responseLogin = await response.json();
-
-      if (responseLogin.token) {
-        const decode = decodeToken(responseLogin.token);
-        await AsyncStorage.setItem("token", responseLogin.token);
-        navigation.navigate("Home", { userName: decode.nome });
-      } else {
-        showAlertModal("error", "Login não realizado!", responseLogin.error, "Tentar novamente", () =>
-          setState((prev) => ({ ...prev, showModalCustom: false, loading: false }))
-        );
-      }
-    } catch (error) {
-      console.error("Erro ao fazer login:", error);
-      showAlertModal("error", "Erro", "Ocorreu um erro inesperado. Tente novamente.", "OK", () =>
-        setState((prev) => ({ ...prev, showModalCustom: false, loading: false }))
-      );
-    } finally {
-      setState((prev) => ({ ...prev, loading: false }));
-    }
-  }, [state.email, state.password, state.uuid, state.describe, navigation]);
-
-  return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-
-      <View style={styles.form}>
-        <Text style={styles.title}>EstoqueFácil</Text>
-      </View>
-
-      <InputField label="Seu email *" value={state.email} onChangeText={(email) => setState((prev) => ({ ...prev, email }))} placeholder="email@email.com" keyboardType="email-address" />
-      
-      <PasswordField value={state.password} onChangeText={(password) => setState((prev) => ({ ...prev, password }))} showPassword={state.showPassword} togglePasswordVisibility={togglePasswordVisibility} />
-
-      <View style={styles.buttonsActions}>
-        <TouchableOpacity style={GlobalStyles.button} onPress={handleLogin} disabled={state.loading}>
-          <Text style={GlobalStyles.buttonText}>{state.loading ? "Carregando..." : "Entrar"}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate("RecoverPassword")}>
-          <Text style={styles.buttonForgotPasswordText}>Esqueci minha senha</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate("CreateAccount")}>
-          <Text style={styles.buttonForgotPasswordText}>Criar uma conta, teste grátis</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Modal de alerta customizado */}
-      <ModalCustom isVisible={state.showModalCustom} onClose={() => setState((prev) => ({ ...prev, showModalCustom: false }))} dataModal={state.modalInfo} />
-    </View>
-  );
-};
 
 export default LoginScreen;

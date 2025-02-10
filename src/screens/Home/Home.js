@@ -6,6 +6,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 // Icons
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
@@ -18,6 +19,8 @@ import CardItemInventory from "../../components/CardInvetory/CardInventory";
 import ModalInventoryCreate from "../Inventory/InventoryCreateModal/InventoryCreateModal";
 import InventoryDeleteModal from "../Inventory/InventoryDeleteModal/InventoryDeleteModal";
 import LogoutModal from "../Login/LogoutModal/LogoutModal";
+import SignupBanner from "components/Banner/Banner";
+import SpreadSheetsImport from "../SpreadSheetsImport/SpreadSheetsImport"
 
 // Backend
 import { Controller } from "../../services/backend/controller";
@@ -26,6 +29,7 @@ import { decodeToken } from "../../utils/token";
 const Home = () => {
   const navigation = useNavigation();
 
+  const [onboardingScreen, setOnboardingScreen] = useState(false);
   const [profile, setProfile] = useState({});
   const [uuidSeleced, setUuidSelected] = useState("");
   const [activeTab, setActiveTab] = useState("inProgress");
@@ -85,19 +89,16 @@ const Home = () => {
       <View style={styles.containerInvetoryList}>
         <View style={styles.header}>
           <View style={styles.headerTabs}>
-            <Text style={styles.headerTitle}>
-              Olá. Bem vindo(a) {profile.nome}
-            </Text>
+            <SignupBanner
+              onLogin={() => navigation.navigate("Login")}
+              createAccount={() => navigation.navigate("CreateAccount")}
+            />
 
             <TouchableOpacity
-              style={styles.logoutButton}
-              onPress={() => logout()}
+              style={styles.buttonProfileHeader}
+              onPress={() => navigation.navigate("Profile")}
             >
-              <MaterialIcons
-                name="logout"
-                size={26}
-                color={colors.colorIcons}
-              />
+              <AntDesign name="user" size={26} color={colors.colorIcons} />
             </TouchableOpacity>
           </View>
 
@@ -210,10 +211,12 @@ const Home = () => {
         <View style={GlobalStyles.menubar}>
           <TouchableOpacity
             style={GlobalStyles.menubarItem}
-            onPress={() => navigation.navigate("Profile")}
+            onPress={() => navigation.navigate("SpreadSheetsImport")}
           >
-            <AntDesign name="user" size={26} color={colors.colorIcons} />
-            <Text style={GlobalStyles.menubarText}>Perfil</Text>
+            <MaterialCommunityIcons name="file-import-outline" size={26} color={colors.colorIcons} />
+            <Text style={GlobalStyles.menubarText}>
+              Importar produtos
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -251,6 +254,14 @@ const Home = () => {
       />
     </View>
   );
+
+  // Caso a conta seja gratuita, limitar a quantidade de inventários !
+  // Limitar os inventários em progresso e finalizados
+  // Limitar a quantidade de itens de inventário
+  // Limitar o tamanho da  planilha que pode ser importada
+
+  // Ao baixar o app ele abre a tela de spash e depois a tela home
+  // Alerta de limite e conta grátuita !
 };
 
 export default Home;

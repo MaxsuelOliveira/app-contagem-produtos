@@ -50,103 +50,6 @@ const Settings = () => {
 
       <ScrollView>
         <View style={styles.settingsItem}>
-          <View style={{ marginBottom: 20 }}>
-            <Text style={[styles.title]}>Importar planilha</Text>
-            <Text style={[GlobalStyles.small]}>
-              Importe uma planilha, para ativar a comparação de produtos no
-              inventario. Evite erros de digitação e agilize o processo.
-            </Text>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => importFileSpreadSheets(setData)}
-            style={{
-              ...GlobalStyles.button,
-              backgroundColor: "transparent",
-              borderColor: colors.textDescription,
-              borderWidth: 1,
-              borderRadius: 10,
-              borderStyle: "dashed",
-            }}
-          >
-            <MaterialCommunityIcons
-              name="google-spreadsheet"
-              size={24}
-              color={"green"}
-            />
-            <Text
-              style={{
-                ...GlobalStyles.buttonText,
-                color: colors.textDescription,
-              }}
-            >
-              Importar planilha
-            </Text>
-
-            <Text style={GlobalStyles.small}>
-              Formatos aceitos: .xls, .xlsx, .csv
-            </Text>
-          </TouchableOpacity>
-
-          <Text style={{ ...GlobalStyles.label, marginTop: 10 }}>
-            Siga o modelo de planilha abaixo para importar os produtos.
-            <TouchableOpacity
-              onPress={() =>
-                downloadFile(
-                  "https://estoque.webart3.com/documents/planilha-exemplov1.0.xlsx",
-                  "planilha-exemplov1.0.xlsx"
-                )
-              }
-            >
-              <Text style={GlobalStyles.link}>
-                Clique aqui para baixar o modelo !
-              </Text>
-            </TouchableOpacity>
-          </Text>
-        </View>
-
-        <View style={styles.settingsItem}>
-          <View style={{ marginBottom: 20 }}>
-            <Text style={[styles.title]}>Suas planilha importadas</Text>
-            <Text style={[GlobalStyles.small]}>
-              Lista de planilhas importadas. Clique para visualizar as
-              informações.
-            </Text>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("SpreadSheets");
-            }}
-            style={{
-              ...GlobalStyles.button,
-              backgroundColor: "transparent",
-              borderColor: colors.textDescription,
-              borderWidth: 1,
-              borderRadius: 10,
-              borderStyle: "dashed",
-            }}
-          >
-            <MaterialCommunityIcons
-              name="google-spreadsheet"
-              size={24}
-              color={"green"}
-            />
-            <Text
-              style={{
-                ...GlobalStyles.buttonText,
-                color: colors.textDescription,
-              }}
-            >
-              Gerenciar planilhas importadas
-            </Text>
-            <Text style={GlobalStyles.small}>
-              {spreadSheetsCount} planilha(s) importadas
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.settingsItem}>
           <Text style={[styles.title]}>Tema do app</Text>
           <View style={styles.settingsBox}>
             <Text style={GlobalStyles.label}>{textLabelTheme}</Text>
@@ -159,6 +62,56 @@ const Settings = () => {
             />
           </View>
         </View>
+
+        <View style={styles.settingsItem}>
+          <Text style={[styles.title]}>Habilitar camera</Text>
+          <View style={styles.settingsBox}>
+            <Text style={GlobalStyles.label}>{textLabelTheme}</Text>
+            <Switch
+              trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
+              thumbColor={true ? "#4d8eea" : "#bfbfbf"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={setTheme}
+              value={toggleSwitch}
+            />
+          </View>
+        </View>
+
+        <View style={styles.settingsItem}>
+          <Text style={[styles.title]}>Som de bip</Text>
+          <View style={styles.settingsBox}>
+            <Text style={GlobalStyles.label}>{textLabelTheme}</Text>
+            <Switch
+              trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
+              thumbColor={true ? "#4d8eea" : "#bfbfbf"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={setTheme}
+              value={toggleSwitch}
+            />
+          </View>
+        </View>
+
+        <View style={styles.settingsItem}>
+          <Text style={[styles.title]}>Cadastro avulso</Text>
+          <View style={styles.settingsBox}>
+            <Text style={GlobalStyles.label}>{textLabelTheme}</Text>
+            <Switch
+              trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
+              thumbColor={true ? "#4d8eea" : "#bfbfbf"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={setTheme}
+              value={toggleSwitch}
+            />
+          </View>
+        </View>
+
+        <Text>
+          Tamanho do banco de dados: {spreadSheetsCount} planilhas importadas
+        </Text>
+        <Text>
+          Alterar o tamanho das fontes ..
+        </Text>
+
       </ScrollView>
     </View>
   );

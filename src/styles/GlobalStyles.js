@@ -88,7 +88,7 @@ const GlobalStyles = StyleSheet.create({
     borderRadius: 5,
     color: colors.inputColor,
     fontFamily: "Montserrat_Medium",
-    fontSize: 14,
+    fontSize: 15,
     height: 48,
     marginBottom: 10,
     paddingLeft: 8,
@@ -199,7 +199,7 @@ const GlobalStyles = StyleSheet.create({
 
   cardTitle: {
     fontSize: 18,
-    fontFamily: "Montserrat_Medium",
+    fontFamily: "Montserrat_Bold",
     textAlign: "center",
     flex: 1,
     color: colors.textPrimary,
@@ -250,8 +250,7 @@ const GlobalStyles = StyleSheet.create({
     width: "100%",
   },
 
-
-  link : {
+  link: {
     fontFamily: "Montserrat_Medium",
     color: colors.primary,
     fontSize: 14,
@@ -259,7 +258,29 @@ const GlobalStyles = StyleSheet.create({
     borderBottomWidth: 0.3,
     marginLeft: 10,
     marginTop: 5,
-  }
+  },
+
+  separator: {
+    textAlign: "center",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 10,
+    margin: 10,
+  },
+
+  textSeparator: {
+    fontFamily: "Montserrat_Medium",
+    fontSize: RFValue(14),
+    color: colors.textSecondary,
+  },
+
+  hr: {
+    height: 1,
+    backgroundColor: colors.borderColor,
+    width: 120,
+  },
 });
 
 export { GlobalStyles, colors };

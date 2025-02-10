@@ -5,13 +5,15 @@ export const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.primaryBackground,
     flex: 1,
-    justifyContent: "center",
-    padding: 25,
-    height: "100vh",
   },
 
   form: {
-    marginBottom: 30,
+    padding: 20,
+    height: "100%", 
+    minHeight: "100%",
+    display : "flex",
+    alignContent: "center",
+    justifyContent: "center"
   },
 
   title: {

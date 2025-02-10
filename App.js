@@ -11,12 +11,14 @@ import {
   Montserrat_700Bold,
 } from "@expo-google-fonts/montserrat";
 
-import Login from "./src/screens/Login/Login";
+import OnboardingScreen from "./src/screens/OnboardingScreen/OnboardingScreen";
 import Home from "./src/screens/Home/Home";
+import Login from "./src/screens/Login/Login";
 import Profile from "./src/screens/Profile/Profile";
-import Settings from "./src/screens/Settings/Settings";
 import InventoryDetails from "./src/screens/Inventory/InventoryDetails/InventoryDetails";
+import SpreadSheetsImport from "./src/screens/SpreadSheetsImport/SpreadSheetsImport";
 import SpreadSheets from "./src/screens/SpreadSheets/SpreadSheets";
+import Settings from "./src/screens/Settings/Settings";
 import CreateAccount from "./src/screens/Login/CreateAccount/CreateAccount";
 import RecoverPassword from "./src/screens/Login/RecoverPassword/RecoverPassword";
 
@@ -31,28 +33,36 @@ export default function App() {
     Montserrat_Bold: Montserrat_700Bold,
   });
 
-  const [initialRoute, setInitialRoute] = useState(null);
-  useEffect(() => {
-    async function checkLogin() {
-      try {
-        const token = await AsyncStorage.getItem("token");
-        setInitialRoute(token ? "Home" : "Login");
-      } catch (error) {
-        console.error("Erro ao recuperar o token:", error);
-        setInitialRoute("Login");
-      }
-    }
+  // const [initialRoute, setInitialRoute] = useState(null);
+  // useEffect(() => {
+  //   async function checkLogin() {
+  //     try {
+  //       const token = await AsyncStorage.getItem("token");
+  //       setInitialRoute(token ? "Home" : "Login");
+  //     } catch (error) {
+  //       console.error("Erro ao recuperar o token:", error);
+  //       setInitialRoute("Login");
+  //     }
+  //   }
 
-    checkLogin();
-  }, []);
+  //   checkLogin();
+  // }, []);
 
-  if (initialRoute === null) {
-    return null;
-  }
+  // if (initialRoute === null) {
+  //   return null;
+  // }
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={initialRoute}>
+      <Stack.Navigator initialRouteName={"OnboardingScreen"}>
+        <Stack.Screen
+          name="OnboardingScreen"
+          component={OnboardingScreen}
+          options={{
+            headerTitle: () => null,
+            headerShown: false,
+          }}
+        />
 
         <Stack.Screen
           name="Home"
@@ -120,6 +130,15 @@ export default function App() {
         <Stack.Screen
           name="SpreadSheets"
           component={SpreadSheets}
+          options={{
+            headerTitle: () => null,
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="SpreadSheetsImport"
+          component={SpreadSheetsImport}
           options={{
             headerTitle: () => null,
             headerShown: false,

@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 10,
+    marginTop: 25,
   },
 
   containerInvetoryList: {
@@ -52,6 +53,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     padding: 5,
     borderRadius: 10,
+    height: 40
   },
 
   categoryTitle: {},
@@ -61,11 +63,13 @@ export const styles = StyleSheet.create({
   },
 
   activeCategoryText: {
-    // color: colors.textPrimary,
-    // fontFamily: "Montserrat_Bold",
+    color: colors.textPrimary,
+    fontFamily: "Montserrat_Bold",
   },
 
   categoryText: {
+    width: "100%",
+    position: "relative",
     flex : 1,
     color: "#ababab",
     fontSize: 15,
@@ -93,4 +97,20 @@ export const styles = StyleSheet.create({
     fontFamily: "Montserrat_Regular",
     margin: 10,
   },
+
+  buttonProfileHeader: {
+    ...GlobalStyles.menubarItem,
+    position: "absolute",
+ 
+    top: -10,
+    left: "90%",
+    backgroundColor: colors.menubarBackground,
+    borderRadius: 30,
+    height: 45,
+    width: 45,
+    minWidth: 45,
+    alignItems: "center",
+    justifyContent: "center",
+  }
+
 });
