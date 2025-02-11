@@ -1,11 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import {
-  View,
-  TextInput,
-  Text,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { View, TextInput, Text, TouchableOpacity, Alert } from "react-native";
 import * as Crypto from "expo-crypto";
 import * as Device from "expo-device";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,6 +9,8 @@ import { styles } from "./styles";
 import ModalCustom from "../../utils/ModalCustom/Modal";
 import { decodeToken } from "../../utils/token";
 import { ScrollView } from "react-native-gesture-handler";
+
+import { LinearGradient } from "expo-linear-gradient";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -106,60 +102,80 @@ const LoginScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <StatusBar style="auto" />
-      <View style={styles.form}>
-        <Text style={styles.title}>EstoqueFácil</Text>
 
-        <InputField
-          label="Seu email *"
-          value={email}
-          onChangeText={setEmail}
-          placeholder="email@email.com"
-          keyboardType="email-address"
+      <View style={styles.container}>
+        <LinearGradient
+          // Background Linear Gradient
+          colors={["rgba(0,0,0,0.8)", "transparent"]}
+          style={styles.background}
         />
-        <PasswordField
-          value={password}
-          onChangeText={setPassword}
-          showPassword={showPassword}
-          togglePassword={() => setShowPassword(!showPassword)}
-        />
-
-        <View style={styles.buttonsActions}>
-          <TouchableOpacity
-            style={GlobalStyles.button}
-            onPress={handleLogin}
-            disabled={loading}
-          >
-            <Text style={GlobalStyles.buttonText}>
-              {loading ? "Carregando..." : "Entrar"}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("RecoverPassword")}
-          >
-            <Text style={styles.buttonForgotPasswordText}>
-              Esqueci minha senha
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("CreateAccount")}
-          >
-            <Text style={styles.buttonForgotPasswordText}>
-              Criar uma conta, teste grátis
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <ModalCustom
-          isVisible={showModal}
-          onClose={() => setShowModal(false)}
-          dataModal={modalInfo}
-        />
+        <LinearGradient
+          // Button Linear Gradient
+          colors={["#4c669f", "#3b5998", "#192f6a"]}
+          style={styles.button}
+        >
+          <Text style={styles.text}>Sign in with Facebook</Text>
+        </LinearGradient>
       </View>
+
+      <Text style={styles.text}>Sign in with Facebook</Text>
+
+      <View style={styles.form}>
+        <View style={styles.containerForm}>
+          <Text style={styles.title}>EstoqueFácil</Text>
+
+          <InputField
+            label="Seu email *"
+            value={email}
+            onChangeText={setEmail}
+            placeholder="email@email.com"
+            keyboardType="email-address"
+          />
+
+          <PasswordField
+            value={password}
+            onChangeText={setPassword}
+            showPassword={showPassword}
+            togglePassword={() => setShowPassword(!showPassword)}
+          />
+
+          <View style={styles.buttonsActions}>
+            <TouchableOpacity
+              style={GlobalStyles.button}
+              onPress={handleLogin}
+              disabled={loading}
+            >
+              <Text style={GlobalStyles.buttonText}>
+                {loading ? "Carregando..." : "Entrar"}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate("RecoverPassword")}
+            >
+              <Text style={styles.buttonForgotPasswordText}>
+                Esqueci minha senha
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate("CreateAccount")}
+            >
+              <Text style={styles.buttonForgotPasswordText}>
+                Criar uma conta, teste grátis
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+
+      <ModalCustom
+        isVisible={showModal}
+        onClose={() => setShowModal(false)}
+        dataModal={modalInfo}
+      />
     </ScrollView>
   );
-  
 };
 
 const InputField = ({

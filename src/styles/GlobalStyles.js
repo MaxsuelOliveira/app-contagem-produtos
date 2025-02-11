@@ -150,13 +150,12 @@ const GlobalStyles = StyleSheet.create({
     color: "#fff",
     width: 20,
     height: 20,
-    // maxHeight: 20,
     marginTop: 0,
     padding: 5,
     paddingTop: 0,
     fontSize: 14,
     right: 5,
-    // lineHeight: 15,
+    textAlign: "center",
   },
 
   modalOverlay: {

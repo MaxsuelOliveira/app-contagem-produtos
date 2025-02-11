@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
   inventoryItemContainer: {
     width: "100%",
     flexDirection: "row",
-    flexWrap: "wrap",
+    // flexWrap: "wrap",
     justifyContent: "space-between",
     flex: 1,
   },
@@ -56,7 +56,7 @@ export const styles = StyleSheet.create({
     fontFamily: "Montserrat_Medium",
     color: colors.textSecondary,
     textAlign: "left",
-    minWidth: 60,
+    minWidth: 50,
   },
 
   value: {

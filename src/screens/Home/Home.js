@@ -221,6 +221,7 @@ const Home = () => {
         </ScrollView>
 
         <View style={GlobalStyles.menubar}>
+        
           <TouchableOpacity
             style={{...GlobalStyles.menubarItem}}
             onPress={() => navigation.navigate("SpreadSheetsImport")}
@@ -257,7 +258,9 @@ const Home = () => {
             />
             <Text style={GlobalStyles.menubarText}>Configurações</Text>
           </TouchableOpacity>
+
         </View>
+
       </View>
 
       <ModalInventoryCreate

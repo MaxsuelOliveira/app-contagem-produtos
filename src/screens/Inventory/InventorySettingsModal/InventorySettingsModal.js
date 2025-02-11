@@ -77,11 +77,10 @@ const InventorySettingssModal = ({ isVisible, onClose, uuidInventory }) => {
             <ScrollView style={styles.cardBody}>
               <View style={styles.grid}>
                 <Text style={styles.title}>Comparação de produtos.</Text>
-
                 <View style={styles.section}>
                   <Text style={styles.label}>
                     Ao habilitar, Só será possível adicionar produtos que
-                    constam na planilha.
+                    constam nas planilhas importadas.
                   </Text>
 
                   <View style={styles.settingsItem}>

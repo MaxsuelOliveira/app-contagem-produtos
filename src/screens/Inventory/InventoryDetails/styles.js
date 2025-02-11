@@ -58,8 +58,11 @@ export const styles = StyleSheet.create({
     marginTop: 16,
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
-    flexWrap: "wrap",
+    gap: 20,
+    // justifyContent: "space-between",
+    // flexWrap: "wrap",
+    maxWidth: "100%",
+    width: "100%",
   },
 
   createInventarioInfoItem: {
@@ -143,6 +146,21 @@ export const styles = StyleSheet.create({
     fontFamily: "Montserrat_Bold",
     fontSize: 18,
     color: "#333",
+  },
+
+  scrollView: {
+    flexDirection: "row",
+  },
+
+  noProducts : {
+    // marginTop: 20,
+    padding: 10,
+  },
+
+  noProductsText: {
+    fontSize: 16,
+    fontFamily: "Montserrat_Medium",
+    color: "#333"
   }
 
 });

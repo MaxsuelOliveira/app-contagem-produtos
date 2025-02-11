@@ -11,6 +11,8 @@ import { decodeToken } from "../../utils/token";
 
 const Profile = () => {
   const [company, setCompany] = useState({});
+  const [token, setToken] = useState("");
+  // const [profile, setProfile] = useState({});
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -25,35 +27,42 @@ const Profile = () => {
     fetchToken();
   }, []);
 
+  console.log(company);
+
   return (
     <View style={styles.profileContainer}>
       <StatusBar style="dark" />
 
-      <View style={GlobalStyles.cardHeader}>
-        <Text style={GlobalStyles.cardTitle}>Perfil</Text>
-      </View>
+      {company.email ? (
+        <>
+          <View style={GlobalStyles.cardHeader}>
+            <Text style={GlobalStyles.cardTitle}>Perfil</Text>
+          </View>
 
-      <View>
-        <Image
-          source={{ uri: "https://placehold.co/150x150" }}
-          style={{
-            width: 80,
-            height: 80,
-            resizeMode: "contain",
-            backgroundColor: "#f0f0f0",
-            borderRadius: 50,
-            margin: "auto",
-            marginBottom: 20,
-          }}
-        />
-        <ProfileItem label="Nome Fantasia" value={company.nome} />
-        <ProfileItem label="CNPJ" value={company.cpf_cnpj} />
-        <ProfileItem label="Email" value={company.email} />
-        <ProfileItem label="Telefone" value={company.telefone} />
-      </View>
+          <View>
+            <Image
+              source={{ uri: "https://placehold.co/150x150" }}
+              style={{
+                width: 80,
+                height: 80,
+                resizeMode: "contain",
+                backgroundColor: "#f0f0f0",
+                borderRadius: 50,
+                margin: "auto",
+                marginBottom: 20,
+              }}
+            />
+            <ProfileItem label="Nome Fantasia" value={company.nome} />
+            <ProfileItem label="CNPJ" value={company.cpf_cnpj} />
+            <ProfileItem label="Email" value={company.email} />
+            <ProfileItem label="Telefone" value={company.telefone} />
+          </View>
+        </>
+      ) : (
+        <Text>Login não realizado !</Text>
+      )}
     </View>
   );
-  
 };
 
 const ProfileItem = ({ label, value }) => {

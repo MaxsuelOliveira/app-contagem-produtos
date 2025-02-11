@@ -1,6 +1,8 @@
 import React from "react";
-import { Linking } from "expo";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+// import * as Linking from 'expo-linking';
+// import * as WebBrowser from 'expo-web-browser';
+
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 
 const SignupBanner = ({ onLogin, createAccount }) => {
   return (
@@ -14,9 +16,7 @@ const SignupBanner = ({ onLogin, createAccount }) => {
         <TouchableOpacity style={styles.button} onPress={onLogin}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={()=> {
-          Linking.openURL('https://estoque.webart3.com/page/');
-        }}>
+        <TouchableOpacity style={styles.button}   onPress={()=>{Alert.alert('Abrindo o navegador !')}}>
           <Text style={styles.buttonText}>
             Saiba mais
           </Text>

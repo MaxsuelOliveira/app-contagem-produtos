@@ -7,13 +7,23 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
 
+  containerForm : {
+    // backgroundColor: linear-gradient(162deg, rgba(137,198,231,1) 0%, rgba(81,122,143,1) 95%, rgba(231,239,243,1) 100%)
+    padding: 20,
+    borderTopLeftRadius: 120,
+    borderTopRightRadius : 50,
+    borderBottomLeftRadius : 100,
+    borderBottomEndRadius : 70,
+  },
+
   form: {
     padding: 20,
     height: "100%", 
     minHeight: "100%",
     display : "flex",
     alignContent: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: colors.primaryBackground,
   },
 
   title: {

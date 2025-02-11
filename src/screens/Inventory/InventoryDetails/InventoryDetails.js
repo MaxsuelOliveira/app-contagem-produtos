@@ -91,57 +91,67 @@ export default function InventoryDetails() {
 
   return (
     <View style={styles.card}>
-      <View style={styles.cardHeader}>
+      <View style={{ ...styles.cardHeader, marginTop: 10 }}>
         <Text style={styles.cardTitle}>{name}</Text>
         <Text style={styles.cardDescription}>{describe}</Text>
 
-        <View style={styles.createInventarioInfo}>
-          <View style={styles.createInventarioInfoItem}>
-            <Text style={styles.label}>Status</Text>
-            <Text style={styles.value}>{setStatus(status)}</Text>
-          </View>
+        <ScrollView horizontal={true} style={styles.scrollView}>
+          <View style={styles.createInventarioInfo}>
+            <View style={styles.createInventarioInfoItem}>
+              <Text style={styles.label}>Status</Text>
+              <Text style={styles.value}>{setStatus(status)}</Text>
+            </View>
 
-          <View style={styles.createInventarioInfoItem}>
-            <Text style={styles.label}>Item(s)</Text>
-            <Text style={styles.value}>{products.length}</Text>
-          </View>
+            <View style={styles.createInventarioInfoItem}>
+              <Text style={styles.label}>Item(s)</Text>
+              <Text style={styles.value}>{products.length}</Text>
+            </View>
 
-          <View style={styles.createInventarioInfoItem}>
-            <Text style={styles.label}>
-              {status === "done" ? "Finalizado em" : "Criado em"}
-            </Text>
-            <Text style={styles.value}>{date_create_formart}</Text>
-          </View>
+            <View style={styles.createInventarioInfoItem}>
+              <Text style={styles.label}>
+                {status === "done" ? "Finalizado em" : "Criado em"}
+              </Text>
+              <Text style={styles.value}>{date_create_formart}</Text>
+            </View>
 
-          <View style={styles.createInventarioInfoItem}>
-            <Text style={styles.label}>Impr. Planilha</Text>
-            <Text style={styles.value}>
-              {compare_in_spreadsheet ? "Sim" : "Não"}
-            </Text>
+            <View style={styles.createInventarioInfoItem}>
+              <Text style={styles.label}>Comparar</Text>
+              <Text style={styles.value}>
+                {compare_in_spreadsheet ? "Sim" : "Não"}
+              </Text>
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </View>
 
       <ScrollView style={styles.cardBody}>
-        {productsInventory.map((item) => (
-          <ProductInventoryCardDetails
-            key={item.uuid}
-            uuid_inventory={uuid}
-            uuid={item.uuid}
-            codebar={item.codebar}
-            quantity={item.quantity}
-            name={item.name ? item.name : ""}
-            price={item.price}
-            inconsistency={item.inconsistency}
-            onEdit={handleEditProduct}
-            onSelected={toggleProdutoSelecionado}
-          />
-        ))}
+        {productsInventory.length > 0 ? (
+          productsInventory.map((item) => (
+            <ProductInventoryCardDetails
+              key={item.uuid}
+              uuid_inventory={uuid}
+              uuid={item.uuid}
+              codebar={item.codebar}
+              quantity={item.quantity}
+              name={item.name ? item.name : ""}
+              price={item.price}
+              inconsistency={item.inconsistency}
+              onEdit={handleEditProduct}
+              onSelected={toggleProdutoSelecionado}
+            />
+          ))
+        ) : (
+          <View style={styles.noProducts}>
+            <Text style={styles.noProductsText}>
+              Nenhum produto encontrado.
+            </Text>
+          </View>
+        )}
       </ScrollView>
 
       <View style={{ ...GlobalStyles.menubar }}>
         {/* Exportar inventário */}
-        {produtosSelecionados.length  === 0? (
+        {produtosSelecionados.length === 0 ? (
           <TouchableOpacity
             style={GlobalStyles.menubarItem}
             onPress={() => setModalVisibleExport(true)}
