@@ -6,7 +6,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 // Icons
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
@@ -20,7 +20,7 @@ import ModalInventoryCreate from "../Inventory/InventoryCreateModal/InventoryCre
 import InventoryDeleteModal from "../Inventory/InventoryDeleteModal/InventoryDeleteModal";
 import LogoutModal from "../Login/LogoutModal/LogoutModal";
 import SignupBanner from "components/Banner/Banner";
-import SpreadSheetsImport from "../SpreadSheetsImport/SpreadSheetsImport"
+import SpreadSheetsImport from "../SpreadSheetsImport/SpreadSheetsImport";
 
 // Backend
 import { Controller } from "../../services/backend/controller";
@@ -42,6 +42,8 @@ const Home = () => {
   const badgeCountInProgress = inventoriesProgress.length;
   const badgeCountCompleted = inventoriesCompleted.length;
 
+  const [isLogin, setIsLogin] = useState(false);
+
   useEffect(() => {
     Controller.Inventory.getStatus("progress").then((response) => {
       setInventoriesProgress(response);
@@ -49,14 +51,6 @@ const Home = () => {
 
     Controller.Inventory.getStatus("done").then((response) => {
       setInventoriesCompleted(response);
-    });
-
-    setProfile({
-      id: 1,
-      name: "Semprelar",
-      email: "",
-      phone: "",
-      profile: "",
     });
   }, []);
 
@@ -73,6 +67,19 @@ const Home = () => {
     fetchToken();
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      let login = await AsyncStorage.getItem("token");
+      if (!login) {
+        setIsLogin(true);
+        setOnboardingScreen(true);
+      } else {
+        setIsLogin(false);
+        setOnboardingScreen(false);
+      }
+    })();
+  }, []);
+
   const logout = () => {
     setModalLogoutVisible(true);
   };
@@ -87,14 +94,14 @@ const Home = () => {
       <StatusBar style="auto" backgroundColor="transparent" />
 
       <View style={styles.containerInvetoryList}>
-
         <View style={styles.header}>
-
           <View style={styles.headerTabs}>
-            <SignupBanner
-              onLogin={() => navigation.navigate("Login")}
-              createAccount={() => navigation.navigate("CreateAccount")}
-            />
+            {isLogin ? (
+              <SignupBanner
+                onLogin={() => navigation.navigate("Login")}
+                createAccount={() => navigation.navigate("CreateAccount")}
+              />
+            ) : null}
 
             <TouchableOpacity
               style={styles.buttonProfileHeader}
@@ -154,7 +161,6 @@ const Home = () => {
               </Text>
             </TouchableOpacity>
           </View>
-          
         </View>
 
         <ScrollView style={styles.inventoryContainer}>
@@ -216,25 +222,36 @@ const Home = () => {
             style={GlobalStyles.menubarItem}
             onPress={() => navigation.navigate("SpreadSheetsImport")}
           >
-            <MaterialCommunityIcons name="file-import-outline" size={26} color={colors.colorIcons} />
-            <Text style={GlobalStyles.menubarText}>
-              Importar produtos
-            </Text>
+            <MaterialCommunityIcons
+              name="google-spreadsheet"
+              size={26}
+              color={colors.colorIcons}
+            />
+
+            <Text style={GlobalStyles.menubarText}>Importar pla.</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={GlobalStyles.menubarItem}
             onPress={() => setModalVisible(true)}
           >
-            <AntDesign name="plus" size={26} color={colors.colorIcons} />
-            <Text style={GlobalStyles.menubarText}>Novo inventário</Text>
+            <MaterialCommunityIcons
+              name="plus"
+              size={26}
+              color={colors.colorIcons}
+            />
+            <Text style={GlobalStyles.menubarText}>Novo</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={GlobalStyles.menubarItem}
             onPress={() => navigation.navigate("Settings")}
           >
-            <AntDesign name="setting" size={26} color={colors.colorIcons} />
+            <MaterialIcons
+              name="settings"
+              size={26}
+              color={colors.colorIcons}
+            />
             <Text style={GlobalStyles.menubarText}>Configurações</Text>
           </TouchableOpacity>
         </View>

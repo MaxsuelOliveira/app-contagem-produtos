@@ -192,7 +192,7 @@ const ProductCreateModal = ({
             </View>
 
             <View style={styles.cardBody}>
-              <View style={{ width: visibleInputs ? "65%" : "100%" }}>
+              <View style={{ width: visibleInputs ? "58%" : "100%" }}>
                 <Text style={GlobalStyles.label}>Código de barras*</Text>
                 <TextInput
                   style={GlobalStyles.input}
@@ -216,7 +216,7 @@ const ProductCreateModal = ({
               {visibleInputs && (
                 <>
                   {/* Quantidade */}
-                  <View style={{ ...styles.grid, width: "30%" }}>
+                  <View style={{ ...styles.grid, width: "34%" }}>
                     <Text style={GlobalStyles.label}>Quantidade*</Text>
                     <TextInput
                       style={GlobalStyles.input}

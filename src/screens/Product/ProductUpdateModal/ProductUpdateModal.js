@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Checkbox from "expo-checkbox";
+import { Switch } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
   Modal,
@@ -94,9 +94,7 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
         <View style={GlobalStyles.modalContent}>
           <View style={GlobalStyles.card}>
             <View style={GlobalStyles.cardHeader}>
-              <Text style={styles.cardTilte}>
-                Atualizar produto
-              </Text>
+              <Text style={styles.cardTilte}>Atualizar produto</Text>
               <TouchableOpacity
                 onPress={onClose}
                 style={GlobalStyles.closeButton}
@@ -151,6 +149,7 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
                 </View>
               </View>
 
+              {/* Preço */}
               <View style={{ ...styles.grid, width: "35%" }}>
                 <View>
                   <Text style={GlobalStyles.label}>Preço R$</Text>
@@ -166,22 +165,37 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
                 </View>
               </View>
 
-              <View style={{ ...styles.grid, width: "100%" }}>
-                <View style={styles.section}>
+              {/* Inconsistência */}
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View style={{ width: "75%" }}>
                   <Text style={GlobalStyles.label}>
                     Alguma inconsistência no produto?
                   </Text>
-                  <Checkbox
-                    style={styles.checkbox}
+                  <Text style={GlobalStyles.small}>
+                    Exemplo: Produto com valor diferente do que está na
+                    etiqueta.
+                  </Text>
+                </View>
+
+                <View style={{ flexDirection: "column", alignItems: "center" }}>
+                  <Switch
                     value={inconsistency}
                     onValueChange={setInconsistency}
                   />
+                  <Text style={GlobalStyles.small}>
+                    {inconsistency ? "Sim" : "Não"}
+                  </Text>
                 </View>
-                <Text style={GlobalStyles.small}>
-                  Exemplo de inconsistência : Produto com valor diferente do que
-                  está na etiqueta.
-                </Text>
               </View>
+
+          
 
               <View
                 style={{

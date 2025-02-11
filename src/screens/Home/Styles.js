@@ -9,8 +9,8 @@ export const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
     flexDirection: "row",
     justifyContent: "space-between",
- 
     marginTop: 30,
+    marginBottom : 5
   },
 
   containerInvetoryList: {
@@ -20,7 +20,6 @@ export const styles = StyleSheet.create({
 
   header: {
     padding: 20,
-    marginTop: 0,
     paddingTop: 0,
     paddingBottom: 0,
   },
@@ -28,6 +27,7 @@ export const styles = StyleSheet.create({
   headerTabs: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginBottom: 10,
   },
 
   headerTitle: {

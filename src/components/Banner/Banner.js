@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-const SignupBanner = ({ onLogin , createAccount  }) => {
+const SignupBanner = ({ onLogin, createAccount }) => {
   return (
     <View style={styles.banner}>
       <Text style={styles.text}>
@@ -9,18 +9,12 @@ const SignupBanner = ({ onLogin , createAccount  }) => {
         Faça login para acessar todos os recursos do{" "}
         <Text style={styles.highlight}>EstoqueFácil!</Text>
       </Text>
-      <View
-        style={{
-          justifyContent: "space-between",
-          flexDirection: "row",
-          gap: 10,
-        }}
-      >
+      <View style={styles.buttons}>
         <TouchableOpacity style={styles.button} onPress={onLogin}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={createAccount}>
-          <Text style={styles.buttonText}>Criar conta</Text>
+          <Text style={styles.buttonText}>Saber mais</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -66,6 +60,11 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat_Medium",
   },
 
+  buttons: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    gap: 10,
+  },
 });
 
 export default SignupBanner;

@@ -70,7 +70,9 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
         successinCreating();
       })
       .catch((error) => {
-        errorInCreating("HOuve um erro ao criar o inventário, tente novamente!");
+        errorInCreating(
+          "HOuve um erro ao criar o inventário, tente novamente!"
+        );
       });
   }
 
@@ -84,9 +86,7 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
       <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
       <View style={GlobalStyles.modalOverlay}>
-
         <View style={GlobalStyles.modalContent}>
-
           <View style={GlobalStyles.card}>
             <View style={GlobalStyles.cardHeader}>
               <Text style={styles.cardTitle}>Novo inventário</Text>
@@ -103,28 +103,28 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
 
               <TextInput
                 style={GlobalStyles.input}
-                placeholder="Digite o nome"
+                placeholder="Digite o nome do inventário"
                 maxLength={150}
                 value={name}
                 autoFocus={focusInName}
                 onChangeText={setName}
               />
 
-              <Text style={GlobalStyles.label}>Descrição do inventário*</Text>
+              {isError ? (
+                <View style={{ marginBottom: 10 }}>
+                  <Text style={{...GlobalStyles.label , color : colors.textDescription}}>{error}</Text>
+                </View>
+              ) : null}
+
+              <Text style={GlobalStyles.label}>Descrição do inventário</Text>
               <TextInput
                 style={styles.textarea}
-                placeholder="Digite a descrição do inventário"
+                placeholder="Digite uma descrição para o inventário"
                 maxLength={255}
                 multiline
                 value={description}
                 onChangeText={setDescription}
               />
-
-              {isError ? (
-                <View style={{ marginBottom: 10 }}>
-                  <Text style={GlobalStyles.label}>{error}</Text>
-                </View>
-              ) : null}
 
               <TouchableOpacity
                 style={GlobalStyles.button}
@@ -138,11 +138,8 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
               </TouchableOpacity>
             </View>
           </View>
-          
         </View>
-
       </View>
-
     </Modal>
   );
 };

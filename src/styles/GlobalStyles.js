@@ -30,7 +30,7 @@ const theme = (options) => {
       menubarBackground: "#f3f2f2",
       menubarText: "#000000",
       textDescription: "#646363",
-      colorIcons: "#878e94",
+      colorIcons: "#adb5bd",
       modalCover: "rgba(18, 34, 56, 0.65)",
       backgroundItem: "#ecebeb",
       danger: "#dc3545",
@@ -52,7 +52,7 @@ const theme = (options) => {
       menubarBackground: "#132237",
       menubarText: "#f8f9fa",
       textDescription: "#646363",
-      colorIcons: "#878e94",
+      colorIcons: "#d1e7dd",
       modalCover: "rgba(18, 34, 56, 0.65)",
       backgroundItem: "rgb(12 22 35)",
       danger: "#dc3545",
@@ -96,7 +96,7 @@ const GlobalStyles = StyleSheet.create({
   },
 
   textArea: {
-    height: 100,
+    height: 70,
     textAlignVertical: "top",
     paddingLeft: 8,
     paddingTop: 3,
@@ -150,9 +150,13 @@ const GlobalStyles = StyleSheet.create({
     color: "#fff",
     width: 20,
     height: 20,
-    textAlign: "center",
-    position: "absolute",
-    right: 10,
+    // maxHeight: 20,
+    marginTop: 0,
+    padding: 5,
+    paddingTop: 0,
+    fontSize: 14,
+    right: 5,
+    // lineHeight: 15,
   },
 
   modalOverlay: {
