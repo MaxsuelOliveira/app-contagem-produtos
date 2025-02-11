@@ -222,7 +222,7 @@ const Home = () => {
 
         <View style={GlobalStyles.menubar}>
           <TouchableOpacity
-            style={GlobalStyles.menubarItem}
+            style={{...GlobalStyles.menubarItem}}
             onPress={() => navigation.navigate("SpreadSheetsImport")}
           >
             <MaterialCommunityIcons
@@ -231,7 +231,7 @@ const Home = () => {
               color={colors.colorIcons}
             />
 
-            <Text style={GlobalStyles.menubarText}>Importar pla.</Text>
+            <Text style={GlobalStyles.menubarText}>Importar produtos</Text>
           </TouchableOpacity>
 
           <TouchableOpacity

@@ -1,4 +1,5 @@
 import React from "react";
+import { Linking } from "expo";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const SignupBanner = ({ onLogin, createAccount }) => {
@@ -13,8 +14,12 @@ const SignupBanner = ({ onLogin, createAccount }) => {
         <TouchableOpacity style={styles.button} onPress={onLogin}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={createAccount}>
-          <Text style={styles.buttonText}>Saber mais</Text>
+        <TouchableOpacity style={styles.button} onPress={()=> {
+          Linking.openURL('https://estoque.webart3.com/page/');
+        }}>
+          <Text style={styles.buttonText}>
+            Saiba mais
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

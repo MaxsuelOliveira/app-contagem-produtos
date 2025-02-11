@@ -19,20 +19,21 @@ export const styles = StyleSheet.create({
   },
 
   title: {
-    width: "100%",
+    width: "90%",
     position: "relative",
     fontFamily: "Montserrat_Bold",
     fontSize: 28,
     color: colors.textPrimary,
-    textAlign: "center",
+    textAlign: "left",
+    position: "relative",
   },
 
   description: {
-    width: "100%",
+    width: "90%",
     position: "relative",
     fontSize: 18,
     color: colors.textSecondary,
-    textAlign: "center",
+    textAlign: "justify",
     marginTop: 10,
     fontFamily: "Montserrat_Medium",
   },
