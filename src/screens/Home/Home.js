@@ -44,6 +44,7 @@ const Home = () => {
 
   const [isLogin, setIsLogin] = useState(false);
 
+  // Busca os inventários em progresso e finalizados
   useEffect(() => {
     Controller.Inventory.getStatus("progress").then((response) => {
       setInventoriesProgress(response);
@@ -54,6 +55,7 @@ const Home = () => {
     });
   }, []);
 
+  // Verifica se o usuário está logado
   useEffect(() => {
     const fetchToken = async () => {
       const token = await AsyncStorage.getItem("token");
@@ -67,6 +69,7 @@ const Home = () => {
     fetchToken();
   }, []);
 
+  // Verifica se o usuário está logado
   useEffect(() => {
     (async () => {
       let login = await AsyncStorage.getItem("token");
