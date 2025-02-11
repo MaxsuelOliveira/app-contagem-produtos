@@ -34,7 +34,7 @@ const theme = (options) => {
       modalCover: "rgba(18, 34, 56, 0.65)",
       backgroundItem: "#ecebeb",
       danger: "#dc3545",
-      warrning: "#ffc107",
+      warrning: "#d0ff00",
     };
   } else {
     return {
@@ -56,7 +56,7 @@ const theme = (options) => {
       modalCover: "rgba(18, 34, 56, 0.65)",
       backgroundItem: "rgb(12 22 35)",
       danger: "#dc3545",
-      warrning: "#ffc107",
+      warrning: "#d0ff00",
     };
   }
 };
@@ -104,7 +104,7 @@ const GlobalStyles = StyleSheet.create({
 
   label: {
     fontFamily: "Montserrat_Medium",
-    color: colors.textSecondary,
+    color: colors.textPrimary,
     marginBottom: 3,
     fontSize: 14,
   },

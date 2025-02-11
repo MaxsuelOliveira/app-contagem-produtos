@@ -138,4 +138,11 @@ export const styles = StyleSheet.create({
   label: { ...GlobalStyles.label, fontSize: 12 },
   value: { ...GlobalStyles.value, fontSize: 14 },
   menuText: { ...GlobalStyles.menubarText, fontSize: 10 },
+
+  title : {
+    fontFamily: "Montserrat_Bold",
+    fontSize: 18,
+    color: "#333",
+  }
+
 });

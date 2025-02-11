@@ -87,7 +87,9 @@ const Home = () => {
       <StatusBar style="auto" backgroundColor="transparent" />
 
       <View style={styles.containerInvetoryList}>
+
         <View style={styles.header}>
+
           <View style={styles.headerTabs}>
             <SignupBanner
               onLogin={() => navigation.navigate("Login")}
@@ -152,6 +154,7 @@ const Home = () => {
               </Text>
             </TouchableOpacity>
           </View>
+          
         </View>
 
         <ScrollView style={styles.inventoryContainer}>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 
 // Icons
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -24,6 +24,8 @@ import { setStatus } from "../../../components/CardInvetory/CardInventory";
 // Backend
 import { Controller } from "../../../services/backend/controller";
 
+let produtos = [];
+
 export default function InventoryDetails() {
   const route = useRoute();
   const {
@@ -43,6 +45,9 @@ export default function InventoryDetails() {
     new Date(date_create)
   );
 
+  const [remover, setRemover] = useState(false);
+  const [produtosSelecionados, setProdutosSelecionados] = useState([]);
+
   const [isModalProductCreate, setModalProductCreate] = useState(false);
   const [isProductUpdateModal, setProductUpdateModal] = useState(false);
   const [isModalVisibleSettings, setModalVisibleSettings] = useState(false);
@@ -56,6 +61,27 @@ export default function InventoryDetails() {
     setSelectedProduct(product);
     setProductUpdateModal(true);
   };
+
+  function toggleProdutoSelecionado(uuid) {
+    const produtoIndex = produtosSelecionados.indexOf(uuid);
+
+    if (produtoIndex !== -1) {
+      produtosSelecionados.splice(produtoIndex, 1);
+      setProdutosSelecionados([...produtosSelecionados]);
+      return {
+        check: false,
+        id: uuid,
+      };
+    } else {
+      setRemover(true);
+      produtosSelecionados.push(uuid);
+      setProdutosSelecionados([...produtosSelecionados]);
+      return {
+        check: true,
+        id: uuid,
+      };
+    }
+  }
 
   useEffect(() => {
     Controller.Inventory.getProducts(uuid).then((products) => {
@@ -108,20 +134,25 @@ export default function InventoryDetails() {
             price={item.price}
             inconsistency={item.inconsistency}
             onEdit={handleEditProduct}
+            onSelected={toggleProdutoSelecionado}
           />
         ))}
       </ScrollView>
 
-      <View style={GlobalStyles.menubar}>
-        <TouchableOpacity
-          style={GlobalStyles.menubarItem}
-          onPress={() => setModalVisibleExport(true)}
-        >
-          <AntDesign name="export" size={26} color={colors.colorIcons} />
-          <Text style={styles.menuText}>Exportar</Text>
-        </TouchableOpacity>
+      <View style={{ ...GlobalStyles.menubar }}>
+        {/* Exportar inventário */}
+        {produtosSelecionados.length  === 0? (
+          <TouchableOpacity
+            style={GlobalStyles.menubarItem}
+            onPress={() => setModalVisibleExport(true)}
+          >
+            <AntDesign name="export" size={26} color={colors.colorIcons} />
+            <Text style={styles.menuText}>Exportar</Text>
+          </TouchableOpacity>
+        ) : null}
 
-        {status === "progress" ? (
+        {/* Adicionar produtos e configurações */}
+        {status === "progress" && produtosSelecionados.length === 0 ? (
           <>
             <TouchableOpacity
               style={[GlobalStyles.menubarItem]}
@@ -139,6 +170,38 @@ export default function InventoryDetails() {
               <Text style={styles.menuText}>Configurações</Text>
             </TouchableOpacity>
           </>
+        ) : null}
+
+        {/* Apagar multiplos produtos */}
+        {produtosSelecionados.length ? (
+          <TouchableOpacity
+            style={GlobalStyles.menubarItem}
+            onPress={() =>
+              Alert.alert("Apagar", "Deseja apagar os produtos?", [
+                {
+                  text: "Cancelar",
+                  style: "cancel",
+                },
+                {
+                  text: "Apagar",
+                  onPress: () => {
+                    console.log("Apagar produtos em  multipla seleção.");
+                    console.log("Total: ", produtosSelecionados.length);
+                    console.log(produtosSelecionados);
+                    // Controller.Inventory.deleteProducts(produtosSelecionados);
+                    // setRefresh(refresh + 1);
+                    // setProdutosSelecionados([]);
+                    // setRemover(false);
+                  },
+                },
+              ])
+            }
+          >
+            <AntDesign name="delete" size={26} color={colors.colorIcons} />
+            <Text style={styles.menuText}>
+              Apagar ({produtosSelecionados.length})
+            </Text>
+          </TouchableOpacity>
         ) : null}
       </View>
 

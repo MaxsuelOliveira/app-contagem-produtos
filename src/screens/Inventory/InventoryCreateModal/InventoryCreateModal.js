@@ -21,14 +21,34 @@ import { styles } from "./styles";
 import { Controller } from "../../../services/backend/controller";
 
 const ModalInventoryCreate = ({ isVisible, onClose }) => {
+  const [loading, setLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState(false);
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [focusInName, setFocusInName] = useState(true);
 
-  function createInventory() {
+  function successinCreating() {
+    setLoading(true);
+    setIsError(false);
+    setError("");
 
+    setTimeout(() => {
+      setLoading(false);
+      onClose();
+    }, 1000);
+  }
+
+  function errorInCreating(message) {
+    setLoading(false);
+    setIsError(true);
+    setError(message);
+  }
+
+  function createInventory() {
     if (name.length == 0 || name == "") {
-      Alert.alert("O inventário precisa de um nome !");
+      errorInCreating("Nome do inventário é obrigatório");
       setFocusInName(true);
       return;
     }
@@ -47,11 +67,10 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
 
     Controller.Inventory.create(inventory)
       .then((response) => {
-        console.log("Inventário criado com sucesso: ", response);
-        onClose();
+        successinCreating();
       })
       .catch((error) => {
-        Alert.alert("Erro ao criar o inventário. : " + error);
+        errorInCreating("HOuve um erro ao criar o inventário, tente novamente!");
       });
   }
 
@@ -69,7 +88,6 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
         <View style={GlobalStyles.modalContent}>
 
           <View style={GlobalStyles.card}>
-
             <View style={GlobalStyles.cardHeader}>
               <Text style={styles.cardTitle}>Novo inventário</Text>
               <TouchableOpacity
@@ -102,18 +120,25 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
                 onChangeText={setDescription}
               />
 
+              {isError ? (
+                <View style={{ marginBottom: 10 }}>
+                  <Text style={GlobalStyles.label}>{error}</Text>
+                </View>
+              ) : null}
+
               <TouchableOpacity
                 style={GlobalStyles.button}
                 onPress={() => {
                   createInventory();
                 }}
               >
-                <Text style={GlobalStyles.buttonText}>Criar inventário</Text>
+                <Text style={GlobalStyles.buttonText}>
+                  {loading ? "Criando ..." : "Criar inventário"}
+                </Text>
               </TouchableOpacity>
             </View>
-
           </View>
-
+          
         </View>
 
       </View>

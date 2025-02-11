@@ -11,10 +11,15 @@ const ProductInventoryCardDetails = ({
   name,
   price,
   inconsistency,
-  onEdit
+  onEdit,
+  onSelected
 }) => {
   const truncatedName = name.length > 20 ? name.substring(0, 20) + "..." : name;
+  const priceFormatted = price ? `R$ ${price}` : 0;
   const inconsistencyText = inconsistency ? "Sim" : "Não";
+
+  const [id, setId] = useState(uuid);
+  const [isCheck, setIsCheck] = useState(false);
 
   const handleEdit = () => {
     const productData = {
@@ -28,16 +33,21 @@ const ProductInventoryCardDetails = ({
     onEdit(productData); 
   };
 
+  const handleLongPress = () => {
+    let {check, id } = onSelected(uuid);
+    setId(id);
+    setIsCheck(check);
+  };
+
   return (
-    <TouchableOpacity onLongPress={handleEdit} delayLongPress={50}>
-      <View style={{...styles.inventoryItem , ...(inconsistency ? styles.itemWarning : {})}}>
+    <TouchableOpacity onLongPress={handleLongPress} delayLongPress={150} onPress={handleEdit}>
+      <View style={{...styles.inventoryItem , ...(inconsistency ? styles.itemWarning : {}) , ...(isCheck ? styles.inventoryItemSelected : {})}}>
         <View style={styles.inventoryItemContent}>
-          <Text style={styles.label}>Código de barras</Text>
-          <Text style={styles.title}>{codebar}</Text>
           <View style={styles.inventoryItemContainer}>
+            <InventoryDetail label="Código de barras" value={codebar} />
             <InventoryDetail label="Qnt(s)" value={quantity} />
             {name ? (<InventoryDetail label="Nome" value={truncatedName}/>) : (null)}
-            {price ? (<InventoryDetail label="Preço" value={price} />) : (null)}
+            {price ? (<InventoryDetail label="Preço" value={priceFormatted} />) : (null)}
             <InventoryDetail label="Inconsis." value={inconsistencyText} />
           </View>
         </View>

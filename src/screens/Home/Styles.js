@@ -4,10 +4,13 @@ import { GlobalStyles, colors } from "../../styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
   inventoryCategories: {
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor: "#f5f5f5",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
-    marginTop: 25,
+ 
+    marginTop: 30,
   },
 
   containerInvetoryList: {
@@ -23,8 +26,6 @@ export const styles = StyleSheet.create({
   },
 
   headerTabs: {
-    marginBottom: 20,
-    marginTop: 20,
     flexDirection: "row",
     justifyContent: "space-between",
   },
@@ -52,14 +53,14 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     padding: 5,
-    borderRadius: 10,
     height: 40
   },
 
   categoryTitle: {},
 
   activeCategory: {
-    backgroundColor: "#f5f5f5",
+    borderRadius: 30,
+    backgroundColor: colors.cardBackground,
   },
 
   activeCategoryText: {
@@ -70,10 +71,10 @@ export const styles = StyleSheet.create({
   categoryText: {
     width: "100%",
     position: "relative",
-    flex : 1,
     color: "#ababab",
-    fontSize: 15,
+    fontSize: 14,
     fontFamily: "Montserrat_Medium",
+    textAlign: "center",
   },
 
   activeBadge: {

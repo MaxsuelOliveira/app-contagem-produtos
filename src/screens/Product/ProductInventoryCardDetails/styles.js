@@ -14,7 +14,6 @@ export const styles = StyleSheet.create({
   },
 
   itemWarning: {
-    backgroundColor: colors.warrning,
     borderColor: colors.warrning,
     borderWidth: 1,
   },
@@ -54,14 +53,17 @@ export const styles = StyleSheet.create({
 
   label: {
     fontSize: 12,
-    fontFamily: "Montserrat_Regular",
-    color: colors.textDescription,
+    fontFamily: "Montserrat_Medium",
+    color: colors.textSecondary,
+    textAlign: "left",
+    minWidth: 60,
   },
 
   value: {
     fontSize: 14,
     fontFamily: "Montserrat_Medium",
     color: colors.textPrimary,
+    textAlign: "left",
   },
 
   menuButton: {
@@ -73,4 +75,14 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 5,
   },
+
+  inventoryItemSelected: {
+    borderColor: colors.primary,
+    borderWidth: 1,
+  },
+
+  inventoryItemRemoved : {
+    backgroundColor: colors.danger,
+  }
+
 });
