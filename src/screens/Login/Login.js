@@ -103,21 +103,6 @@ const LoginScreen = ({ navigation }) => {
     <ScrollView style={styles.container}>
       <StatusBar style="auto" />
 
-      <View style={styles.container}>
-        <LinearGradient
-          // Background Linear Gradient
-          colors={["rgba(0,0,0,0.8)", "transparent"]}
-          style={styles.background}
-        />
-        <LinearGradient
-          // Button Linear Gradient
-          colors={["#4c669f", "#3b5998", "#192f6a"]}
-          style={styles.button}
-        >
-          <Text style={styles.text}>Sign in with Facebook</Text>
-        </LinearGradient>
-      </View>
-
       <Text style={styles.text}>Sign in with Facebook</Text>
 
       <View style={styles.form}>
