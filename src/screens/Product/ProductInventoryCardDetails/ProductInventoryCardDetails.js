@@ -39,6 +39,10 @@ const ProductInventoryCardDetails = ({
     let { check, id } = onSelected(uuid);
     setId(id);
     setIsCheck(check);
+
+    console.log("id", id);
+    console.log("isCheck", isCheck);
+
   };
 
   return (
@@ -64,7 +68,7 @@ const ProductInventoryCardDetails = ({
             {price ? (
               <InventoryDetail label="Preço" value={priceFormatted} />
             ) : null}
-            <InventoryDetail label="Inconsis." value={inconsistencyText} />
+            {/* <InventoryDetail label="Inconsis." value={inconsistencyText} /> */}
           </View>
         </View>
       </View>

@@ -3,6 +3,9 @@ import { View, Text, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// Components
+import SignupBanner from "components/Banner/Banner";
+
 // Styles
 import { GlobalStyles } from "../../styles/GlobalStyles";
 import { styles } from "./styles";
@@ -12,7 +15,20 @@ import { decodeToken } from "../../utils/token";
 const Profile = () => {
   const [company, setCompany] = useState({});
   const [token, setToken] = useState("");
-  // const [profile, setProfile] = useState({});
+  const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      let login = await AsyncStorage.getItem("token");
+      if (!login) {
+        setIsLogin(true);
+        setOnboardingScreen(true);
+      } else {
+        setIsLogin(false);
+        setOnboardingScreen(false);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -26,8 +42,6 @@ const Profile = () => {
 
     fetchToken();
   }, []);
-
-  console.log(company);
 
   return (
     <View style={styles.profileContainer}>
@@ -59,7 +73,18 @@ const Profile = () => {
           </View>
         </>
       ) : (
-        <Text>Login não realizado !</Text>
+        <>
+          <Text>Login não realizado !</Text>
+
+          {isLogin ? (
+            <View style={styles.SignupBanner}>
+              <SignupBanner
+                onLogin={() => navigation.navigate("Login")}
+                createAccount={() => navigation.navigate("CreateAccount")}
+              />
+            </View>
+          ) : null}
+        </>
       )}
     </View>
   );

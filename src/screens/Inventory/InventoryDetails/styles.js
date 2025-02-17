@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
     display: "flex",
+    width: "100%",
   },
 
   cardBody: {
@@ -55,14 +56,9 @@ export const styles = StyleSheet.create({
   },
 
   createInventarioInfo: {
-    marginTop: 16,
     display: "flex",
     flexDirection: "row",
-    gap: 20,
-    // justifyContent: "space-between",
-    // flexWrap: "wrap",
-    maxWidth: "100%",
-    width: "100%",
+    justifyContent: "space-between",
   },
 
   createInventarioInfoItem: {
@@ -161,6 +157,32 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Montserrat_Medium",
     color: "#333"
+  },
+
+  input: {
+    display: "none",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    padding: 10,
+    marginBottom: 16,
+    height: 40,
+    borderRadius: 20,
+    fontFamily: "Montserrat_Regular",
+    fontSize: 14,
+    color: "#333",
+    borderColor: "#333",
+  },
+
+  inputActive : {
+    display: "flex",
+  },
+
+  buttonSearch : {
+    position: "absolute",
+    left: "90%",
+    top: -100,
+    zIndex: 1,
   }
 
 });

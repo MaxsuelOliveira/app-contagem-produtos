@@ -19,8 +19,8 @@ import CardItemInventory from "../../components/CardInvetory/CardInventory";
 import ModalInventoryCreate from "../Inventory/InventoryCreateModal/InventoryCreateModal";
 import InventoryDeleteModal from "../Inventory/InventoryDeleteModal/InventoryDeleteModal";
 import LogoutModal from "../Login/LogoutModal/LogoutModal";
-import SignupBanner from "components/Banner/Banner";
-import SpreadSheetsImport from "../SpreadSheetsImport/SpreadSheetsImport";
+
+import SpreadSheetsImportModal from "../SpreadSheets/SpreadSheetsImportModal/SpreadSheetsImportModal";
 
 // Backend
 import { Controller } from "../../services/backend/controller";
@@ -33,7 +33,10 @@ const Home = () => {
   const [profile, setProfile] = useState({});
   const [uuidSeleced, setUuidSelected] = useState("");
   const [activeTab, setActiveTab] = useState("inProgress");
+
+  // Modals
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalImportVisible, setModalImportVisible] = useState(false);
   const [isModalDeleteVisible, setModalDeleteVisible] = useState(false);
   const [isModalLogoutVisible, setModalLogoutVisible] = useState(false);
   const [inventoriesProgress, setInventoriesProgress] = useState([]);
@@ -41,8 +44,6 @@ const Home = () => {
 
   const badgeCountInProgress = inventoriesProgress.length;
   const badgeCountCompleted = inventoriesCompleted.length;
-
-  const [isLogin, setIsLogin] = useState(false);
 
   // Busca os inventários em progresso e finalizados
   useEffect(() => {
@@ -69,20 +70,6 @@ const Home = () => {
     fetchToken();
   }, []);
 
-  // Verifica se o usuário está logado
-  useEffect(() => {
-    (async () => {
-      let login = await AsyncStorage.getItem("token");
-      if (!login) {
-        setIsLogin(true);
-        setOnboardingScreen(true);
-      } else {
-        setIsLogin(false);
-        setOnboardingScreen(false);
-      }
-    })();
-  }, []);
-
   const logout = () => {
     setModalLogoutVisible(true);
   };
@@ -97,24 +84,30 @@ const Home = () => {
       <StatusBar style="auto" backgroundColor="transparent" />
 
       <View style={styles.containerInvetoryList}>
-        <View style={styles.header}>
-          <View style={styles.headerTabs}>
-            {isLogin ? (
-              <SignupBanner
-                onLogin={() => navigation.navigate("Login")}
-                createAccount={() => navigation.navigate("CreateAccount")}
-              />
-            ) : null}
+        <View style={styles.headerProfile}>
+          <Text
+            style={{
+              ...GlobalStyles.cardTitle,
+              marginBottom: 10,
+              marginTop: 10,
+              flex : 0,
+            }}
+          >
+            Hello, {profile.name || "Usuário"}
+          </Text>
 
+       
             <TouchableOpacity
-              style={styles.buttonProfileHeader}
+              style={{ ...styles.buttonProfileHeader }}
               onPress={() => navigation.navigate("Profile")}
             >
-              <AntDesign name="user" size={26} color={colors.colorIcons} />
+              <AntDesign name="user" size={26} color={"#fff"} />
             </TouchableOpacity>
-          </View>
+         
+        </View>
 
-          <View style={styles.inventoryCategories}>
+        <View style={styles.header}>
+          <View style={{ ...styles.inventoryCategories }}>
             <TouchableOpacity
               style={[
                 styles.category,
@@ -124,21 +117,22 @@ const Home = () => {
             >
               <Text
                 style={[
-                  styles.categoryText,
-                  activeTab === "inProgress" && styles.activeCategoryText,
-                ]}
-              >
-                Em progresso
-              </Text>
-              <Text
-                style={[
                   GlobalStyles.badge,
                   activeTab === "inProgress" && styles.activeBadge,
                 ]}
               >
                 {badgeCountInProgress}
               </Text>
+              <Text
+                style={[
+                  styles.categoryText,
+                  activeTab === "inProgress" && styles.activeCategoryText,
+                ]}
+              >
+                Em progresso
+              </Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={[
                 styles.category,
@@ -220,11 +214,12 @@ const Home = () => {
           )}
         </ScrollView>
 
+       
+
         <View style={GlobalStyles.menubar}>
-        
           <TouchableOpacity
-            style={{...GlobalStyles.menubarItem}}
-            onPress={() => navigation.navigate("SpreadSheetsImport")}
+            style={{ ...GlobalStyles.menubarItem }}
+            onPress={() => setModalImportVisible(true)}
           >
             <MaterialCommunityIcons
               name="google-spreadsheet"
@@ -258,14 +253,17 @@ const Home = () => {
             />
             <Text style={GlobalStyles.menubarText}>Configurações</Text>
           </TouchableOpacity>
-
         </View>
-
       </View>
 
       <ModalInventoryCreate
         isVisible={isModalVisible}
         onClose={() => setModalVisible(false)}
+      />
+
+      <SpreadSheetsImportModal
+        isVisible={isModalImportVisible}
+        onClose={() => setModalImportVisible(false)}
       />
 
       <InventoryDeleteModal

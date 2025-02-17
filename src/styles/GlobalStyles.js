@@ -109,6 +109,13 @@ const GlobalStyles = StyleSheet.create({
     fontSize: 14,
   },
 
+  labelError: {
+    fontFamily: "Montserrat_Medium",
+    color: colors.textDescription,
+    marginBottom: 3,
+    fontSize: 12,
+  },
+
   small: {
     fontFamily: "Montserrat_Medium",
     color: colors.textDescription,
@@ -146,16 +153,14 @@ const GlobalStyles = StyleSheet.create({
   badge: {
     fontFamily: "Montserrat_Bold",
     backgroundColor: "#ababab",
-    borderRadius: 7,
+    borderRadius: 5,
     color: "#fff",
     width: 20,
     height: 20,
-    marginTop: 0,
-    padding: 5,
-    paddingTop: 0,
-    fontSize: 14,
-    right: 5,
     textAlign: "center",
+    // position: "absolute",
+    // top: 10,
+    // left: 0,
   },
 
   modalOverlay: {
@@ -182,8 +187,8 @@ const GlobalStyles = StyleSheet.create({
 
   card: {
     backgroundColor: colors.cardBackground,
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     padding: 20,
     elevation: 5,
     minHeight: "40vh",
@@ -236,6 +241,7 @@ const GlobalStyles = StyleSheet.create({
     left: 0,
     right: 0,
     margin: 10,
+    // height: 50,
   },
 
   menubarItem: {
@@ -259,7 +265,7 @@ const GlobalStyles = StyleSheet.create({
     fontSize: 14,
     borderBottomColor: colors.primary,
     borderBottomWidth: 0.3,
-    marginLeft: 10,
+    // marginLeft: 10,
     marginTop: 5,
   },
 

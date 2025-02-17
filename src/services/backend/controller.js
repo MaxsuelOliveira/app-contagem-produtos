@@ -133,6 +133,19 @@ export const Controller = {
           return Promise.reject(error);
         });
     },
+
+    deleteProducts : async (uuid_inventory, products) => {
+      return Model.Product.deleteProducts(uuid_inventory, products)
+        .then((inventario) => {
+          console.log("Apagando multiplos produtos" + products.lenght);
+          console.log(inventario);
+          return inventario;
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    }
+
   },
 
   SpreadSheets: {

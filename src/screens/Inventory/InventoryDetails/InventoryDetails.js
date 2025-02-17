@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 
 // Icons
@@ -15,7 +17,7 @@ import InventorySettingsModal from "../InventorySettingsModal/InventorySettingsM
 import InventoryExportModal from "../InventoryExportModal/InventoryExportModal";
 
 // Produtos
-import ProductCreateModal from "../../Product/ProductCreateModal/ProductCreateModal";
+import ProductCreateModal from "../../ProductCreate/ProductCreate";
 import ProductUpdateModal from "../../Product/ProductUpdateModal/ProductUpdateModal";
 
 // Ultis
@@ -23,10 +25,12 @@ import { setStatus } from "../../../components/CardInvetory/CardInventory";
 
 // Backend
 import { Controller } from "../../../services/backend/controller";
+import { TextInput } from "react-native-gesture-handler";
 
 let produtos = [];
 
 export default function InventoryDetails() {
+  const navigation = useNavigation();
   const route = useRoute();
   const {
     uuid,
@@ -47,15 +51,19 @@ export default function InventoryDetails() {
 
   const [remover, setRemover] = useState(false);
   const [produtosSelecionados, setProdutosSelecionados] = useState([]);
-
-  const [isModalProductCreate, setModalProductCreate] = useState(false);
   const [isProductUpdateModal, setProductUpdateModal] = useState(false);
   const [isModalVisibleSettings, setModalVisibleSettings] = useState(false);
   const [isModalVisibleExport, setModalVisibleExport] = useState(false);
   const [productsInventory, setProductsInventory] = useState([]);
-
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [refresh, setRefresh] = useState(0);
+  const [activeSearch, setActiveSearch] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      setRefresh((prev) => prev + 1);
+    }, [])
+  );
 
   const handleEditProduct = (product) => {
     setSelectedProduct(product);
@@ -63,25 +71,37 @@ export default function InventoryDetails() {
   };
 
   function toggleProdutoSelecionado(uuid) {
-    const produtoIndex = produtosSelecionados.indexOf(uuid);
+    let check = false;
 
-    if (produtoIndex !== -1) {
-      produtosSelecionados.splice(produtoIndex, 1);
-      setProdutosSelecionados([...produtosSelecionados]);
-      return {
-        check: false,
-        id: uuid,
-      };
-    } else {
-      setRemover(true);
-      produtosSelecionados.push(uuid);
-      setProdutosSelecionados([...produtosSelecionados]);
-      return {
-        check: true,
-        id: uuid,
-      };
-    }
+    setProdutosSelecionados((prev) => {
+      const produtoIndex = prev.findIndex((produto) => produto.uuid === uuid);
+
+      if (produtoIndex !== -1) {
+        // Remove o item
+        const novaLista = prev.filter((produto) => produto.uuid !== uuid);
+        check = false; // O item foi removido
+        return novaLista;
+      } else {
+        // Adiciona o item
+        check = true; // O item foi adicionado
+        return [...prev, { uuid }];
+      }
+    });
+
+    return { check, id: uuid };
   }
+
+  const handleNavigateToProductCreate = () => {
+    if (!uuid || compare_in_spreadsheet === undefined) {
+      console.error("Erro: uuid ou compare_in_spreadsheet não definidos.");
+      return;
+    }
+
+    navigation.navigate("ProductCreate", {
+      uuid_inventory: uuid,
+      compare_in_spreadsheet: compare_in_spreadsheet,
+    });
+  };
 
   useEffect(() => {
     Controller.Inventory.getProducts(uuid).then((products) => {
@@ -95,33 +115,38 @@ export default function InventoryDetails() {
         <Text style={styles.cardTitle}>{name}</Text>
         <Text style={styles.cardDescription}>{describe}</Text>
 
-        <ScrollView horizontal={true} style={styles.scrollView}>
-          <View style={styles.createInventarioInfo}>
-            <View style={styles.createInventarioInfoItem}>
-              <Text style={styles.label}>Status</Text>
-              <Text style={styles.value}>{setStatus(status)}</Text>
-            </View>
-
-            <View style={styles.createInventarioInfoItem}>
-              <Text style={styles.label}>Item(s)</Text>
-              <Text style={styles.value}>{products.length}</Text>
-            </View>
-
-            <View style={styles.createInventarioInfoItem}>
-              <Text style={styles.label}>
-                {status === "done" ? "Finalizado em" : "Criado em"}
-              </Text>
-              <Text style={styles.value}>{date_create_formart}</Text>
-            </View>
-
-            <View style={styles.createInventarioInfoItem}>
-              <Text style={styles.label}>Comparar</Text>
-              <Text style={styles.value}>
-                {compare_in_spreadsheet ? "Sim" : "Não"}
-              </Text>
-            </View>
+        <View style={styles.createInventarioInfo}>
+          <View style={styles.createInventarioInfoItem}>
+            <Text style={styles.label}>Status</Text>
+            <Text style={styles.value}>{setStatus(status)}</Text>
           </View>
-        </ScrollView>
+
+          <View style={styles.createInventarioInfoItem}>
+            <Text style={styles.label}>Item(s)</Text>
+            <Text style={styles.value}>{products.length}</Text>
+          </View>
+
+          <View style={styles.createInventarioInfoItem}>
+            <Text style={styles.label}>
+              {status === "done" ? "Finalizado em" : "Criado em"}
+            </Text>
+            <Text style={styles.value}>{date_create_formart}</Text>
+          </View>
+        </View>
+
+        <View>
+          <TouchableOpacity style={styles.buttonSearch} onPress={() => setActiveSearch(!activeSearch)}>
+            <AntDesign name="search1" size={24} color="black" />
+          </TouchableOpacity>
+
+          <TextInput
+            placeholder="Pesquisar"
+            style={[
+              styles.input,
+              activeSearch === true ? styles.inputActive : null,
+            ]}
+          ></TextInput>
+        </View>
       </View>
 
       <ScrollView style={styles.cardBody}>
@@ -150,7 +175,6 @@ export default function InventoryDetails() {
       </ScrollView>
 
       <View style={{ ...GlobalStyles.menubar }}>
-        {/* Exportar inventário */}
         {produtosSelecionados.length === 0 ? (
           <TouchableOpacity
             style={GlobalStyles.menubarItem}
@@ -161,12 +185,11 @@ export default function InventoryDetails() {
           </TouchableOpacity>
         ) : null}
 
-        {/* Adicionar produtos e configurações */}
         {status === "progress" && produtosSelecionados.length === 0 ? (
           <>
             <TouchableOpacity
               style={[GlobalStyles.menubarItem]}
-              onPress={() => setModalProductCreate(true)}
+              onPress={handleNavigateToProductCreate}
             >
               <AntDesign name="plus" size={26} color={colors.colorIcons} />
               <Text style={styles.menuText}>Adicionar</Text>
@@ -182,7 +205,6 @@ export default function InventoryDetails() {
           </>
         ) : null}
 
-        {/* Apagar multiplos produtos */}
         {produtosSelecionados.length ? (
           <TouchableOpacity
             style={GlobalStyles.menubarItem}
@@ -198,10 +220,10 @@ export default function InventoryDetails() {
                     console.log("Apagar produtos em  multipla seleção.");
                     console.log("Total: ", produtosSelecionados.length);
                     console.log(produtosSelecionados);
-                    // Controller.Inventory.deleteProducts(produtosSelecionados);
-                    // setRefresh(refresh + 1);
-                    // setProdutosSelecionados([]);
-                    // setRemover(false);
+                    Controller.Product.deleteProducts(produtosSelecionados);
+                    setRefresh(refresh + 1);
+                    setProdutosSelecionados([]);
+                    setRemover(false);
                   },
                 },
               ])
@@ -220,14 +242,6 @@ export default function InventoryDetails() {
         onClose={() => setProductUpdateModal(false)}
         product={selectedProduct}
         uuidInventory={uuid}
-      />
-
-      <ProductCreateModal
-        isVisible={isModalProductCreate}
-        onClose={() => setModalProductCreate(false)}
-        compareInSpreadsheet={compare_in_spreadsheet}
-        uuidInventory={uuid}
-        inputs={inputs_hability}
       />
 
       <InventoryExportModal

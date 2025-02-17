@@ -1,0 +1,258 @@
+import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useState, useEffect, useRef } from "react";
+import uuid from "react-native-uuid";
+import { StatusBar } from "expo-status-bar";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Switch,
+  ActivityIndicator,
+} from "react-native";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { GlobalStyles, colors } from "../../styles/GlobalStyles";
+import { styles } from "./styles";
+import { Controller } from "../../services/backend/controller";
+
+const ProductCreate = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const uuid_inventory = route.params?.uuid_inventory;
+  const compare_in_spreadsheet = route.params?.compare_in_spreadsheet;
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [productsSpreadsheets, setProductsSpreadsheets] = useState([]);
+  const [codebar, setCodebar] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [inconsistency, setInconsistency] = useState(false);
+  const [focusInCodebar, setFocusInCodebar] = useState(true);
+  const [focusInQuantity, setFocusInQuantity] = useState(false);
+  const [quantityLabel, setQuantityLabel] = useState(false);
+  const [visibleInputs, setVisibleInputs] = useState(false);
+
+  const codebarInputRef = useRef(null);
+
+  useEffect(() => {
+    if (compare_in_spreadsheet) {
+      Controller.SpreadSheets.getAll().then((response) => {
+        const produtos = response.flatMap((item) =>
+          item.products.map(({ codebar, name, price }) => ({
+            codebar: codebar.trim(),
+            name,
+            price,
+          }))
+        );
+        setProductsSpreadsheets(produtos);
+      });
+    }
+  }, [compare_in_spreadsheet]);
+
+  const checkProductSpreadsheet = (codebarInput) => {
+    const trimmedCodebar = codebarInput.trim();
+    setCodebar(trimmedCodebar);
+    setFocusInQuantity(true);
+
+    if (!trimmedCodebar) {
+      setError("Código de barras é obrigatório.");
+      resetValues();
+      return;
+    }
+
+    const produto = productsSpreadsheets.find(
+      (item) => item.codebar === trimmedCodebar
+    );
+
+    if (compare_in_spreadsheet) {
+      if (produto) {
+        setVisibleInputs(true);
+        setName(produto.name);
+        setPrice(produto.price.toString());
+        setError("Produto encontrado!");
+      } else {
+        setError("Produto não encontrado na planilha importada.");
+      }
+    } else {
+      setVisibleInputs(true);
+      setError("Código de barras informado.");
+    }
+  };
+
+  const handleQuantityChange = (text) => {
+    setQuantity(text.replace(/[^0-9]/g, ""));
+    setQuantityLabel(!text);
+  };
+
+  const resetValues = () => {
+    setCodebar("");
+    setQuantity("");
+    setName("");
+    setPrice("");
+    setInconsistency(false);
+    setVisibleInputs(false);
+  };
+
+  const createProduct = () => {
+    
+    if (!codebar) return setError("Código de barras é obrigatório.");
+    if (!quantity) return setQuantityLabel(true);
+    const product = {
+      uuid: uuid.v4(),
+      codebar,
+      quantity: parseFloat(quantity) || 0,
+      name,
+      price: parseFloat(price) || 0,
+      inconsistency,
+    };
+
+    setLoading(true);   
+    Controller.Product.create(uuid_inventory, product)
+      .then(() => {
+        resetValues();
+        setError("Produto adicionado com sucesso!");
+      })
+      .catch((err) => setError(err.message || "Erro ao adicionar produto."))
+      .finally(() => {
+        setTimeout(() => {
+          codebarInputRef.current?.focus();
+          setLoading(false);
+        }, 500);
+      });
+  };
+
+  return (
+    <View style={GlobalStyles.container}>
+      
+      <StatusBar style="auto" backgroundColor={colors.cardBackground} />
+
+      <View style={styles.card}>
+
+        <View style={styles.cardHeader}>
+          <Text style={GlobalStyles.cardTitle}>Adicionar produto</Text>
+          <TouchableOpacity
+            onPress={navigation.goBack}
+            style={GlobalStyles.closeButton}
+          >
+            <AntDesign name="close" size={28} color={colors.colorIcons} />
+          </TouchableOpacity>
+        </View>
+
+        <ScrollView>
+          <View style={styles.cardBody}>
+            <View style={{ flexDirection: "row", width: "100%", gap: 10 }}>
+              <View style={{ width: visibleInputs ? "65%" : "100%" }}>
+                <Text style={GlobalStyles.label}>Código de barras*</Text>
+                <TextInput
+                  ref={codebarInputRef} // Referência no input
+                  style={GlobalStyles.input}
+                  maxLength={150}
+                  value={codebar}
+                  autoFocus={focusInCodebar}
+                  onChangeText={checkProductSpreadsheet}
+                  keyboardType="numeric"
+                  returnKeyType="next"
+                />
+                {error && <Text style={GlobalStyles.labelError}>{error}</Text>}
+              </View>
+
+              {visibleInputs ? (
+                <View style={{ width: "35%", marginBottom: 10 }}>
+                  <Text style={GlobalStyles.label}>Quantidade*</Text>
+                  <TextInput
+                    style={GlobalStyles.input}
+                    maxLength={255}
+                    keyboardType="numeric"
+                    value={quantity}
+                    autoFocus={focusInQuantity}
+                    onChangeText={handleQuantityChange}
+                    onSubmitEditing={createProduct}
+                    returnKeyType="done"
+                  />
+                  {quantityLabel && (
+                    <Text style={GlobalStyles.labelError}>
+                      Campo obrigatório!
+                    </Text>
+                  )}
+                </View>
+              ) : null}
+            </View>
+            {compare_in_spreadsheet && (
+              <>
+                <View style={styles.grid}>
+                  <Text style={GlobalStyles.label}>Nome do produto</Text>
+                  <TextInput
+                    style={{ ...GlobalStyles.input, minHeight: 50 }}
+                    maxLength={255}
+                    value={name}
+                    onChangeText={setName}
+                    editable={compare_in_spreadsheet}
+                    multiline
+                  />
+                </View>
+                <View style={styles.grid}>
+                  <Text style={GlobalStyles.label}>Nome do produto</Text>
+                  <TextInput
+                    style={{ ...GlobalStyles.input, minHeight: 50 }}
+                    maxLength={255}
+                    value={name}
+                    onChangeText={setName}
+                    editable={compare_in_spreadsheet}
+                    multiline
+                  />
+                </View>
+              </>
+            )}
+          </View>
+
+          {visibleInputs && (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+                marginTop: 10,
+              }}
+            >
+              <Text style={GlobalStyles.label}>Inconsistência no produto?</Text>
+              <View>
+                <Switch
+                  value={inconsistency}
+                  onValueChange={setInconsistency}
+                />
+                <Text
+                  style={{
+                    ...GlobalStyles.labelError,
+                    textAlign: "center",
+                  }}
+                >
+                  {inconsistency ? "Sim" : "Não"}
+                </Text>
+              </View>
+            </View>
+          )}
+        </ScrollView>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={createProduct}
+          disabled={loading}
+        >
+          <Text style={GlobalStyles.buttonText}>
+            {loading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Adicionar</Text>
+            )}
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+    </View>
+  );
+};
+
+export default ProductCreate;

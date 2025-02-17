@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.backgroundItem,
     margin: 10,
     marginBottom: 15,
-    padding: 10,
+    padding: 5,
     borderRadius: 15,
   },
 
@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 16,
+    fontSize: 14.5,
     fontFamily: "Montserrat_Bold",
     color: colors.textPrimary,
   },
@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
   },
 
   value: {
-    fontSize: 13,
+    fontSize: 12.5,
     color: colors.textPrimary,
     fontFamily: "Montserrat_Medium",
   },

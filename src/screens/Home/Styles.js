@@ -1,16 +1,19 @@
 import { StyleSheet } from "react-native";
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
-import { GlobalStyles, colors } from "../../styles/GlobalStyles";
+import { colors } from "../../styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
   inventoryCategories: {
-    padding: 10,
-    borderRadius: 20,
+    padding: 5,
+    borderRadius: 120,
     backgroundColor: "#f5f5f5",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 30,
-    marginBottom : 5
+    marginTop: 5,
+    marginBottom: 5,
+    height: 55,
+    alignItems: "center",
+    width: "100%",
+    gap: 10,
   },
 
   containerInvetoryList: {
@@ -19,44 +22,29 @@ export const styles = StyleSheet.create({
   },
 
   header: {
-    padding: 20,
+    padding: 10,
     paddingTop: 0,
     paddingBottom: 0,
-  },
-
-  headerTabs: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
+    width: "100%",
   },
 
-  headerTitle: {
-    fontFamily: "Montserrat_Bold",
-    fontSize: RFPercentage(3.5),
-    width: "80%",
-  },
-
-  logoutButton: {
-    width: "auto",
-    alignItems: "flex-end",
-    backgroundColor: colors.menubarBackground,
-    borderRadius: 30,
-    height: 40,
-    width: 40,
-    justifyContent: "center",
-    alignItems: "center",
+  SignupBanner: {
+    padding: 10,
+    margin: 10,
   },
 
   category: {
     width: "50%",
+    height: 40,
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "row",
-    padding: 5,
-    height: 40
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "column",
+    padding: 10,
   },
-
-  categoryTitle: {},
 
   activeCategory: {
     borderRadius: 30,
@@ -75,6 +63,8 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "Montserrat_Medium",
     textAlign: "center",
+    position: "absolute",
+    left: 25,
   },
 
   activeBadge: {
@@ -99,19 +89,26 @@ export const styles = StyleSheet.create({
     margin: 10,
   },
 
+  headerProfile: {
+
+    display: "flex",
+    justifyContent: "space-between",
+    flexDirection: "row",
+    maxWidth: "100%",
+    alignItems: "center",
+    padding: 20,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+
   buttonProfileHeader: {
-    ...GlobalStyles.menubarItem,
-    position: "absolute",
- 
-    top: -10,
-    left: "90%",
-    backgroundColor: colors.menubarBackground,
-    borderRadius: 30,
-    height: 45,
-    width: 45,
-    minWidth: 45,
+    backgroundColor: colors.cardBackground,
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
-  }
-
+    borderRadius: 15,
+    height: 35,
+    width: 35,
+    // backgroundColor: colors.cardBackground,
+  },
 });

@@ -92,26 +92,21 @@ const Settings = () => {
         </View>
 
         <View style={styles.settingsItem}>
-          <Text style={[styles.title]}>Cadastro avulso</Text>
+          <Text style={[styles.title]}>Importar planilha de produtos</Text>
           <View style={styles.settingsBox}>
             <Text style={GlobalStyles.label}>{textLabelTheme}</Text>
-            <Switch
-              trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
-              thumbColor={true ? "#4d8eea" : "#bfbfbf"}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={setTheme}
-              value={toggleSwitch}
-            />
+            <TouchableOpacity style={{...GlobalStyles.button , width : "auto" , minWidth : "auto" , maxWidth : 120 , borderRadius : 5}} onPress={() => importFileSpreadSheets(setData)}>
+            <Text style={GlobalStyles.buttonText}>Importar</Text>
+          </TouchableOpacity>
           </View>
+
+         
         </View>
 
         <Text>
           Tamanho do banco de dados: {spreadSheetsCount} planilhas importadas
         </Text>
-        <Text>
-          Alterar o tamanho das fontes ..
-        </Text>
-
+        <Text>Alterar o tamanho das fontes ..</Text>
       </ScrollView>
     </View>
   );

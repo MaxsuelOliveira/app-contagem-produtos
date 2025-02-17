@@ -10,8 +10,6 @@ import ModalCustom from "../../utils/ModalCustom/Modal";
 import { decodeToken } from "../../utils/token";
 import { ScrollView } from "react-native-gesture-handler";
 
-import { LinearGradient } from "expo-linear-gradient";
-
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

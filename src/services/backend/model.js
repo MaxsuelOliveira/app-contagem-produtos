@@ -222,6 +222,30 @@ export const Model = {
 
       return inventory;
     },
+
+    deleteProducts: async (uuid_inventory, products) => {
+      const realm = await createRealm();
+      const inventories = realm.objects("Inventory").filtered(`uuid == "${uuid_inventory}"`);
+      if (inventories.length === 0) {
+        return {
+          error: `Inventário com uuid ${uuid_inventory} não encontrado`,
+          success: false,
+        };
+      }
+      const inventory = inventories[0];
+      realm.write(() => {
+        products.forEach((product) => {
+          inventory.products = inventory.products.filter(
+            (produto) => produto.uuid !== product.uuid
+          );
+        });
+      });
+
+      console.log(inventory);
+
+      return inventory;
+    },
+
   },
 
   SpreadSheets: {

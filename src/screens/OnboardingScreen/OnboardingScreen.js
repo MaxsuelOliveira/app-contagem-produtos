@@ -3,9 +3,20 @@ import { View, Text, TouchableOpacity, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Swiper from "react-native-swiper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// Fonts
+import { useFonts } from "expo-font";
+import {
+  Montserrat_300Light,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold,
+  Montserrat_700Bold,
+} from "@expo-google-fonts/montserrat";
 
 // Styles
-import { colors } from "../../styles/GlobalStyles"; 
+import { colors } from "../../styles/GlobalStyles";
 import { styles } from "./Styles";
 
 const slides = [
@@ -32,9 +43,22 @@ const slides = [
 ];
 
 const OnboardingScreen = () => {
+  const [fontsLoaded, fontError] = useFonts({
+    Montserrat_Light: Montserrat_300Light,
+    Montserrat_Regular: Montserrat_400Regular,
+    Montserrat_Medium: Montserrat_500Medium,
+    Montserrat_SemiBold: Montserrat_600SemiBold,
+    Montserrat_Bold: Montserrat_700Bold,
+  });
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const swiperRef = useRef(null);
   const navigation = useNavigation();
+
+  async function nextHome() {
+    await AsyncStorage.setItem("OnboardingScreen", "true");
+    navigation.navigate("Home");
+  }
 
   return (
     <View style={styles.container}>
@@ -58,7 +82,7 @@ const OnboardingScreen = () => {
       <TouchableOpacity
         onPress={() =>
           currentIndex === slides.length - 1
-            ? navigation.replace("Home")
+            ? nextHome()
             : swiperRef.current.scrollBy(1)
         }
         style={styles.button}

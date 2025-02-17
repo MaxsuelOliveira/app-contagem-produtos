@@ -11,16 +11,18 @@ import {
   Montserrat_700Bold,
 } from "@expo-google-fonts/montserrat";
 
+import { View, ActivityIndicator } from "react-native";
+
 import OnboardingScreen from "./src/screens/OnboardingScreen/OnboardingScreen";
 import Home from "./src/screens/Home/Home";
 import Login from "./src/screens/Login/Login";
 import Profile from "./src/screens/Profile/Profile";
 import InventoryDetails from "./src/screens/Inventory/InventoryDetails/InventoryDetails";
-import SpreadSheetsImport from "./src/screens/SpreadSheetsImport/SpreadSheetsImport";
 import SpreadSheets from "./src/screens/SpreadSheets/SpreadSheets";
 import Settings from "./src/screens/Settings/Settings";
 import CreateAccount from "./src/screens/Login/CreateAccount/CreateAccount";
 import RecoverPassword from "./src/screens/Login/RecoverPassword/RecoverPassword";
+import ProductCreate from "./src/screens/ProductCreate/ProductCreate";
 
 const Stack = createStackNavigator();
 
@@ -33,118 +35,105 @@ export default function App() {
     Montserrat_Bold: Montserrat_700Bold,
   });
 
-  // const [initialRoute, setInitialRoute] = useState(null);
-  // useEffect(() => {
-  //   async function checkLogin() {
-  //     try {
-  //       const token = await AsyncStorage.getItem("token");
-  //       setInitialRoute(token ? "Home" : "Login");
-  //     } catch (error) {
-  //       console.error("Erro ao recuperar o token:", error);
-  //       setInitialRoute("Login");
-  //     }
-  //   }
+  const [initialRoute, setInitialRoute] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  //   checkLogin();
-  // }, []);
+  useEffect(() => {
+    async function checkOnboardingScreen() {
+      try {
+        const onboardingScreen = await AsyncStorage.getItem("OnboardingScreen");
+        console.log("OnboardingScreen:", onboardingScreen);
+        setInitialRoute(
+          onboardingScreen === "true" ? "Home" : "OnboardingScreen"
+        );
+      } catch (error) {
+        console.error(error);
+        setInitialRoute("Login");
+      } finally {
+        setIsLoading(false);
+      }
+    }
 
-  // if (initialRoute === null) {
-  //   return null;
-  // }
+    checkOnboardingScreen();
+  }, []);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={"OnboardingScreen"}>
+      <Stack.Navigator initialRouteName={initialRoute}>
+
         <Stack.Screen
           name="OnboardingScreen"
           component={OnboardingScreen}
-          options={{
-            headerTitle: () => null,
-            headerShown: false,
-          }}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
           name="Home"
           component={Home}
-          options={{
-            headerTitle: () => null,
-            headerShown: false,
-          }}
-        />
-
-        <Stack.Screen
-          name="InventoryDetails"
-          component={InventoryDetails}
-          options={{
-            headerTitle: () => null,
-            headerShown: false,
-          }}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
           name="Login"
           component={Login}
-          options={{
-            headerTitle: () => null,
-            headerShown: false,
-          }}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
           name="CreateAccount"
           component={CreateAccount}
-          options={{
-            headerTitle: () => null,
-            headerShown: false,
-          }}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
           name="RecoverPassword"
           component={RecoverPassword}
-          options={{
-            headerTitle: () => null,
-            headerShown: false,
-          }}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
-          name="Profile"
-          component={Profile}
-          options={{
-            headerTitle: () => null,
-            headerShown: false,
-          }}
-        />
-
-        <Stack.Screen
-          name="Settings"
-          component={Settings}
-          options={{
-            headerTitle: () => null,
-            headerShown: false,
-          }}
+          name="InventoryDetails"
+          component={InventoryDetails}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
           name="SpreadSheets"
           component={SpreadSheets}
-          options={{
-            headerTitle: () => null,
-            headerShown: false,
-          }}
+          options={{ headerShown: false }}
+        />
+        
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
+          options={{ headerShown: false }}
+        />
+        
+        <Stack.Screen
+          name="Settings"
+          component={Settings}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
-          name="SpreadSheetsImport"
-          component={SpreadSheetsImport}
-          options={{
-            headerTitle: () => null,
-            headerShown: false,
-          }}
+          name="ProductCreate"
+          component={ProductCreate}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
+  );
+}
+
+// Criar um componente simples para exibir enquanto carrega
+function LoadingScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <ActivityIndicator size="large" color="#0000ff" />
+    </View>
   );
 }

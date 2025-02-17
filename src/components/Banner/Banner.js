@@ -9,17 +9,13 @@ const SignupBanner = ({ onLogin, createAccount }) => {
     <View style={styles.banner}>
       <Text style={styles.text}>
         <Text style={styles.icon}>🚀</Text>
-        Faça login para acessar todos os recursos do{" "}
+        <Text style={{fontSize: 16}}> Faça login {"\n"}</Text>
+        Acesse todos os recursos do{" "}
         <Text style={styles.highlight}>EstoqueFácil!</Text>
       </Text>
       <View style={styles.buttons}>
         <TouchableOpacity style={styles.button} onPress={onLogin}>
           <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}   onPress={()=>{Alert.alert('Abrindo o navegador !')}}>
-          <Text style={styles.buttonText}>
-            Saiba mais
-          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -29,11 +25,14 @@ const SignupBanner = ({ onLogin, createAccount }) => {
 const styles = StyleSheet.create({
   banner: {
     backgroundColor: "#007AFF",
-    padding: 20,
+    padding: 5,
     borderRadius: 10,
     alignItems: "center",
     width: "100%",
     marginBottom: -20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap : "10 10"
   },
 
   icon: {
@@ -42,8 +41,8 @@ const styles = StyleSheet.create({
 
   text: {
     color: "#fff",
-    fontSize: 16,
-    textAlign: "center",
+    fontSize: 14,
+    textAlign: "justify",
     marginBottom: 10,
     fontFamily: "Montserrat_Medium",
   },
@@ -54,18 +53,19 @@ const styles = StyleSheet.create({
 
   button: {
     backgroundColor: "#fff",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     borderRadius: 20,
   },
 
   buttonText: {
     color: "#007AFF",
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: "Montserrat_Medium",
   },
 
   buttons: {
+    // display : 'none',
     justifyContent: "space-between",
     flexDirection: "row",
     gap: 10,
