@@ -232,9 +232,6 @@ export default function InventoryDetails() {
                 {
                   text: "Apagar",
                   onPress: () => {
-                    console.log("Apagar produtos em  multipla seleção.");
-                    console.log("Total: ", selectedProducts.length);
-                    console.log(selectedProducts);
                     Controller.Product.deleteProducts(selectedProducts);
                     setRefresh(refresh + 1);
                     setSelectedProducts([]);

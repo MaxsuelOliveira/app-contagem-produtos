@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Alert , Modal} from "react-native";
+import { View, Text, TouchableOpacity} from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView, Switch } from "react-native-gesture-handler";
 
@@ -28,7 +28,6 @@ const Settings = () => {
   const [spreadSheetsCount, setSpreadSheetsCount] = useState(0);
   const [spreadSheetsImportModal, setSpreadSheetsImportModal] = useState(false);
   const [spreadSheetsModal, setSpreadSheetsModal] = useState([]);
-
 
   function setTheme() {
     setToggleSwitch(!toggleSwitch);

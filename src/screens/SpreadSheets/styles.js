@@ -23,7 +23,6 @@ export const styles = StyleSheet.create({
   },
 
   import: {
-    // border: "2px dashed #ededee",
     borderColor: "#ededee",
     borderWidth: 2,
     borderStyle: "dashed",

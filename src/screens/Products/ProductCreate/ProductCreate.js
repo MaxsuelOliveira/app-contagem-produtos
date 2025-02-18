@@ -11,20 +11,29 @@ import {
   Switch,
   ActivityIndicator,
 } from "react-native";
+
+// Icons
 import AntDesign from "@expo/vector-icons/AntDesign";
+
+// Styles
 import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
+
+// Backend
 import { Controller } from "@services/backend/controller";
 
 const ProductCreate = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const uuid_inventory = route.params?.uuid_inventory;
-  const compare_in_spreadsheet = route.params?.compare_in_spreadsheet;
+  // const compare_in_spreadsheet = route.params?.compare_in_spreadsheet;
+  const [compare_in_spreadsheet, setCompareInSpreadsheet] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [productsSpreadsheets, setProductsSpreadsheets] = useState([]);
+  const [productFound, setProductFound] = useState(false);
+
   const [codebar, setCodebar] = useState("");
   const [quantity, setQuantity] = useState("");
   const [name, setName] = useState("");
@@ -38,19 +47,25 @@ const ProductCreate = () => {
   const codebarInputRef = useRef(null);
 
   useEffect(() => {
-    if (compare_in_spreadsheet) {
-      Controller.SpreadSheets.getAll().then((response) => {
-        const produtos = response.flatMap((item) =>
-          item.products.map(({ codebar, name, price }) => ({
-            codebar: codebar.trim(),
-            name,
-            price,
-          }))
-        );
-        setProductsSpreadsheets(produtos);
-      });
-    }
-  }, [compare_in_spreadsheet]);
+    Controller.Inventory.getUUID(uuid_inventory).then((inventory) => {
+      inventory = inventory[0];
+
+      setCompareInSpreadsheet(inventory.compare_in_spreadsheet);
+      if (inventory.compare_in_spreadsheet) {
+        Controller.SpreadSheets.getAll().then((response) => {
+          const produtos = response.flatMap((item) =>
+            item.products.map(({ codebar, name, price }) => ({
+              codebar: codebar.trim(),
+              name,
+              price,
+            }))
+          );
+          setProductsSpreadsheets(produtos);
+        });
+      }
+      
+    });
+  }, [uuid_inventory]);
 
   const checkProductSpreadsheet = (codebarInput) => {
     const trimmedCodebar = codebarInput.trim();
@@ -67,13 +82,18 @@ const ProductCreate = () => {
       (item) => item.codebar === trimmedCodebar
     );
 
+    console.log("Produto encontrado:", compare_in_spreadsheet);
+
     if (compare_in_spreadsheet) {
       if (produto) {
+        setProductFound(true);
         setVisibleInputs(true);
         setName(produto.name);
         setPrice(produto.price.toString());
         setError("Produto encontrado!");
       } else {
+        setVisibleInputs(false);
+        setProductFound(false);
         setError("Produto não encontrado na planilha importada.");
       }
     } else {
@@ -114,6 +134,7 @@ const ProductCreate = () => {
       .then(() => {
         resetValues();
         setError("Produto adicionado com sucesso!");
+        setProductFound(false);
       })
       .catch((err) => setError(err.message || "Erro ao adicionar produto."))
       .finally(() => {
@@ -137,7 +158,7 @@ const ProductCreate = () => {
             onPress={navigation.goBack}
             style={GlobalStyles.closeButton}
           >
-            {/* <AntDesign name="close" size={28} color={colors.colorIcons} /> */}
+            <AntDesign name="close" size={28} color={colors.colorIcons} />
           </TouchableOpacity>
         </View>
 
@@ -157,7 +178,13 @@ const ProductCreate = () => {
                   returnKeyType="next"
                   placeholder="Código de barras"
                 />
-                {error && <Text style={GlobalStyles.labelError}>{error}</Text>}
+                {error && (
+                  <Text
+                    style={{ ...GlobalStyles.labelError, marginBottom: 10 }}
+                  >
+                    {error}
+                  </Text>
+                )}
               </View>
 
               {visibleInputs ? (
@@ -182,27 +209,27 @@ const ProductCreate = () => {
                 </View>
               ) : null}
             </View>
-            {compare_in_spreadsheet && (
+            {compare_in_spreadsheet === true && productFound === true && (
               <>
                 <View style={styles.grid}>
-                  <Text style={GlobalStyles.label}>Nome do produto</Text>
+                  <Text style={GlobalStyles.label}>Nome</Text>
                   <TextInput
                     style={{ ...GlobalStyles.input, minHeight: 50 }}
                     maxLength={255}
-                    value={name}
+                    value={name ?? ""}
                     onChangeText={setName}
-                    editable={compare_in_spreadsheet}
+                    editable={compare_in_spreadsheet || visibleInputs}
                     multiline
                   />
                 </View>
                 <View style={styles.grid}>
-                  <Text style={GlobalStyles.label}>Nome do produto</Text>
+                  <Text style={GlobalStyles.label}>Preço R$</Text>
                   <TextInput
                     style={{ ...GlobalStyles.input, minHeight: 50 }}
                     maxLength={255}
-                    value={name}
-                    onChangeText={setName}
-                    editable={compare_in_spreadsheet}
+                    value={price ?? ""}
+                    onChangeText={setPrice}
+                    editable={compare_in_spreadsheet || visibleInputs}
                     multiline
                   />
                 </View>

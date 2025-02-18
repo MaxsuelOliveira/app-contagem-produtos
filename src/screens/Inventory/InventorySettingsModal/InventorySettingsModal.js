@@ -8,6 +8,7 @@ import {
   Switch,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 
 // Icons
@@ -21,9 +22,12 @@ import { styles } from "./styles";
 import { Controller } from "@services/backend/controller";
 
 const InventorySettingssModal = ({ isVisible, onClose, uuidInventory }) => {
+  const [loading, setLoading] = useState(false);
   const [isBuyWithSpreadsheet, setIsBuyWithSpreadsheet] = useState(false);
   const toggleSwitchSpreadsheet = () =>
-    setIsBuyWithSpreadsheet((previousState) => !previousState);
+    setIsBuyWithSpreadsheet((previousState) => {
+      return !previousState;
+  });
 
   useEffect(() => {
     Controller.Inventory.getUUID(uuidInventory)
@@ -37,17 +41,20 @@ const InventorySettingssModal = ({ isVisible, onClose, uuidInventory }) => {
   }, []);
 
   const updateSettings = () => {
-    Alert.alert(isBuyWithSpreadsheet);
+    setLoading(true);
 
     Controller.Inventory.updateCompareInSpreadSheets(
       uuidInventory,
       isBuyWithSpreadsheet
     )
       .then((inventory) => {
-        Alert.alert("Inventário atualizado com sucesso!");
+        setTimeout(() => {
+          setLoading(false);
+        }, 300);
         onClose();
       })
       .catch((error) => {
+        setLoading(false);
         Alert.alert("Erro atualizar inventorio !" + error);
       });
   };
@@ -90,7 +97,7 @@ const InventorySettingssModal = ({ isVisible, onClose, uuidInventory }) => {
 
                     <Switch
                       trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
-                      thumbColor={true ? "#4d8eea" : "#bfbfbf"}
+                      thumbColor={isBuyWithSpreadsheet ? "#4d8eea" : "#bfbfbf"}
                       ios_backgroundColor="#3e3e3e"
                       onValueChange={toggleSwitchSpreadsheet}
                       value={isBuyWithSpreadsheet}
@@ -103,9 +110,11 @@ const InventorySettingssModal = ({ isVisible, onClose, uuidInventory }) => {
                 style={styles.button}
                 onPress={() => updateSettings()}
               >
-                <Text style={GlobalStyles.buttonText}>
-                  Salvar configurações
-                </Text>
+                {loading ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <Text style={GlobalStyles.buttonText}>Salvar</Text>
+                )}
               </TouchableOpacity>
             </ScrollView>
           </View>

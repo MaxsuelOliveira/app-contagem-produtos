@@ -134,7 +134,7 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
                 </View>
               </View>
 
-              <View style={{ ...styles.grid, width: "60%" }}>
+              <View style={{ ...styles.grid, width: "100%" }}>
                 <View>
                   <Text style={GlobalStyles.label}>Nome do produto</Text>
                   <TextInput
@@ -145,12 +145,13 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
                     placeholderTextColor="gray"
                     value={name}
                     onChangeText={setName}
+                    multiline={true}
                   />
                 </View>
               </View>
 
               {/* Preço */}
-              <View style={{ ...styles.grid, width: "35%" }}>
+              <View style={{ ...styles.grid, width: "100%" }}>
                 <View>
                   <Text style={GlobalStyles.label}>Preço R$</Text>
                   <TextInput

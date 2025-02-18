@@ -112,7 +112,7 @@ const GlobalStyles = StyleSheet.create({
     fontFamily: "Montserrat_Medium",
     color: colors.textDescription,
     marginBottom: 3,
-    fontSize: 12,
+    fontSize: 14,
   },
 
   small: {
