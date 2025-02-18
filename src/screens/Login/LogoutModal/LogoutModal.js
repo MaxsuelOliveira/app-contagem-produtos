@@ -5,7 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 // Styles
-import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
 
 const LogoutModal = ({ isVisible, onClose, uuidInventory }) => {

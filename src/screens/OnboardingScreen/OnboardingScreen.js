@@ -16,7 +16,7 @@ import {
 } from "@expo-google-fonts/montserrat";
 
 // Styles
-import { colors } from "../../styles/GlobalStyles";
+import { colors } from "@styles/GlobalStyles";
 import { styles } from "./Styles";
 
 const slides = [

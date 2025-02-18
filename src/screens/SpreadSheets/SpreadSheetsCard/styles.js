@@ -1,23 +1,19 @@
 import { StyleSheet } from "react-native";
-import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
   itemInventario: {
-    width: "100%",
-    padding: 10,
-    backgroundColor: "#a5a4a40d",
-    borderRadius: 8,
-    marginBottom: 10,
+
     minHeight: 80,
-    alignItems: "center",
-    justifyContent: "center",
+    marginBottom: 10,
+    width: "100%",
   },
 
   itemContent: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: 15, // Aplicado do .item-inventario--content
+    gap: 15,
   },
 
   menuButtton: {
@@ -39,6 +35,7 @@ export const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+   
   },
 
   menuButttonIcon: {
@@ -56,8 +53,8 @@ export const styles = StyleSheet.create({
   },
 
   titleText: {
-    fontFamily: "Montserrat_Medium",
-    fontSize: 17,
+    fontFamily: "Montserrat_Bold",
+    fontSize: 14,
     color: colors.textPrimary,
   },
 

@@ -8,30 +8,26 @@ import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 // Styles
-import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
-
-// Components
-import ProductInventoryCardDetails from "../../Product/ProductInventoryCardDetails/ProductInventoryCardDetails";
-import InventorySettingsModal from "../InventorySettingsModal/InventorySettingsModal";
-import InventoryExportModal from "../InventoryExportModal/InventoryExportModal";
-
-// Produtos
-import ProductCreateModal from "../../ProductCreate/ProductCreate";
-import ProductUpdateModal from "../../Product/ProductUpdateModal/ProductUpdateModal";
 
 // Ultis
 import { setStatus } from "../../../components/CardInvetory/CardInventory";
 
-// Backend
-import { Controller } from "../../../services/backend/controller";
-import { TextInput } from "react-native-gesture-handler";
+// Components
+import ProductInventoryCardDetails from "../../Products/ProductInventoryCardDetails/ProductInventoryCardDetails";
+import ProductUpdateModal from "../../Products/ProductUpdateModal/ProductUpdateModal";
+import InventorySettingsModal from "../InventorySettingsModal/InventorySettingsModal";
+import InventoryExportModal from "../InventoryExportModal/InventoryExportModal";
 
-let produtos = [];
+// Backend
+import { Controller } from "@services/backend/controller";
+import { TextInput } from "react-native-gesture-handler";
 
 export default function InventoryDetails() {
   const navigation = useNavigation();
   const route = useRoute();
+
   const {
     uuid,
     name,
@@ -50,7 +46,7 @@ export default function InventoryDetails() {
   );
 
   const [remover, setRemover] = useState(false);
-  const [produtosSelecionados, setProdutosSelecionados] = useState([]);
+  const [selectedProducts, setSelectedProducts] = useState([]);
   const [isProductUpdateModal, setProductUpdateModal] = useState(false);
   const [isModalVisibleSettings, setModalVisibleSettings] = useState(false);
   const [isModalVisibleExport, setModalVisibleExport] = useState(false);
@@ -58,6 +54,15 @@ export default function InventoryDetails() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [refresh, setRefresh] = useState(0);
   const [activeSearch, setActiveSearch] = useState(false);
+
+  const [search, setSearch] = useState("");
+
+  // Filtra os produtos com base no nome ou código de barras
+  const filteredProducts = productsInventory.filter(
+    (item) =>
+      item.name?.toLowerCase().includes(search.toLowerCase()) ||
+      item.codebar?.toLowerCase().includes(search.toLowerCase())
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -73,7 +78,7 @@ export default function InventoryDetails() {
   function toggleProdutoSelecionado(uuid) {
     let check = false;
 
-    setProdutosSelecionados((prev) => {
+    setSelectedProducts((prev) => {
       const produtoIndex = prev.findIndex((produto) => produto.uuid === uuid);
 
       if (produtoIndex !== -1) {
@@ -111,47 +116,56 @@ export default function InventoryDetails() {
 
   return (
     <View style={styles.card}>
-      <View style={{ ...styles.cardHeader, marginTop: 10 }}>
+      <View style={{ ...styles.cardHeader }}>
         <Text style={styles.cardTitle}>{name}</Text>
-        <Text style={styles.cardDescription}>{describe}</Text>
+        {describe ? (
+          <Text style={styles.cardDescription}>{describe}</Text>
+        ) : null}
 
         <View style={styles.createInventarioInfo}>
-          <View style={styles.createInventarioInfoItem}>
-            <Text style={styles.label}>Status</Text>
-            <Text style={styles.value}>{setStatus(status)}</Text>
-          </View>
+          {activeSearch ? (
+            <TextInput
+              placeholder="Pesquisar"
+              style={[
+                styles.input,
+                activeSearch === true ? styles.inputActive : null,
+              ]}
+              value={search}
+              onChangeText={setSearch}
+            ></TextInput>
+          ) : (
+            <>
+              <View style={styles.createInventarioInfoItem}>
+                <Text style={styles.label}>Status</Text>
+                <Text style={styles.value}>{setStatus(status)}</Text>
+              </View>
 
-          <View style={styles.createInventarioInfoItem}>
-            <Text style={styles.label}>Item(s)</Text>
-            <Text style={styles.value}>{products.length}</Text>
-          </View>
+              <View style={styles.createInventarioInfoItem}>
+                <Text style={styles.label}>Item(s)</Text>
+                <Text style={styles.value}>{products.length}</Text>
+              </View>
 
-          <View style={styles.createInventarioInfoItem}>
-            <Text style={styles.label}>
-              {status === "done" ? "Finalizado em" : "Criado em"}
-            </Text>
-            <Text style={styles.value}>{date_create_formart}</Text>
-          </View>
-        </View>
+              <View style={styles.createInventarioInfoItem}>
+                <Text style={styles.label}>
+                  {status === "done" ? "Finalizado em" : "Criado em"}
+                </Text>
+                <Text style={styles.value}>{date_create_formart}</Text>
+              </View>
+            </>
+          )}
 
-        <View>
-          <TouchableOpacity style={styles.buttonSearch} onPress={() => setActiveSearch(!activeSearch)}>
-            <AntDesign name="search1" size={24} color="black" />
+          <TouchableOpacity
+            style={styles.buttonSearch}
+            onPress={() => setActiveSearch(!activeSearch)}
+          >
+            <AntDesign name="search1" size={22} color="#fff" />
           </TouchableOpacity>
-
-          <TextInput
-            placeholder="Pesquisar"
-            style={[
-              styles.input,
-              activeSearch === true ? styles.inputActive : null,
-            ]}
-          ></TextInput>
         </View>
       </View>
 
       <ScrollView style={styles.cardBody}>
-        {productsInventory.length > 0 ? (
-          productsInventory.map((item) => (
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((item) => (
             <ProductInventoryCardDetails
               key={item.uuid}
               uuid_inventory={uuid}
@@ -175,7 +189,7 @@ export default function InventoryDetails() {
       </ScrollView>
 
       <View style={{ ...GlobalStyles.menubar }}>
-        {produtosSelecionados.length === 0 ? (
+        {selectedProducts.length === 0 ? (
           <TouchableOpacity
             style={GlobalStyles.menubarItem}
             onPress={() => setModalVisibleExport(true)}
@@ -185,9 +199,10 @@ export default function InventoryDetails() {
           </TouchableOpacity>
         ) : null}
 
-        {status === "progress" && produtosSelecionados.length === 0 ? (
+        {status === "progress" && selectedProducts.length === 0 ? (
           <>
             <TouchableOpacity
+              testID="add-product-button"
               style={[GlobalStyles.menubarItem]}
               onPress={handleNavigateToProductCreate}
             >
@@ -205,7 +220,7 @@ export default function InventoryDetails() {
           </>
         ) : null}
 
-        {produtosSelecionados.length ? (
+        {selectedProducts.length ? (
           <TouchableOpacity
             style={GlobalStyles.menubarItem}
             onPress={() =>
@@ -218,11 +233,11 @@ export default function InventoryDetails() {
                   text: "Apagar",
                   onPress: () => {
                     console.log("Apagar produtos em  multipla seleção.");
-                    console.log("Total: ", produtosSelecionados.length);
-                    console.log(produtosSelecionados);
-                    Controller.Product.deleteProducts(produtosSelecionados);
+                    console.log("Total: ", selectedProducts.length);
+                    console.log(selectedProducts);
+                    Controller.Product.deleteProducts(selectedProducts);
                     setRefresh(refresh + 1);
-                    setProdutosSelecionados([]);
+                    setSelectedProducts([]);
                     setRemover(false);
                   },
                 },
@@ -231,7 +246,7 @@ export default function InventoryDetails() {
           >
             <AntDesign name="delete" size={26} color={colors.colorIcons} />
             <Text style={styles.menuText}>
-              Apagar ({produtosSelecionados.length})
+              Apagar ({selectedProducts.length})
             </Text>
           </TouchableOpacity>
         ) : null}

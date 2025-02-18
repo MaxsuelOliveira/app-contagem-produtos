@@ -16,4 +16,14 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 20,
   },
+
+  profileImage: {
+    width: 80,
+    height: 80,
+    resizeMode: "contain",
+    backgroundColor: "#f0f0f0",
+    borderRadius: 50,
+    margin: "auto",
+    marginBottom: 20,
+  },
 });

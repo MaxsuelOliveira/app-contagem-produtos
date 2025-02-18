@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { colors } from "../../styles/GlobalStyles";
+import { colors, GlobalStyles } from "@styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
   inventoryCategories: {
@@ -28,12 +28,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-  },
-
-  SignupBanner: {
-    padding: 10,
-    margin: 10,
-  },
+  }, 
 
   category: {
     width: "50%",
@@ -74,7 +69,7 @@ export const styles = StyleSheet.create({
   inventoryContainer: {
     flex: 1,
     padding: 10,
-    paddingTop: 10,
+    paddingTop: 0,
   },
 
   inventoryItem: {
@@ -90,7 +85,6 @@ export const styles = StyleSheet.create({
   },
 
   headerProfile: {
-
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "row",
@@ -102,13 +96,19 @@ export const styles = StyleSheet.create({
   },
 
   buttonProfileHeader: {
-    backgroundColor: colors.cardBackground,
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 15,
     height: 35,
     width: 35,
-    // backgroundColor: colors.cardBackground,
+  },
+
+  cardTitle: {
+    ...GlobalStyles.cardTitle,
+    marginBottom: 10,
+    marginTop: 10,
+    flex: 1,
+    textAlign: "left",
   },
 });

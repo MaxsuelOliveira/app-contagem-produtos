@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // Ícones para melhorar a UI
 
-import { GlobalStyles, colors } from "../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
 
 const ALERT_TYPES = {

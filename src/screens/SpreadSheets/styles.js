@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { GlobalStyles } from "../../styles/GlobalStyles";
+import { GlobalStyles } from "@styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
   cardTilte: {
@@ -7,12 +7,17 @@ export const styles = StyleSheet.create({
     marginTop: 0,
   },
 
+  card : {
+    ...GlobalStyles.card,
+    minHeight: "50%",
+  },
+
   settingsItem: {
     marginBottom: 30,
   },
 
   title: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: "Montserrat_Regular",
     marginBottom: 10,
   },

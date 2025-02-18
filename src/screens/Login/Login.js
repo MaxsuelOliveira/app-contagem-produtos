@@ -4,10 +4,10 @@ import * as Crypto from "expo-crypto";
 import * as Device from "expo-device";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import { GlobalStyles } from "../../styles/GlobalStyles";
+import { GlobalStyles } from "@styles/GlobalStyles";
 import { styles } from "./styles";
-import ModalCustom from "../../utils/ModalCustom/Modal";
-import { decodeToken } from "../../utils/token";
+import ModalCustom from "@utils/ModalCustom/Modal";
+import { decodeToken } from "@utils/token";
 import { ScrollView } from "react-native-gesture-handler";
 
 const LoginScreen = ({ navigation }) => {

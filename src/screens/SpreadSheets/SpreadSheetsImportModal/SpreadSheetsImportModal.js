@@ -8,12 +8,12 @@ import { ScrollView, Switch } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 // Backend
-import { Controller } from "../../../services/backend/controller";
-import { downloadFile } from "../../../utils/downloadFile";
-import importFileSpreadSheets from "../../../utils/importFileSpreadSheets";
+import { Controller } from "@services/backend/controller";
+import { downloadFile } from "@utils/downloadFile";
+import importFileSpreadSheets from "@utils/importFileSpreadSheets";
 
 // Styles
-import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
 
 const SpreadSheetsImportModal = ({ isVisible, onClose }) => {

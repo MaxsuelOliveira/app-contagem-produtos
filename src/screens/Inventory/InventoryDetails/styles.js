@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { GlobalStyles } from "../../../styles/GlobalStyles";
+import { GlobalStyles , colors } from "@styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
   card: {
@@ -15,13 +15,12 @@ export const styles = StyleSheet.create({
   },
 
   cardHeader: {
+    width: "95%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 15,
     padding: 20,
     paddingBottom: 0,
-    marginTop: 30,
-    justifyContent: "center",
-    alignContent: "center",
-    display: "flex",
-    width: "100%",
   },
 
   cardBody: {
@@ -46,6 +45,7 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "center",
     fontFamily: "Montserrat_Bold",
+    marginBottom :  5
   },
 
   cardDescription: {
@@ -59,6 +59,8 @@ export const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    gap: 10,
+    marginBottom : 10
   },
 
   createInventarioInfoItem: {
@@ -149,7 +151,6 @@ export const styles = StyleSheet.create({
   },
 
   noProducts : {
-    // marginTop: 20,
     padding: 10,
   },
 
@@ -160,18 +161,16 @@ export const styles = StyleSheet.create({
   },
 
   input: {
-    display: "none",
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#e9ecef",
     borderRadius: 4,
     padding: 10,
-    marginBottom: 16,
     height: 40,
     borderRadius: 20,
     fontFamily: "Montserrat_Regular",
     fontSize: 14,
     color: "#333",
-    borderColor: "#333",
+    width: "85%",
   },
 
   inputActive : {
@@ -179,10 +178,13 @@ export const styles = StyleSheet.create({
   },
 
   buttonSearch : {
-    position: "absolute",
-    left: "90%",
-    top: -100,
-    zIndex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 35,
+    width: 40,
+    backgroundColor: colors.primary,
+    borderRadius: 15,
   }
 
 });

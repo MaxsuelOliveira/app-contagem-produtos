@@ -7,18 +7,18 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Alert,
+  ActivityIndicator
 } from "react-native";
 
 // Icons
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 // Styles
-import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
 
 // Controller
-import { Controller } from "../../../services/backend/controller";
+import { Controller } from "@services/backend/controller";
 
 const ModalInventoryCreate = ({ isVisible, onClose }) => {
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
     setTimeout(() => {
       setLoading(false);
       onClose();
-    }, 1000);
+    }, 300);
   }
 
   function errorInCreating(message) {
@@ -112,7 +112,14 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
 
               {isError ? (
                 <View style={{ marginBottom: 10 }}>
-                  <Text style={{...GlobalStyles.label , color : colors.textDescription}}>{error}</Text>
+                  <Text
+                    style={{
+                      ...GlobalStyles.label,
+                      color: colors.textDescription,
+                    }}
+                  >
+                    {error}
+                  </Text>
                 </View>
               ) : null}
 
@@ -133,7 +140,11 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
                 }}
               >
                 <Text style={GlobalStyles.buttonText}>
-                  {loading ? "Criando ..." : "Criar inventário"}
+                  {loading ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <Text style={styles.buttonText}>Adicionar</Text>
+                  )}
                 </Text>
               </TouchableOpacity>
             </View>

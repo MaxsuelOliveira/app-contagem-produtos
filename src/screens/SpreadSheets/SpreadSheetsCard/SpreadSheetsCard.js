@@ -8,7 +8,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { styles } from "./styles";
 
 // Backend
-import { Controller } from "services/backend/controller";
+import { Controller } from "@services/backend/controller";
 
 export default function CardSpreadSheets({
   uuid,
@@ -49,7 +49,7 @@ export default function CardSpreadSheets({
       navigation.navigate("Settings");
       return;
     }
-    Alert.alert("Erro ao excluir a planilha !" , responseDelete);
+    Alert.alert("Erro ao excluir a planilha !", responseDelete);
     console.error(responseDelete);
   };
 
@@ -74,7 +74,7 @@ export default function CardSpreadSheets({
         </View>
 
         <TouchableOpacity style={styles.button} onPress={() => alertDelete()}>
-          <AntDesign name="delete" size={20} color={"#fff"} />
+          <AntDesign name="close" size={20} color={"#fff"} />
         </TouchableOpacity>
       </View>
     </View>

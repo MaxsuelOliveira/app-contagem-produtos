@@ -1,19 +1,22 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Alert , Modal} from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView, Switch } from "react-native-gesture-handler";
 
 // Icons
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 // Backend
-import { Controller } from "../../services/backend/controller";
-import { downloadFile } from "../../utils/downloadFile";
-import importFileSpreadSheets from "../../utils/importFileSpreadSheets";
+import { Controller } from "@services/backend/controller";
+import { downloadFile } from "@utils/downloadFile";
+import importFileSpreadSheets from "@utils/importFileSpreadSheets";
+import SpreadSheetsImportModal from "../SpreadSheets/SpreadSheetsImportModal/SpreadSheetsImportModal";
+import SpreadSheets from "@screens/SpreadSheets/SpreadSheets";
 
 // Styles
-import { GlobalStyles, colors } from "../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
 
 const Settings = () => {
@@ -23,6 +26,9 @@ const Settings = () => {
 
   const [data, setData] = useState([]);
   const [spreadSheetsCount, setSpreadSheetsCount] = useState(0);
+  const [spreadSheetsImportModal, setSpreadSheetsImportModal] = useState(false);
+  const [spreadSheetsModal, setSpreadSheetsModal] = useState([]);
+
 
   function setTheme() {
     setToggleSwitch(!toggleSwitch);
@@ -50,9 +56,9 @@ const Settings = () => {
 
       <ScrollView>
         <View style={styles.settingsItem}>
-          <Text style={[styles.title]}>Tema do app</Text>
+          <Text style={styles.title}>Tema do app</Text>
           <View style={styles.settingsBox}>
-            <Text style={GlobalStyles.label}>{textLabelTheme}</Text>
+            <Text style={styles.label}>{textLabelTheme}</Text>
             <Switch
               trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
               thumbColor={true ? "#4d8eea" : "#bfbfbf"}
@@ -64,9 +70,9 @@ const Settings = () => {
         </View>
 
         <View style={styles.settingsItem}>
-          <Text style={[styles.title]}>Habilitar camera</Text>
+          <Text style={styles.title}>Habilitar camera</Text>
           <View style={styles.settingsBox}>
-            <Text style={GlobalStyles.label}>{textLabelTheme}</Text>
+            <Text style={styles.label}>{textLabelTheme}</Text>
             <Switch
               trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
               thumbColor={true ? "#4d8eea" : "#bfbfbf"}
@@ -78,9 +84,9 @@ const Settings = () => {
         </View>
 
         <View style={styles.settingsItem}>
-          <Text style={[styles.title]}>Som de bip</Text>
+          <Text style={styles.title}>Som de bip</Text>
           <View style={styles.settingsBox}>
-            <Text style={GlobalStyles.label}>{textLabelTheme}</Text>
+            <Text style={styles.label}>{textLabelTheme}</Text>
             <Switch
               trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
               thumbColor={true ? "#4d8eea" : "#bfbfbf"}
@@ -91,23 +97,52 @@ const Settings = () => {
           </View>
         </View>
 
+        <View style={styles.hr}></View>
+
         <View style={styles.settingsItem}>
-          <Text style={[styles.title]}>Importar planilha de produtos</Text>
-          <View style={styles.settingsBox}>
-            <Text style={GlobalStyles.label}>{textLabelTheme}</Text>
-            <TouchableOpacity style={{...GlobalStyles.button , width : "auto" , minWidth : "auto" , maxWidth : 120 , borderRadius : 5}} onPress={() => importFileSpreadSheets(setData)}>
-            <Text style={GlobalStyles.buttonText}>Importar</Text>
+          <TouchableOpacity
+            style={styles.settingsButton}
+            onPress={() => setSpreadSheetsImportModal(true)}
+          >
+            <View style={{ width: "90%" }}>
+              <Text style={styles.title}>Importar planilha de produtos</Text>
+              <Text style={styles.label}>
+                Importe uma planilha de produtos para o banco de dados.
+              </Text>
+            </View>
+
+            <AntDesign name="right" size={24} color="black" />
           </TouchableOpacity>
-          </View>
-
-         
         </View>
 
-        <Text>
-          Tamanho do banco de dados: {spreadSheetsCount} planilhas importadas
-        </Text>
-        <Text>Alterar o tamanho das fontes ..</Text>
+        <View style={styles.hr}></View>
+
+        <View style={styles.settingsItem}>
+          <TouchableOpacity
+            style={styles.settingsButton}
+            onPress={() => setSpreadSheetsModal(true)}
+          >
+            <View style={{ width: "90%" }}>
+              <Text style={styles.title}>Ver planilhas importadas</Text>
+              <Text style={styles.label}>
+                Importe uma planilha de produtos para o banco de dados.
+              </Text>
+            </View>
+
+            <AntDesign name="right" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
       </ScrollView>
+
+      <SpreadSheetsImportModal
+        isVisible={spreadSheetsImportModal}
+        onClose={() => setSpreadSheetsImportModal(false)}
+      />
+
+      <SpreadSheets
+        isVisible={spreadSheetsModal}
+        onClose={() => setSpreadSheetsModal(false)}
+      />
     </View>
   );
 };

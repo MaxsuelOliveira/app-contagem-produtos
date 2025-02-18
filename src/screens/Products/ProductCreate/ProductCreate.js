@@ -12,9 +12,9 @@ import {
   ActivityIndicator,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { GlobalStyles, colors } from "../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
-import { Controller } from "../../services/backend/controller";
+import { Controller } from "@services/backend/controller";
 
 const ProductCreate = () => {
   const navigation = useNavigation();
@@ -97,9 +97,9 @@ const ProductCreate = () => {
   };
 
   const createProduct = () => {
-    
     if (!codebar) return setError("Código de barras é obrigatório.");
     if (!quantity) return setQuantityLabel(true);
+
     const product = {
       uuid: uuid.v4(),
       codebar,
@@ -109,7 +109,7 @@ const ProductCreate = () => {
       inconsistency,
     };
 
-    setLoading(true);   
+    setLoading(true);
     Controller.Product.create(uuid_inventory, product)
       .then(() => {
         resetValues();
@@ -126,18 +126,18 @@ const ProductCreate = () => {
 
   return (
     <View style={GlobalStyles.container}>
-      
       <StatusBar style="auto" backgroundColor={colors.cardBackground} />
 
       <View style={styles.card}>
-
         <View style={styles.cardHeader}>
-          <Text style={GlobalStyles.cardTitle}>Adicionar produto</Text>
+          <Text style={{ ...GlobalStyles.cardTitle, marginTop: 0 }}>
+            Adicionar produto
+          </Text>
           <TouchableOpacity
             onPress={navigation.goBack}
             style={GlobalStyles.closeButton}
           >
-            <AntDesign name="close" size={28} color={colors.colorIcons} />
+            {/* <AntDesign name="close" size={28} color={colors.colorIcons} /> */}
           </TouchableOpacity>
         </View>
 
@@ -155,6 +155,7 @@ const ProductCreate = () => {
                   onChangeText={checkProductSpreadsheet}
                   keyboardType="numeric"
                   returnKeyType="next"
+                  placeholder="Código de barras"
                 />
                 {error && <Text style={GlobalStyles.labelError}>{error}</Text>}
               </View>
@@ -171,6 +172,7 @@ const ProductCreate = () => {
                     onChangeText={handleQuantityChange}
                     onSubmitEditing={createProduct}
                     returnKeyType="done"
+                    placeholder="0"
                   />
                   {quantityLabel && (
                     <Text style={GlobalStyles.labelError}>
@@ -249,7 +251,6 @@ const ProductCreate = () => {
             )}
           </Text>
         </TouchableOpacity>
-
       </View>
     </View>
   );

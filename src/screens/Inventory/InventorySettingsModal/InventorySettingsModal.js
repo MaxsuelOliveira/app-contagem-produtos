@@ -14,11 +14,11 @@ import {
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 // Styles
-import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
 
 // Backend
-import { Controller } from "../../../services/backend/controller";
+import { Controller } from "@services/backend/controller";
 
 const InventorySettingssModal = ({ isVisible, onClose, uuidInventory }) => {
   const [isBuyWithSpreadsheet, setIsBuyWithSpreadsheet] = useState(false);

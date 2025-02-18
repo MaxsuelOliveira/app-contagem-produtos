@@ -1,6 +1,7 @@
 import { View, Text, Alert, TouchableOpacity, ScrollView } from "react-native";
 import React, { useState } from "react";
 
+// Styles
 import { styles } from "./styles";
 
 const ProductInventoryCardDetails = ({
@@ -39,10 +40,6 @@ const ProductInventoryCardDetails = ({
     let { check, id } = onSelected(uuid);
     setId(id);
     setIsCheck(check);
-
-    console.log("id", id);
-    console.log("isCheck", isCheck);
-
   };
 
   return (
@@ -53,22 +50,26 @@ const ProductInventoryCardDetails = ({
     >
       <View
         style={{
-          ...styles.inventoryItem,
-          ...(inconsistency ? styles.itemWarning : {}),
-          ...(isCheck ? styles.inventoryItemSelected : {}),
+          ...styles.productItem,
+          ...(inconsistency ? null : {}),
+          ...(isCheck ? styles.productItemSelected : {}),
         }}
       >
-        <View style={styles.inventoryItemContent}>
-          <View style={styles.inventoryItemContainer}>
+        <View style={styles.productItemContent}>
+
+        <View style={{position : 'absolute', leeft: 0, top: -20, flexDirection : 'row' , gap : 10}}>
+          <Text style={styles.productBagder}>{quantity}x</Text>
+          {inconsistency ? (<Text style={[styles.productBagder , styles.itemWarning]}>Inconsistência</Text>) : null}
+        </View>
+
+          <View style={styles.productItemContainer}>
             <InventoryDetail label="Código de barras" value={tructedCodebar} />
-            <InventoryDetail label="Qnt(s)" value={quantity} />
             {name ? (
               <InventoryDetail label="Nome" value={truncatedName} />
             ) : null}
             {price ? (
               <InventoryDetail label="Preço" value={priceFormatted} />
             ) : null}
-            {/* <InventoryDetail label="Inconsis." value={inconsistencyText} /> */}
           </View>
         </View>
       </View>
@@ -77,9 +78,9 @@ const ProductInventoryCardDetails = ({
 };
 
 const InventoryDetail = ({ label, value }) => (
-  <View style={styles.inventoryItemContainerItem}>
-    <Text style={styles.label}>{label}</Text>
-    <Text style={styles.value}>{value}</Text>
+  <View style={styles.productItemContainerItem}>
+    <Text style={styles.productLabel}>{label}</Text>
+    <Text style={styles.productValue}>{value}</Text>
   </View>
 );
 

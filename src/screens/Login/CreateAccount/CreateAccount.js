@@ -5,10 +5,10 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import Checkbox from "expo-checkbox";
 
 // Styles
-import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
 
-import { FormattingInputs } from "../../../utils/inputFormat";
+import { FormattingInputs } from "@utils/inputFormat";
 
 const CreateAccount = () => {
   const [loading, setLoading] = useState(false);

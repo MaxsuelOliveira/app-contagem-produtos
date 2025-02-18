@@ -12,12 +12,12 @@ import * as XLSX from "xlsx";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 // Styles
-import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
 
 // Backend
-import { Controller } from "../../../services/backend/controller";
-import { downloadFile } from "../../../utils/downloadFile";
+import { Controller } from "@services/backend/controller";
+import { downloadFile } from "@utils/downloadFile";
 
 function callbackSuccess(uuid_inventory, navigation) {
   alert(uuid_inventory);

@@ -14,7 +14,7 @@ import {
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 // Styles
-import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
 
 // Backend

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { GlobalStyles } from "../../styles/GlobalStyles";
+import { colors, GlobalStyles } from "@styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
   cardTilte: {
@@ -25,13 +25,34 @@ export const styles = StyleSheet.create({
   },
 
   label: {
-    color: "white",
-    fontWeight: "bold",
+    ...GlobalStyles.label,
+    fontFamily: "Montserrat_Regular",
+    color: colors.textDescription,
   },
 
   title: {
     fontSize: 16,
     fontFamily: "Montserrat_Medium",
     marginBottom: 10,
+  },
+
+  settingsButton: {
+    ...GlobalStyles.menubarItem,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    justifyContent: "space-between",
+    flex: 1,
+    backgroundColor: "#fff",
+
+    borderRadius: 5,
+  },
+
+  hr: {
+    ...GlobalStyles.hr,
+    width: "100%",
+    marginTop: 0,
+    marginBottom: 20,
+    paddingVertical : 5
   },
 });

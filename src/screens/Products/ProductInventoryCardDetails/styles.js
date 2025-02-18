@@ -1,8 +1,8 @@
 import { StyleSheet } from "react-native";
-import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { colors } from "@styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
-  inventoryItem: {
+  productItem: {
     flexDirection: "row",
     alignItems: "center",
     gap: 15,
@@ -14,29 +14,28 @@ export const styles = StyleSheet.create({
   },
 
   itemWarning: {
-    borderColor: colors.warrning,
-    borderWidth: 1,
+    backgroundColor : colors.warrning,
   },
 
-  inventoryItemContent: {
+  productItemContent: {
     padding: 5,
     gap: 5,
   },
 
-  inventoryItemContainer: {
+  productItemContainer: {
     width: "100%",
     flexDirection: "row",
-    // flexWrap: "wrap",
     justifyContent: "space-between",
     flex: 1,
+    marginTop: 10,
   },
 
-  inventoryItemContainerItem: {
+  productItemContainerItem: {
     marginRight: 15,
     marginBottom: 5,
   },
 
-  inventoryItemActions: {
+  productItemActions: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -45,13 +44,13 @@ export const styles = StyleSheet.create({
     minHeight: 60,
   },
 
-  title: {
+  productTitle: {
     fontSize: 16,
     fontFamily: "Montserrat_Medium",
     color: colors.textPrimary,
   },
 
-  label: {
+  productLabel: {
     fontSize: 12,
     fontFamily: "Montserrat_Medium",
     color: colors.textSecondary,
@@ -59,30 +58,29 @@ export const styles = StyleSheet.create({
     minWidth: 50,
   },
 
-  value: {
+  productValue: {
     fontSize: 14,
     fontFamily: "Montserrat_Medium",
     color: colors.textPrimary,
     textAlign: "left",
   },
 
-  menuButton: {
-    backgroundColor: "#fff",
-    minWidth: 50,
-    minHeight: 50,
-    borderRadius: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 5,
-  },
-
-  inventoryItemSelected: {
+  productItemSelected: {
     borderColor: colors.primary,
     borderWidth: 1,
   },
 
-  inventoryItemRemoved : {
+  productItemRemoved: {
     backgroundColor: colors.danger,
-  }
+  },
 
+  productBagder: {
+    fontSize: 14,
+    fontFamily: "Montserrat_Medium",
+    color: colors.textPrimary,
+    textAlign: "left",
+    backgroundColor: "#ced4da",
+    padding: 5,
+    borderRadius: 5,
+  },
 });

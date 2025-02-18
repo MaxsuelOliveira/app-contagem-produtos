@@ -26,7 +26,7 @@ const theme = (options) => {
       textSecondary: "#6c757d",
       // buttonBackground: "#122238",
       buttonBackground: "#0d6efd",
-      borderColor: "#212529",
+      borderColor: "#f8f9fa",
       menubarBackground: "#f3f2f2",
       menubarText: "#000000",
       textDescription: "#646363",
@@ -34,7 +34,7 @@ const theme = (options) => {
       modalCover: "rgba(18, 34, 56, 0.65)",
       backgroundItem: "#ecebeb",
       danger: "#dc3545",
-      warrning: "#d0ff00",
+      warrning: "#ffc107",
     };
   } else {
     return {
@@ -48,7 +48,7 @@ const theme = (options) => {
       textSecondary: "#adb5bd",
       buttonBackground: "#0b5ed7",
       inputBackground: "#162940",
-      borderColor: "#6c757d4e",
+      borderColor: "#e2e3e5",
       menubarBackground: "#132237",
       menubarText: "#f8f9fa",
       textDescription: "#646363",
@@ -73,7 +73,6 @@ const GlobalStyles = StyleSheet.create({
   textPrimary: {
     color: colors.textPrimary,
     fontSize: RFPercentage(2.5),
-    // fontSize : 16,
   },
 
   textSecondary: {
@@ -158,9 +157,6 @@ const GlobalStyles = StyleSheet.create({
     width: 20,
     height: 20,
     textAlign: "center",
-    // position: "absolute",
-    // top: 10,
-    // left: 0,
   },
 
   modalOverlay: {
@@ -212,6 +208,7 @@ const GlobalStyles = StyleSheet.create({
     flex: 1,
     color: colors.textPrimary,
     marginTop: 20,
+    position : "relative",
   },
 
   cardBody: {
@@ -236,17 +233,17 @@ const GlobalStyles = StyleSheet.create({
     borderRadius: 50,
     flexDirection: "row",
     justifyContent: "space-around",
-    padding: 15,
+    padding: 10,
     position: "relative",
     left: 0,
     right: 0,
     margin: 10,
-    // height: 50,
   },
 
   menubarItem: {
     alignItems: "center",
     minWidth: RFPercentage(12),
+    padding: 5,
   },
 
   menubarText: {
@@ -265,7 +262,6 @@ const GlobalStyles = StyleSheet.create({
     fontSize: 14,
     borderBottomColor: colors.primary,
     borderBottomWidth: 0.3,
-    // marginLeft: 10,
     marginTop: 5,
   },
 
@@ -286,9 +282,10 @@ const GlobalStyles = StyleSheet.create({
   },
 
   hr: {
-    height: 1,
-    backgroundColor: colors.borderColor,
-    width: 120,
+    borderBottomWidth: 1,
+    borderColor: colors.borderColor,
+    borderType: "solid",
+    width: "100%",
   },
 });
 

@@ -10,11 +10,11 @@ import {
 } from "react-native";
 
 // Styles
-import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
 
 // Controller
-import { Controller } from "../../../services/backend/controller";
+import { Controller } from "@services/backend/controller";
 
 const InventoryDeleteModal = ({ isVisible, onClose, uuidInventory }) => {
   function removerInventory() {

@@ -3,10 +3,10 @@ import { StatusBar } from "expo-status-bar";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 
 // Styles
-import { GlobalStyles, colors } from "../../../styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
 import Checkbox from "expo-checkbox";
-import { FormattingInputs } from "../../../utils/inputFormat";
+import { FormattingInputs } from "@utils/inputFormat";
 
 const RecoverPassword = () => {
   const [loading, setLoading] = useState(false);

@@ -13,16 +13,16 @@ import {
 
 import { View, ActivityIndicator } from "react-native";
 
-import OnboardingScreen from "./src/screens/OnboardingScreen/OnboardingScreen";
-import Home from "./src/screens/Home/Home";
-import Login from "./src/screens/Login/Login";
-import Profile from "./src/screens/Profile/Profile";
-import InventoryDetails from "./src/screens/Inventory/InventoryDetails/InventoryDetails";
-import SpreadSheets from "./src/screens/SpreadSheets/SpreadSheets";
-import Settings from "./src/screens/Settings/Settings";
-import CreateAccount from "./src/screens/Login/CreateAccount/CreateAccount";
-import RecoverPassword from "./src/screens/Login/RecoverPassword/RecoverPassword";
-import ProductCreate from "./src/screens/ProductCreate/ProductCreate";
+import OnboardingScreen from "@screens/OnboardingScreen/OnboardingScreen";
+import Home from "@screens/Home/Home";
+import Login from "@screens/Login/Login";
+import Profile from "@screens/Profile/Profile";
+import InventoryDetails from "@screens/Inventory/InventoryDetails/InventoryDetails";
+// import SpreadSheets from "@screens/SpreadSheets/SpreadSheets";
+import Settings from "@screens/Settings/Settings";
+import CreateAccount from "@screens/Login/CreateAccount/CreateAccount";
+import RecoverPassword from "@screens/Login/RecoverPassword/RecoverPassword";
+import ProductCreate from "@screens/Products/ProductCreate/ProductCreate";
 
 const Stack = createStackNavigator();
 
@@ -101,11 +101,11 @@ export default function App() {
           options={{ headerShown: false }}
         />
 
-        <Stack.Screen
+        {/* <Stack.Screen
           name="SpreadSheets"
           component={SpreadSheets}
           options={{ headerShown: false }}
-        />
+        /> */}
         
         <Stack.Screen
           name="Profile"
@@ -129,7 +129,6 @@ export default function App() {
   );
 }
 
-// Criar um componente simples para exibir enquanto carrega
 function LoadingScreen() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
