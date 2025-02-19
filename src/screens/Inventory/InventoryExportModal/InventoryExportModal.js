@@ -27,7 +27,7 @@ function callbackSuccess(uuid_inventory, navigation) {
     .then((response) => {
       console.log(response);
       Alert.alert("Inventário finalizado com sucesso!");
-      navigation.navigate("Home"); // ✅ Agora a navegação é passada corretamente!
+      navigation.navigate("Home");
     })
     .catch((error) => {
       console.error("Erro ao atualizar o inventário");

@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 
 // Icons
@@ -21,6 +22,7 @@ import { styles } from "./styles";
 import { Controller } from "services/backend/controller";
 
 const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
+  const [loading, setLoading] = useState(false);
   const [codebar, setCodebar] = useState("");
   const [quantity, setQuantity] = useState("");
   const [name, setName] = useState("");
@@ -38,6 +40,8 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
   }, [product]);
 
   const updateProduct = () => {
+    setLoading(true);
+
     const newProduct = {
       uuid: product.uuid,
       codebar: codebar,
@@ -49,10 +53,13 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
 
     Controller.Product.update(uuidInventory, newProduct)
       .then((response) => {
-        Alert.alert("Produto atualizado com sucesso !", "");
-        onClose();
+        setTimeout(() => {
+          setLoading(false);
+          onClose();
+        }, 300);
       })
       .catch((error) => {
+        setLoading(false);
         Alert.alert("Erro ao atualizar o produto !", error);
         console.error(error);
       });
@@ -150,7 +157,6 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
                 </View>
               </View>
 
-              {/* Preço */}
               <View style={{ ...styles.grid, width: "100%" }}>
                 <View>
                   <Text style={GlobalStyles.label}>Preço R$</Text>
@@ -166,7 +172,6 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
                 </View>
               </View>
 
-              {/* Inconsistência */}
               <View
                 style={{
                   width: "100%",
@@ -196,8 +201,6 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
                 </View>
               </View>
 
-          
-
               <View
                 style={{
                   flexDirection: "row",
@@ -222,7 +225,13 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
                   style={{ ...GlobalStyles.button, flex: 1 }}
                   onPress={() => updateProduct()}
                 >
-                  <Text style={GlobalStyles.buttonText}>Atualizar produto</Text>
+                  <Text style={GlobalStyles.buttonText}>
+                    {loading ? (
+                      <ActivityIndicator size="small" color="#fff" />
+                    ) : (
+                      <Text style={styles.buttonText}>Atualizar</Text>
+                    )}
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

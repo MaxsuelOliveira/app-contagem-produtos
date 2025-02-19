@@ -49,8 +49,9 @@ const Settings = () => {
     <View style={styles.settingsContainer}>
       <StatusBar style="auto" backgroundColor="#ffffff" />
 
-      <View style={GlobalStyles.cardHeader}>
+      <View style={styles.cardHeader}>
         <Text style={styles.cardTilte}>Configurações</Text>
+        {/* <Text style={GlobalStyles.label}>Configurações</Text> */}
       </View>
 
       <ScrollView>

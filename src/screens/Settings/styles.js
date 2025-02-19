@@ -2,6 +2,14 @@ import { StyleSheet } from "react-native";
 import { colors, GlobalStyles } from "@styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
+  cardHeader : {
+    ...GlobalStyles.cardHeader,
+    // flexDirection : "column",
+    // height: 100,
+    // margin : 0,
+    // padding : 0
+  },
+
   cardTilte: {
     ...GlobalStyles.cardTitle,
   },

@@ -119,7 +119,7 @@ export default function InventoryDetails() {
       <View style={{ ...styles.cardHeader }}>
         <Text style={styles.cardTitle}>{name}</Text>
         {describe ? (
-          <Text style={styles.cardDescription}>{describe}</Text>
+          <Text style={{...styles.cardDescription , marginBottom : 10}}>{describe}</Text>
         ) : null}
 
         <View style={styles.createInventarioInfo}>

@@ -1,6 +1,7 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useCallback } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -26,7 +27,7 @@ import { decodeToken, isTokenExpired } from "@utils/token";
 
 const Home = () => {
   const navigation = useNavigation();
-
+  const [refresh, setRefresh] = useState(0);
   const [profile, setProfile] = useState({});
   const [uuidSeleced, setUuidSelected] = useState("");
   const [activeTab, setActiveTab] = useState("inProgress");
@@ -39,6 +40,12 @@ const Home = () => {
 
   const badgeCountInProgress = inventoriesProgress.length;
   const badgeCountCompleted = inventoriesCompleted.length;
+
+  useFocusEffect(
+    useCallback(() => {
+      setRefresh((prev) => prev + 1);
+    }, [])
+  );
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -68,7 +75,7 @@ const Home = () => {
     Controller.Inventory.getStatus("done").then((response) => {
       setInventoriesCompleted(response);
     });
-  }, []);
+  }, [refresh]);
 
   const logout = () => {
     setModalLogoutVisible(true);

@@ -81,7 +81,7 @@ export const Model = {
         "Código de barras": produto.codebar,
         Quantidade: produto.quantity,
         Preço: produto.price,
-        Iconsistência: produto.inconsistency,
+        Iconsistência: produto.inconsistency ? "Sim" : "Não",
       }));
     },
 
