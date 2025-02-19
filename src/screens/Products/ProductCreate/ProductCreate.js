@@ -82,8 +82,6 @@ const ProductCreate = () => {
       (item) => item.codebar === trimmedCodebar
     );
 
-    console.log("Produto encontrado:", compare_in_spreadsheet);
-
     if (compare_in_spreadsheet) {
       if (produto) {
         setProductFound(true);

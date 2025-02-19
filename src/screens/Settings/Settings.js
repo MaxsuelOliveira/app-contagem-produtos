@@ -1,11 +1,11 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity} from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView, Switch } from "react-native-gesture-handler";
 
 // Icons
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 // Backend
@@ -28,10 +28,20 @@ const Settings = () => {
   const [spreadSheetsCount, setSpreadSheetsCount] = useState(0);
   const [spreadSheetsImportModal, setSpreadSheetsImportModal] = useState(false);
   const [spreadSheetsModal, setSpreadSheetsModal] = useState([]);
+  const [account, setAccount] = useState(false);
 
   function setTheme() {
     setToggleSwitch(!toggleSwitch);
     textLabelTheme === "dark" ? "light" : "dark";
+  }
+
+  async function getAccount() {
+    const isAccount = await AsyncStorage.getItem("isAccount");
+    if (isAccount === "premium") {
+      setAccount(false);
+    } else {
+      setAccount(true);
+    }
   }
 
   useEffect(() => {
@@ -45,13 +55,16 @@ const Settings = () => {
       });
   }, []);
 
+  useEffect(() => {
+    getAccount();
+  }, []);
+
   return (
     <View style={styles.settingsContainer}>
       <StatusBar style="auto" backgroundColor="#ffffff" />
 
       <View style={styles.cardHeader}>
         <Text style={styles.cardTilte}>Configurações</Text>
-        {/* <Text style={GlobalStyles.label}>Configurações</Text> */}
       </View>
 
       <ScrollView>
@@ -133,6 +146,18 @@ const Settings = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {account && (
+        <TouchableOpacity
+          style={styles.banner}
+          onPress={() => navigation.navigate("Login")}
+        >
+          <Text style={styles.bannerText}>
+            Sua conta é gratuita. Para ter acesso a mais recursos, faça um
+            upgrade para o plano PRO.
+          </Text>
+        </TouchableOpacity>
+      )}
 
       <SpreadSheetsImportModal
         isVisible={spreadSheetsImportModal}

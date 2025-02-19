@@ -28,7 +28,14 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-  }, 
+  },
+
+  headerProfileContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    width: "80%",
+  },
 
   category: {
     width: "50%",

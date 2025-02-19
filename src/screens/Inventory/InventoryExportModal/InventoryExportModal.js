@@ -25,7 +25,6 @@ function callbackSuccess(uuid_inventory, navigation) {
   let date_end = new Date();
   Controller.Inventory.update(uuid_inventory, "done", date_end)
     .then((response) => {
-      console.log(response);
       Alert.alert("Inventário finalizado com sucesso!");
       navigation.navigate("Home");
     })

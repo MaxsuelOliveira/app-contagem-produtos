@@ -42,7 +42,6 @@ export default function App() {
     async function checkOnboardingScreen() {
       try {
         const onboardingScreen = await AsyncStorage.getItem("OnboardingScreen");
-        console.log("OnboardingScreen:", onboardingScreen);
         setInitialRoute(
           onboardingScreen === "true" ? "Home" : "OnboardingScreen"
         );
@@ -64,7 +63,6 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRoute}>
-
         <Stack.Screen
           name="OnboardingScreen"
           component={OnboardingScreen}
@@ -106,13 +104,13 @@ export default function App() {
           component={SpreadSheets}
           options={{ headerShown: false }}
         /> */}
-        
+
         <Stack.Screen
           name="Profile"
           component={Profile}
           options={{ headerShown: false }}
         />
-        
+
         <Stack.Screen
           name="Settings"
           component={Settings}

@@ -83,14 +83,17 @@ export const Controller = {
     },
 
     updateCompareInSpreadSheets: async (uuid, compare_in_spreadsheet) => {
-      return Model.Inventory.updateCompareInSpreadSheets(uuid, compare_in_spreadsheet)
+      return Model.Inventory.updateCompareInSpreadSheets(
+        uuid,
+        compare_in_spreadsheet
+      )
         .then((inventario) => {
           return inventario;
         })
         .catch((error) => {
           return Promise.reject(error);
         });
-    }, 
+    },
 
     export: async (uuid_inventory) => {
       return Model.Inventory.export(uuid_inventory)
@@ -134,7 +137,7 @@ export const Controller = {
         });
     },
 
-    deleteProducts : async (uuid_inventory, products) => {
+    deleteProducts: async (uuid_inventory, products) => {
       return Model.Product.deleteProducts(uuid_inventory, products)
         .then((inventario) => {
           console.log("Apagando multiplos produtos" + products.lenght);
@@ -144,8 +147,7 @@ export const Controller = {
         .catch((error) => {
           return Promise.reject(error);
         });
-    }
-
+    },
   },
 
   SpreadSheets: {

@@ -7,7 +7,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // Components
 import SignupBanner from "../../components/Banner/Banner";
 
-
 // Styles
 import { GlobalStyles } from "@styles/GlobalStyles";
 import { styles } from "./styles";
@@ -16,65 +15,51 @@ import { decodeToken, isTokenExpired } from "@utils/token";
 
 const Profile = () => {
   const navigation = useNavigation();
-  const [company, setCompany] = useState({});
-  const [isNotLogin, setIsNotLogin] = useState(false);
+  const [profile, setProfile] = useState({});
+  const [isLogin, setIsLogin] = useState(false);
+
+  async function getToken() {
+    const isToken = await AsyncStorage.getItem("isToken");
+
+    if (isToken) {
+      const decoded = decodeToken(isToken);
+      setProfile(decoded);
+      setIsLogin(true);
+      return;
+    }
+    setIsLogin(false);
+  }
 
   useEffect(() => {
-    (async () => {
-      const token = await AsyncStorage.getItem("token");
-      
-      if (isTokenExpired(token)) {
-        Alert.alert("Sessão expirada", "Faça login novamente");
-        setIsNotLogin(true);
-        return;
-      }
-
-      if (!token) {
-        const decoded = decodeToken(token);
-        setCompany(decoded);
-        setIsNotLogin(false);
-        setOnboardingScreen(true);
-      } else {
-        setIsNotLogin(true);
-        setOnboardingScreen(false);
-      }
-    })();
+    getToken();
   }, []);
 
   return (
     <View style={styles.profileContainer}>
       <StatusBar style="dark" backgroundColor="transparent" />
 
-      {company.email ? (
-        <>
-          <Text>Login realizado com sucesso!</Text>
+      {isLogin ? (
+        <View>
           <View style={GlobalStyles.cardHeader}>
             <Text style={GlobalStyles.cardTitle}>Seu perfil</Text>
           </View>
 
-          <View>
-            <Image
-              source={{ uri: "https://placehold.co/150x150" }}
-              style={styles.profileImage}
-            />
-            <ProfileItem label="Nome Fantasia" value={company.nome} />
-            <ProfileItem label="CNPJ" value={company.cpf_cnpj} />
-            <ProfileItem label="Email" value={company.email} />
-            <ProfileItem label="Telefone" value={company.telefone} />
-          </View>
-        </>
+          <Image
+            source={{ uri: "https://placehold.co/150x150" }}
+            style={styles.profileImage}
+          />
+          <ProfileItem label="Nome Fantasia" value={profile.nome} />
+          <ProfileItem label="CNPJ" value={profile.cpf_cnpj} />
+          <ProfileItem label="Email" value={profile.email} />
+          <ProfileItem label="Telefone" value={profile.telefone} />
+        </View>
       ) : (
-        <>
-          <Text>Login não realizado com sucesso!</Text>
-          {isNotLogin ? (
-            <View style={styles.SignupBanner}>
-              <SignupBanner
-                onLogin={() => navigation.navigate("Login")}
-                createAccount={() => navigation.navigate("CreateAccount")}
-              />
-            </View>
-          ) : null}
-        </>
+        <View style={styles.SignupBanner}>
+          <SignupBanner
+            onLogin={() => navigation.navigate("Login")}
+            createAccount={() => navigation.navigate("CreateAccount")}
+          />
+        </View>
       )}
     </View>
   );

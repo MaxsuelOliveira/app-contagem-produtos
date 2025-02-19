@@ -90,7 +90,7 @@ const importFileSpreadSheets = async (setData) => {
       // Converter planilha para JSON
       parsedData = XLSX.utils.sheet_to_json(sheet);
 
-      Alert.alert("👍 Tudo certo ! ", "Arquivo convertido com sucesso !");
+
     }
 
     if (parsedData.length === 0) {
@@ -108,6 +108,9 @@ const importFileSpreadSheets = async (setData) => {
       Alert.alert("⚠️ Aviso", "O arquivo contém muitos dados, isso pode demorar um pouco !");
     }
 
+
+    Alert.alert("👍 Tudo certo ! ", "Arquivo convertido com sucesso !");
+
     // Salvar os dados no banco de dados
     saveSheet(parsedData);
 
@@ -115,6 +118,7 @@ const importFileSpreadSheets = async (setData) => {
     setData(parsedData);
   } catch (error) {
     Alert.alert("❌ Erro ao importar arquivo !", error);
+    console.error("Erro ao importar arquivo !", error);
   }
 };
 

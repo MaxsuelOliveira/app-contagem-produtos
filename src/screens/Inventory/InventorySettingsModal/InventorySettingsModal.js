@@ -41,9 +41,9 @@ const InventorySettingssModal = ({ isVisible, onClose, uuidInventory }) => {
     });
 
   useEffect(() => {
-    Controller.SpreadSheets.getAll()
-      .then((spreadsheets) => {
-        if (spreadsheets.length == 0) {
+    Controller.SpreadSheets.count()
+      .then((total) => {
+        if (total == 0) {
           setPlanilhaLength(true);
           return;
         }

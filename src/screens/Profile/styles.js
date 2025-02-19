@@ -26,4 +26,10 @@ export const styles = StyleSheet.create({
     margin: "auto",
     marginBottom: 20,
   },
+
+  SignupBanner: {
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });

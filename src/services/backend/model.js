@@ -20,7 +20,6 @@ export const Model = {
       const realm = await createRealm();
 
       realm.write(() => {
-        // Buscar o primeiro item correspondente ao UUID
         const inventoryItem = realm
           .objects("Inventory")
           .filtered("uuid == $0", uuid)[0];
@@ -78,20 +77,18 @@ export const Model = {
       }
       const inventory = inventories[0];
       return inventory.products.map((produto) => ({
-        "Código de barras": produto.codebar,
-        Quantidade: produto.quantity,
-        Preço: produto.price,
-        Iconsistência: produto.inconsistency ? "Sim" : "Não",
+        TMER_CODIGO_BARRAS_UKN: produto.codebar,
+        TMER_NOME: produto.name,
+        TMER_QUANTIDADE: produto.price,
+        TMER_PRECO_VENDA: produto.price,
+        TMER_INCONSISTENCIA: produto.inconsistency ? "❌" : "",
       }));
     },
 
     getAll: async () => {
       const realm = await createRealm();
       const inventories = realm.objects("Inventory");
-
-      // Ordenar os inventários pela data de criação
-      inventories.sorted("date_create", true); // 'true' para ordem decrescente
-
+      inventories.sorted("date_create", true);
       return inventories;
     },
 
@@ -126,9 +123,7 @@ export const Model = {
       }
 
       const inventory = inventories[0];
-
-      // Ordena os produtos pela propriedade 'codebar'
-      const sortedProducts = inventory.products.sorted("codebar", false); // true para ordem decrescente
+      const sortedProducts = inventory.products.sorted("codebar", false);
       return sortedProducts;
     },
   },
@@ -153,7 +148,7 @@ export const Model = {
         if (!inventory.products) {
           inventory.products = [];
         }
-        // Verifica se o produto já existe pelo 'id' ou outra chave única
+
         const productExists = inventory.products.some(
           (existingProduct) => existingProduct.uuid === product.uuid
         );
@@ -183,14 +178,12 @@ export const Model = {
       const inventory = inventories[0];
 
       realm.write(() => {
-        // Verifica se o produto já existe no inventário pelo uuid
         const existingProduct = inventory.products.find(
           (p) => p.uuid === product.uuid
         );
 
         if (existingProduct) {
-          // Se o produto já existe, atualiza os dados do produto
-          Object.assign(existingProduct, product); // Atualiza todas as propriedades com os dados do novo produt
+          Object.assign(existingProduct, product);
           return product;
         } else {
           return new Error(
@@ -225,7 +218,9 @@ export const Model = {
 
     deleteProducts: async (uuid_inventory, products) => {
       const realm = await createRealm();
-      const inventories = realm.objects("Inventory").filtered(`uuid == "${uuid_inventory}"`);
+      const inventories = realm
+        .objects("Inventory")
+        .filtered(`uuid == "${uuid_inventory}"`);
       if (inventories.length === 0) {
         return {
           error: `Inventário com uuid ${uuid_inventory} não encontrado`,
@@ -240,12 +235,8 @@ export const Model = {
           );
         });
       });
-
-      console.log(inventory);
-
       return inventory;
     },
-
   },
 
   SpreadSheets: {
@@ -261,7 +252,6 @@ export const Model = {
       const realm = await createRealm();
 
       realm.write(() => {
-        // Encontrar a spreadsheet pelo id_spreadsheet
         const spreadsheetToDelete = realm
           .objects("SpreadSheets")
           .filtered(`uuid == "${id_spreadsheet}"`)[0];

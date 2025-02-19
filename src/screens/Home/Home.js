@@ -1,7 +1,7 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState, useEffect , useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -23,7 +23,8 @@ import LogoutModal from "../Login/LogoutModal/LogoutModal";
 
 // Backend
 import { Controller } from "@services/backend/controller";
-import { decodeToken, isTokenExpired } from "@utils/token";
+import { decodeToken } from "@utils/token";
+import { getDateExpire, isExpired } from "@utils/timestamp";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -49,14 +50,16 @@ const Home = () => {
 
   useEffect(() => {
     const fetchToken = async () => {
-      const token = await AsyncStorage.getItem("token");
-
-      if (isTokenExpired(token)) {
-        Alert.alert("Sessão expirada", "Faça login novamente");
-        navigation.navigate("Login");
-        return;
+      const isDevice = await AsyncStorage.getItem("isDevice");
+      if (isDevice) {
+        const { expires_in } = JSON.parse(isDevice);
+        if (isExpired(expires_in)) {
+          Alert.alert("Sessão expirada", "Faça login novamente.");
+          return;
+        }
       }
 
+      const token = await AsyncStorage.getItem("isToken");
       if (token) {
         const decoded = decodeToken(token);
         setProfile(decoded);
@@ -77,6 +80,10 @@ const Home = () => {
     });
   }, [refresh]);
 
+  useEffect(() => {
+    checkStoredData();
+  }, []);
+
   const logout = () => {
     setModalLogoutVisible(true);
   };
@@ -86,20 +93,29 @@ const Home = () => {
     setModalDeleteVisible(true);
   };
 
+  const checkStoredData = async () => {
+    try {
+      const isDevice = await AsyncStorage.getItem("isDevice");
+      if (isDevice) {
+        const { expires_in } = JSON.parse(isDevice);
+
+        if (isExpired(expires_in)) {
+          Alert.alert("Sessão expirada", "Faça login novamente.");
+          return;
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao acessar AsyncStorage:", error);
+    }
+  };
+
   return (
     <View style={GlobalStyles.container}>
       <StatusBar style="auto" backgroundColor="transparent" />
 
       <View style={styles.containerInvetoryList}>
         <View style={styles.headerProfile}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 10,
-              width: "80%",
-            }}
-          >
+          <View style={styles.headerProfileContainer}>
             <TouchableOpacity
               style={styles.buttonProfileHeader}
               onPress={() => navigation.navigate("Profile")}
@@ -108,7 +124,7 @@ const Home = () => {
             </TouchableOpacity>
 
             <Text style={styles.cardTitle}>
-              Olá, {profile.name || "usuário"} !
+              Olá, {profile.nome || "usuário"} !
             </Text>
           </View>
 

@@ -1,42 +1,72 @@
 import { useState, useEffect, useCallback } from "react";
-import { View, TextInput, Text, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  TextInput,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { StatusBar } from "expo-status-bar";
 import * as Crypto from "expo-crypto";
 import * as Device from "expo-device";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { StatusBar } from "expo-status-bar";
+
+// Styles
 import { GlobalStyles } from "@styles/GlobalStyles";
 import { styles } from "./styles";
+
+// Components
 import ModalCustom from "@utils/ModalCustom/Modal";
+
+// Utils
+import { expiresIn, isExpired } from "@utils/timestamp";
 import { decodeToken } from "@utils/token";
-import { ScrollView } from "react-native-gesture-handler";
+import { Login } from "@services/API";
 
 const LoginScreen = ({ navigation }) => {
+  const [uuid, setUUID] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [uuid, setUuid] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
+  const [message, setMessage] = useState("Faça login para acessar o sistema.");
 
   useEffect(() => {
-    (async () => {
-      try {
-        let storedUUID = await AsyncStorage.getItem("uuid");
-
-        Alert.alert("Você possui um uuid", storedUUID);
-
-        if (!storedUUID) {
-          storedUUID = Crypto.randomUUID();
-          await AsyncStorage.setItem("uuid", storedUUID);
-        }
-
-        setUuid(storedUUID);
-      } catch (error) {
-        Alert.alert("Erro ao recuperar UUID:", error.message);
-      }
-    })();
+    checkStoredData();
   }, []);
+
+  const checkStoredData = async () => {
+    try {
+      const isDevice = await AsyncStorage.getItem("isDevice");
+      if (isDevice) {
+        const { expires_in } = JSON.parse(isDevice);
+        if (!isExpired(expires_in)) {
+          navigation.navigate("Home");
+          return;
+        }
+      }
+      await setOrRetrieveUUID();
+    } catch (error) {
+      console.error("Erro ao acessar AsyncStorage:", error);
+    }
+  };
+
+  const setOrRetrieveUUID = async () => {
+    try {
+      let uuidDevice = await AsyncStorage.getItem("uuidDevice");
+
+      if (!uuidDevice) {
+        uuidDevice = Crypto.randomUUID();
+        await AsyncStorage.setItem("uuidDevice", uuidDevice);
+      }
+
+      setUUID(uuidDevice);
+    } catch (error) {
+      console.error("Erro ao gerar UUID:", error);
+    }
+  };
 
   const handleLogin = useCallback(async () => {
     if (!email || !password) {
@@ -51,36 +81,42 @@ const LoginScreen = ({ navigation }) => {
         password
       );
 
-      const response = await fetch(
-        "https://coletor.webart3.com/login/empresa",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email,
-            password: hashedPass,
-            uuid,
-            describe: Device.modelName,
-          }),
-        }
-      );
+      const deviceInfo = `${Device.manufacturer} ${Device.brand} ${Device.modelName} ${Device.osName} ${Device.osVersion}`;
 
+      const response = await Login(email, hashedPass, uuid, deviceInfo);
       const data = await response.json();
 
       if (data.token) {
-        const decoded = decodeToken(data.token);
-        await AsyncStorage.setItem("token", data.token);
-        await AsyncStorage.setItem("login", "true");
-        navigation.navigate("Home", { userName: decoded.nome });
+        const { token, dispositivo } = data;
+        dispositivo.expires_in = expiresIn();
+
+        await AsyncStorage.multiSet([
+          ["isToken", token],
+          ["isLogin", "true"],
+          ["isAccount", "premium"],
+          ["isOnboarding", "true"],
+          ["isDevice", JSON.stringify(dispositivo)],
+        ]);
+
+        let { bloqueado } = decodeToken(token);
+        if (bloqueado == 1) {
+          showAlert(
+            "error",
+            "Login não realizado!",
+            "Seu usuário foi bloqueado."
+          );
+          return;
+        }
+
+        navigation.navigate("Home");
       } else {
         if (data.error === "Limite de dispositivos atingido") {
-          showAlert("error", "Login não realizado!", data.error, "OK");
-
-          return;
+          showAlert("error", "Login não realizado!", data.error);
         }
       }
     } catch (error) {
       showAlert("error", "Erro", "Ocorreu um erro inesperado.");
+      console.error("Erro ao logar:", error);
     } finally {
       setLoading(false);
     }
@@ -99,56 +135,54 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <StatusBar style="auto" />
-
-      <Text style={styles.text}>Sign in with Facebook</Text>
+      <StatusBar style="dark" />
 
       <View style={styles.form}>
-        <View style={styles.containerForm}>
-          <Text style={styles.title}>EstoqueFácil</Text>
+        <Text style={styles.title}>EstoqueFácil</Text>
 
-          <InputField
-            label="Seu email *"
-            value={email}
-            onChangeText={setEmail}
-            placeholder="email@email.com"
-            keyboardType="email-address"
-          />
+        <InputField
+          label="Seu email *"
+          value={email}
+          onChangeText={setEmail}
+          placeholder="email@email.com"
+          keyboardType="email-address"
+        />
 
-          <PasswordField
-            value={password}
-            onChangeText={setPassword}
-            showPassword={showPassword}
-            togglePassword={() => setShowPassword(!showPassword)}
-          />
+        <PasswordField
+          value={password}
+          onChangeText={setPassword}
+          showPassword={showPassword}
+          togglePassword={() => setShowPassword(!showPassword)}
+        />
 
-          <View style={styles.buttonsActions}>
-            <TouchableOpacity
-              style={GlobalStyles.button}
-              onPress={handleLogin}
-              disabled={loading}
-            >
-              <Text style={GlobalStyles.buttonText}>
-                {loading ? "Carregando..." : "Entrar"}
-              </Text>
-            </TouchableOpacity>
+        <Text style={styles.describe}>{message}</Text>
 
-            <TouchableOpacity
-              onPress={() => navigation.navigate("RecoverPassword")}
-            >
-              <Text style={styles.buttonForgotPasswordText}>
-                Esqueci minha senha
-              </Text>
-            </TouchableOpacity>
+        <View style={styles.buttonsActions}>
+          <TouchableOpacity
+            style={GlobalStyles.button}
+            onPress={handleLogin}
+            disabled={loading}
+          >
+            <Text style={GlobalStyles.buttonText}>
+              {loading ? "Carregando..." : "Login"}
+            </Text>
+          </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => navigation.navigate("CreateAccount")}
-            >
-              <Text style={styles.buttonForgotPasswordText}>
-                Criar uma conta, teste grátis
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("RecoverPassword")}
+          >
+            <Text style={styles.buttonForgotPasswordText}>
+              Esqueci minha senha
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("CreateAccount")}
+          >
+            <Text style={styles.buttonForgotPasswordText}>
+              Criar uma conta, teste grátis
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
 

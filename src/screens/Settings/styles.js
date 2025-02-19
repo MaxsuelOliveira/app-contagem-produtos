@@ -4,10 +4,6 @@ import { colors, GlobalStyles } from "@styles/GlobalStyles";
 export const styles = StyleSheet.create({
   cardHeader : {
     ...GlobalStyles.cardHeader,
-    // flexDirection : "column",
-    // height: 100,
-    // margin : 0,
-    // padding : 0
   },
 
   cardTilte: {
@@ -52,7 +48,6 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     flex: 1,
     backgroundColor: "#fff",
-
     borderRadius: 5,
   },
 
@@ -63,4 +58,18 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
     paddingVertical : 5
   },
+  
+  banner: {
+    backgroundColor: colors.primary,
+    padding: 10,
+    borderRadius: 5,
+    marginTop: -10,
+  },
+
+  bannerText: {
+    ...GlobalStyles.label,
+    color: "#fff",
+  },
+
+
 });

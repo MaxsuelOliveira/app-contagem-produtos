@@ -56,7 +56,10 @@ const OnboardingScreen = () => {
   const navigation = useNavigation();
 
   async function nextHome() {
-    await AsyncStorage.setItem("OnboardingScreen", "true");
+    await AsyncStorage.setItem("isOnboarding", "true");
+    await AsyncStorage.setItem("isLogin", "false");
+    await AsyncStorage.setItem("isToken", "false");
+    await AsyncStorage.setItem("isAccount", "free");
     navigation.navigate("Home");
   }
 

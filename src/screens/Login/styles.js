@@ -7,14 +7,6 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
 
-  containerForm : {
-    // backgroundColor: linear-gradient(162deg, rgba(137,198,231,1) 0%, rgba(81,122,143,1) 95%, rgba(231,239,243,1) 100%)
-    padding: 20,
-    borderTopLeftRadius: 120,
-    borderTopRightRadius : 50,
-    borderBottomLeftRadius : 100,
-    borderBottomEndRadius : 70,
-  },
 
   form: {
     padding: 20,
@@ -23,7 +15,6 @@ export const styles = StyleSheet.create({
     display : "flex",
     alignContent: "center",
     justifyContent: "center",
-    backgroundColor: colors.primaryBackground,
   },
 
   title: {
@@ -31,13 +22,15 @@ export const styles = StyleSheet.create({
     fontSize: 35,
     fontFamily: "Montserrat_Bold",
     textAlign: "start",
+    marginBottom: 10,
   },
 
   describe: {
     fontFamily: "Montserrat_Medium",
-    fontSize: 15,
-    textAlign: "start",
+    fontSize: 14,
+    textAlign: "center",
     color: colors.textSecondary,
+    marginBottom : 10
   },
 
   containerShowPassword: {
