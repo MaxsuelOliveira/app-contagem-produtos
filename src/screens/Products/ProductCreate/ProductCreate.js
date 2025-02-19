@@ -21,16 +21,21 @@ import { styles } from "./styles";
 
 // Backend
 import { Controller } from "@services/backend/controller";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const limitProducts = 500;
 
 const ProductCreate = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const uuid_inventory = route.params?.uuid_inventory;
-  // const compare_in_spreadsheet = route.params?.compare_in_spreadsheet;
-  const [compare_in_spreadsheet, setCompareInSpreadsheet] = useState(false);
+  const [compareInSpreadsheet, setCompareInSpreadsheet] = useState(false);
 
   const [loading, setLoading] = useState(false);
+  const [productInfo, setProductInfo] = useState("");
   const [error, setError] = useState("");
+
+  const [selectedInventory, setSelectedInventory] = useState({});
   const [productsSpreadsheets, setProductsSpreadsheets] = useState([]);
   const [productFound, setProductFound] = useState(false);
 
@@ -46,12 +51,16 @@ const ProductCreate = () => {
 
   const codebarInputRef = useRef(null);
 
+  const [limitProducts, setLimitProducts] = useState(500);
+
   useEffect(() => {
     Controller.Inventory.getUUID(uuid_inventory).then((inventory) => {
       inventory = inventory[0];
 
+      setSelectedInventory(inventory);
       setCompareInSpreadsheet(inventory.compare_in_spreadsheet);
-      if (inventory.compare_in_spreadsheet) {
+
+      if (compareInSpreadsheet) {
         Controller.SpreadSheets.getAll().then((response) => {
           const produtos = response.flatMap((item) =>
             item.products.map(({ codebar, name, price }) => ({
@@ -63,9 +72,22 @@ const ProductCreate = () => {
           setProductsSpreadsheets(produtos);
         });
       }
-      
     });
   }, [uuid_inventory]);
+
+  useEffect(() => {
+    if (getAccount() === "premium") {
+      setLimitProducts(false);
+      return;
+    }
+
+    setLimitProducts(500);
+  }, []);
+
+  const getAccount = async () => {
+    const account = await AsyncStorage.getItem("isAccount");
+    return account;
+  };
 
   const checkProductSpreadsheet = (codebarInput) => {
     const trimmedCodebar = codebarInput.trim();
@@ -82,7 +104,7 @@ const ProductCreate = () => {
       (item) => item.codebar === trimmedCodebar
     );
 
-    if (compare_in_spreadsheet) {
+    if (compareInSpreadsheet) {
       if (produto) {
         setProductFound(true);
         setVisibleInputs(true);
@@ -118,6 +140,14 @@ const ProductCreate = () => {
     if (!codebar) return setError("Código de barras é obrigatório.");
     if (!quantity) return setQuantityLabel(true);
 
+    if (limitProducts !== false) {
+      if (selectedInventory.products.length >= limitProducts) {
+        return setProductInfo(
+          `Limite de ${limitProducts} produtos atingido. Não é possível adicionar mais produtos. Faça o upgrade para o plano PRO.`
+        );
+      }
+    }
+
     const product = {
       uuid: uuid.v4(),
       codebar,
@@ -128,6 +158,8 @@ const ProductCreate = () => {
     };
 
     setLoading(true);
+    setProductInfo("");
+
     Controller.Product.create(uuid_inventory, product)
       .then(() => {
         resetValues();
@@ -207,7 +239,7 @@ const ProductCreate = () => {
                 </View>
               ) : null}
             </View>
-            {compare_in_spreadsheet === true && productFound === true && (
+            {compareInSpreadsheet === true && productFound === true && (
               <>
                 <View style={styles.grid}>
                   <Text style={GlobalStyles.label}>Nome</Text>
@@ -216,7 +248,7 @@ const ProductCreate = () => {
                     maxLength={255}
                     value={name ?? ""}
                     onChangeText={setName}
-                    editable={compare_in_spreadsheet || visibleInputs}
+                    editable={compareInSpreadsheet || visibleInputs}
                     multiline
                   />
                 </View>
@@ -227,7 +259,7 @@ const ProductCreate = () => {
                     maxLength={255}
                     value={price ?? ""}
                     onChangeText={setPrice}
-                    editable={compare_in_spreadsheet || visibleInputs}
+                    editable={compareInSpreadsheet || visibleInputs}
                     multiline
                   />
                 </View>
@@ -263,6 +295,11 @@ const ProductCreate = () => {
           )}
         </ScrollView>
 
+        {productInfo && (
+          <Text style={{ ...GlobalStyles.labelError, marginBottom: 10 }}>
+            {productInfo}
+          </Text>
+        )}
         <TouchableOpacity
           style={styles.button}
           onPress={createProduct}

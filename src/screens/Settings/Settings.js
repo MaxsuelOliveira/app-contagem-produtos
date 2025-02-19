@@ -11,7 +11,6 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 // Backend
 import { Controller } from "@services/backend/controller";
 import { downloadFile } from "@utils/downloadFile";
-import importFileSpreadSheets from "@utils/importFileSpreadSheets";
 import SpreadSheetsImportModal from "../SpreadSheets/SpreadSheetsImportModal/SpreadSheetsImportModal";
 import SpreadSheets from "@screens/SpreadSheets/SpreadSheets";
 

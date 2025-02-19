@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
@@ -57,18 +58,13 @@ export default function InventoryDetails() {
 
   const [search, setSearch] = useState("");
 
-  // Filtra os produtos com base no nome ou código de barras
   const filteredProducts = productsInventory.filter(
     (item) =>
       item.name?.toLowerCase().includes(search.toLowerCase()) ||
       item.codebar?.toLowerCase().includes(search.toLowerCase())
   );
 
-  useFocusEffect(
-    useCallback(() => {
-      setRefresh((prev) => prev + 1);
-    }, [])
-  );
+  const [limitProducts, setLimitProducts] = useState(500);
 
   const handleEditProduct = (product) => {
     setSelectedProduct(product);
@@ -82,13 +78,11 @@ export default function InventoryDetails() {
       const produtoIndex = prev.findIndex((produto) => produto.uuid === uuid);
 
       if (produtoIndex !== -1) {
-        // Remove o item
         const novaLista = prev.filter((produto) => produto.uuid !== uuid);
-        check = false; // O item foi removido
+        check = false;
         return novaLista;
       } else {
-        // Adiciona o item
-        check = true; // O item foi adicionado
+        check = true;
         return [...prev, { uuid }];
       }
     });
@@ -108,6 +102,25 @@ export default function InventoryDetails() {
     });
   };
 
+  const getAccount = async () => {
+    const account = await AsyncStorage.getItem("isAccount");
+    if (account === "premium") {
+      setLimitProducts(false);
+    } else {
+      setLimitProducts(500);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      setRefresh((prev) => prev + 1);
+    }, [])
+  );
+
+  useEffect(() => {
+    getAccount();
+  }, []);
+
   useEffect(() => {
     Controller.Inventory.getProducts(uuid).then((products) => {
       setProductsInventory(products);
@@ -119,7 +132,9 @@ export default function InventoryDetails() {
       <View style={{ ...styles.cardHeader }}>
         <Text style={styles.cardTitle}>{name}</Text>
         {describe ? (
-          <Text style={{...styles.cardDescription , marginBottom : 10}}>{describe}</Text>
+          <Text style={{ ...styles.cardDescription, marginBottom: 10 }}>
+            {describe}
+          </Text>
         ) : null}
 
         <View style={styles.createInventarioInfo}>
@@ -142,7 +157,16 @@ export default function InventoryDetails() {
 
               <View style={styles.createInventarioInfoItem}>
                 <Text style={styles.label}>Item(s)</Text>
-                <Text style={styles.value}>{products.length}</Text>
+                {limitProducts !== false ? (
+                  <Text style={styles.value}>
+                    {products.length}{" "}
+                    {limitProducts ? `de ${limitProducts}` : ""}
+                  </Text>
+                ) : (
+                  <Text style={styles.value}>
+                    {products.length} {limitProducts ? "" : "de *"}
+                  </Text>
+                )}
               </View>
 
               <View style={styles.createInventarioInfoItem}>

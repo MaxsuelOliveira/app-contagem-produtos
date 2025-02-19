@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Alert, Modal } from "react-native";
@@ -23,10 +24,20 @@ const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
 
   const [data, setData] = useState([]);
   const [spreadSheetsCount, setSpreadSheetsCount] = useState(0);
+  const [limitAccount, setLimitlimitAccount] = useState("free");
 
   function setTheme() {
     setToggleSwitch(!toggleSwitch);
     textLabelTheme === "dark" ? "light" : "dark";
+  }
+
+  async function getLimitAccount() {
+    const typeAccount = await AsyncStorage.getItem("isAccount");
+    if (typeAccount === "premium") {
+      setLimitlimitAccount("premium");
+    } else {
+      setLimitlimitAccount("free");
+    }
   }
 
   useEffect(() => {
@@ -38,6 +49,10 @@ const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
         console.error("Erro ao contar as planilhas importadas !");
         console.error(error);
       });
+  }, []);
+
+  useEffect(() => {
+    getLimitAccount();
   }, []);
 
   return (
@@ -68,7 +83,8 @@ const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
                   </Text>
 
                   <Text style={{ ...GlobalStyles.small, fontSize: 14 }}>
-                    São 3 colunas, com o seguinte formato: (Código de barras é obrigatório.)
+                    São 3 colunas, com o seguinte formato: (Código de barras é
+                    obrigatório.)
                   </Text>
 
                   <Text
@@ -97,7 +113,7 @@ const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
               </View>
 
               <TouchableOpacity
-                onPress={() => importFileSpreadSheets(setData)}
+                onPress={() => importFileSpreadSheets(setData, limitAccount)}
                 style={{
                   ...GlobalStyles.button,
                   backgroundColor: "transparent",

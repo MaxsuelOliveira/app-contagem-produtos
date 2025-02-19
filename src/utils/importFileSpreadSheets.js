@@ -44,7 +44,7 @@ const saveSheet = async (data) => {
     });
 };
 
-const importFileSpreadSheets = async (setData) => {
+const importFileSpreadSheets = async (setData, account) => {
   try {
     let parsedData = [];
 
@@ -75,8 +75,10 @@ const importFileSpreadSheets = async (setData) => {
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
       fileType === "application/vnd.ms-excel"
     ) {
-
-      Alert.alert("⚠️ Aviso", "Aguardando a conversão do arquivo, por favor aguarde !");
+      Alert.alert(
+        "⚠️ Aviso",
+        "Aguardando a conversão do arquivo, por favor aguarde !"
+      );
 
       // Converter Base64 para Buffer
       const workbook = XLSX.read(Buffer.from(response, "base64"), {
@@ -89,8 +91,6 @@ const importFileSpreadSheets = async (setData) => {
 
       // Converter planilha para JSON
       parsedData = XLSX.utils.sheet_to_json(sheet);
-
-
     }
 
     if (parsedData.length === 0) {
@@ -98,16 +98,26 @@ const importFileSpreadSheets = async (setData) => {
       return;
     }
 
-    if (parsedData.length > 5000) {
-      Alert.alert("⚠️ Aviso", "A quantidade supera o limite de 5.000 registros, apenas os 5.0000 primeiros serão importados !");
-      Alert.alert("⚠️ Aviso", "Faça a sua conta premium para importar mais de 5.000 registros !");
-      parsedData = parsedData.slice(0, 5000);
+    if (account === "free") {
+      if (parsedData.length > 500) {
+        Alert.alert(
+          "⚠️ Aviso",
+          "A quantidade supera o limite de 500 registros, apenas os 5.0000 primeiros serão importados !"
+        );
+        Alert.alert(
+          "⚠️ Aviso",
+          "Faça a sua conta premium para importar mais de 5.000 registros !"
+        );
+        parsedData = parsedData.slice(0, 5000);
+      }
     }
 
     if (parsedData.length > 10000) {
-      Alert.alert("⚠️ Aviso", "O arquivo contém muitos dados, isso pode demorar um pouco !");
+      Alert.alert(
+        "⚠️ Aviso",
+        "O arquivo contém muitos dados, isso pode demorar um pouco !"
+      );
     }
-
 
     Alert.alert("👍 Tudo certo ! ", "Arquivo convertido com sucesso !");
 
