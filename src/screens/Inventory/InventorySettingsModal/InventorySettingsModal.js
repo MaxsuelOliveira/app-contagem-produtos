@@ -23,11 +23,36 @@ import { Controller } from "@services/backend/controller";
 
 const InventorySettingssModal = ({ isVisible, onClose, uuidInventory }) => {
   const [loading, setLoading] = useState(false);
+  const [planilhaLength, setPlanilhaLength] = useState(false);
   const [isBuyWithSpreadsheet, setIsBuyWithSpreadsheet] = useState(false);
+  const [additionalFields, setAdditionalFields] = useState(false);
+
   const toggleSwitchSpreadsheet = () =>
     setIsBuyWithSpreadsheet((previousState) => {
+      if (planilhaLength) {
+        return false;
+      }
       return !previousState;
-  });
+    });
+
+  const toggleSwitchAdditionalFields = () =>
+    setAdditionalFields((previousState) => {
+      return !previousState;
+    });
+
+  useEffect(() => {
+    Controller.SpreadSheets.getAll()
+      .then((spreadsheets) => {
+        if (spreadsheets.length == 0) {
+          setPlanilhaLength(true);
+          return;
+        }
+        setPlanilhaLength(false);
+      })
+      .catch((error) => {
+        return Promise.reject(error);
+      });
+  }, []);
 
   useEffect(() => {
     Controller.Inventory.getUUID(uuidInventory)
@@ -101,6 +126,38 @@ const InventorySettingssModal = ({ isVisible, onClose, uuidInventory }) => {
                       ios_backgroundColor="#3e3e3e"
                       onValueChange={toggleSwitchSpreadsheet}
                       value={isBuyWithSpreadsheet}
+                    />
+                  </View>
+
+                  {planilhaLength ? (
+                    <Text style={{ ...styles.value, marginTop: 10 }}>
+                      Atenção ! Nenhuma planilha importada para habilitar essa
+                      função.
+                    </Text>
+                  ) : null}
+                </View>
+              </View>
+
+              <View style={styles.grid}>
+                <Text style={styles.title}>Campos adicionais.</Text>
+                <View style={styles.section}>
+                  <Text style={styles.label}>
+                    Ao habilitar, os campos adicionais serão exibidos na tela de
+                    cadastro de produtos, os campos são nome do produto e preço
+                    .
+                  </Text>
+
+                  <View style={styles.settingsItem}>
+                    <Text style={styles.value}>
+                      {additionalFields ? "Exibindo" : "Não exibindo"}
+                    </Text>
+
+                    <Switch
+                      trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
+                      thumbColor={additionalFields ? "#4d8eea" : "#bfbfbf"}
+                      ios_backgroundColor="#3e3e3e"
+                      onValueChange={toggleSwitchAdditionalFields}
+                      value={additionalFields}
                     />
                   </View>
                 </View>

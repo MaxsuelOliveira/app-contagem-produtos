@@ -97,7 +97,7 @@ const Home = () => {
               flexDirection: "row",
               alignItems: "center",
               gap: 10,
-              width: "90%",
+              width: "80%",
             }}
           >
             <TouchableOpacity
@@ -114,7 +114,6 @@ const Home = () => {
 
           <TouchableOpacity
             style={{
-              width: "10%",
               backgroundColor: colors.backgroundItem,
               padding: 5,
               alignItems: "center",

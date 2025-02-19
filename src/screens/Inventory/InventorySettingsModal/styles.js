@@ -17,18 +17,14 @@ export const styles = StyleSheet.create({
   label: {
     ...GlobalStyles.label,
     // marginBottom: 10,
-    fontFamily: "Montserrat_Medium",
+    color : colors.textDescription,
+    fontFamily: "Montserrat_Regular",
     fontSize: 14,
   },
 
   settingsItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
-    marginTop: 10,
-    backgroundColor: colors.inputBackground,
-    padding: 10,
-    borderRadius: 5,
   },
 
   value: {
@@ -36,13 +32,11 @@ export const styles = StyleSheet.create({
     fontFamily: "Montserrat_Medium",
     fontSize: 14,
     flex: 1,
-    
   },
 
   title: {
     fontSize: 16,
     fontFamily: "Montserrat_Medium",
-    color: colors.colorText,
     marginBottom: 10,
     marginTop: 20,
   },

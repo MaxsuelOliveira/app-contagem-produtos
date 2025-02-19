@@ -15,21 +15,21 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: 30,
   },
 
   title: {
-    width: "90%",
+    width: "100%",
     position: "relative",
     fontFamily: "Montserrat_Bold",
-    fontSize: 28,
+    fontSize: 24,
     color: colors.textPrimary,
     textAlign: "left",
     position: "relative",
   },
 
   description: {
-    width: "90%",
+    width: "100%",
     position: "relative",
     fontSize: 18,
     color: colors.textSecondary,
