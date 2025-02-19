@@ -47,8 +47,14 @@ export const styles = StyleSheet.create({
 
   button : {
     ...GlobalStyles.button,
-    // position: "absolute", 
-    // top: "100%",
-    // left: 0,
+    width : "80%",
+  },
+
+  buttonContainer : {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginTop: 10,
+    gap: 10,
   }
 });

@@ -14,10 +14,14 @@ import {
 
 // Icons
 import AntDesign from "@expo/vector-icons/AntDesign";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 // Styles
 import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
+
+// Components
+import CaptureCodeBar from "@screens/Products/ProductCaputeCodebarModal/ProductCaputeCodebar";
 
 // Backend
 import { Controller } from "@services/backend/controller";
@@ -30,6 +34,8 @@ const ProductCreate = () => {
   const route = useRoute();
   const uuid_inventory = route.params?.uuid_inventory;
   const [compareInSpreadsheet, setCompareInSpreadsheet] = useState(false);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [productInfo, setProductInfo] = useState("");
@@ -300,20 +306,41 @@ const ProductCreate = () => {
             {productInfo}
           </Text>
         )}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={createProduct}
-          disabled={loading}
-        >
-          <Text style={GlobalStyles.buttonText}>
-            {loading ? (
-              <ActivityIndicator size="small" color="#fff" />
-            ) : (
-              <Text style={styles.buttonText}>Adicionar</Text>
-            )}
-          </Text>
-        </TouchableOpacity>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={createProduct}
+            disabled={loading}
+          >
+            <Text style={GlobalStyles.buttonText}>
+              {loading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>Adicionar</Text>
+              )}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{
+              ...styles.button,
+              width: "60",
+              borderRadius: 10,
+              backgroundColor: colors.inputBackground,
+            }}
+            onPress={() => setIsModalVisible(true)}
+          >
+            <Ionicons name="barcode-outline" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
       </View>
+
+      <CaptureCodeBar
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        setCodebar={checkProductSpreadsheet}
+      />
     </View>
   );
 };

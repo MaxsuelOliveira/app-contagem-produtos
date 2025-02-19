@@ -18,7 +18,6 @@ import Home from "@screens/Home/Home";
 import Login from "@screens/Login/Login";
 import Profile from "@screens/Profile/Profile";
 import InventoryDetails from "@screens/Inventory/InventoryDetails/InventoryDetails";
-// import SpreadSheets from "@screens/SpreadSheets/SpreadSheets";
 import Settings from "@screens/Settings/Settings";
 import CreateAccount from "@screens/Login/CreateAccount/CreateAccount";
 import RecoverPassword from "@screens/Login/RecoverPassword/RecoverPassword";
@@ -41,7 +40,7 @@ export default function App() {
   useEffect(() => {
     async function checkOnboardingScreen() {
       try {
-        const onboardingScreen = await AsyncStorage.getItem("OnboardingScreen");
+        const onboardingScreen = await AsyncStorage.getItem("isOnboarding");
         setInitialRoute(
           onboardingScreen === "true" ? "Home" : "OnboardingScreen"
         );
@@ -98,12 +97,6 @@ export default function App() {
           component={InventoryDetails}
           options={{ headerShown: false }}
         />
-
-        {/* <Stack.Screen
-          name="SpreadSheets"
-          component={SpreadSheets}
-          options={{ headerShown: false }}
-        /> */}
 
         <Stack.Screen
           name="Profile"

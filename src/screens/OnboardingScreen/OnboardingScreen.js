@@ -21,12 +21,12 @@ import { styles } from "./Styles";
 
 const slides = [
   {
-    title: "Controle Total do\n Seu Estoque",
+    title: "Controle Total do\nSeu Estoque",
     description:
       "Gerencie seus produtos sem limites! Adicione, edite e acompanhe seu estoque com facilidade e precisão.",
   },
   {
-    title: "Verificação Rápida e Precisa",
+    title: "Verificação Rápida \ne Precisa",
     description:
       "Escaneie e confira produtos em segundos. Importação e exportação ilimitadas para manter seu estoque sempre atualizado!",
   },
