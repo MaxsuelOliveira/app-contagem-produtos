@@ -98,6 +98,16 @@ const importFileSpreadSheets = async (setData) => {
       return;
     }
 
+    if (parsedData.length > 5000) {
+      Alert.alert("⚠️ Aviso", "A quantidade supera o limite de 5.000 registros, apenas os 5.0000 primeiros serão importados !");
+      Alert.alert("⚠️ Aviso", "Faça a sua conta premium para importar mais de 5.000 registros !");
+      parsedData = parsedData.slice(0, 5000);
+    }
+
+    if (parsedData.length > 10000) {
+      Alert.alert("⚠️ Aviso", "O arquivo contém muitos dados, isso pode demorar um pouco !");
+    }
+
     // Salvar os dados no banco de dados
     saveSheet(parsedData);
 
