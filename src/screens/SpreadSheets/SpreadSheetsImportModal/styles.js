@@ -1,10 +1,15 @@
 import { StyleSheet } from "react-native";
-import { GlobalStyles } from "@styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
   cardTilte: {
     ...GlobalStyles.cardTitle,
-    marginTop : 0
+    marginTop: 0,
+  },
+
+  cardBody : {
+    gap : 10,
+    marginBottom : 10
   },
 
   settingsContainer: {
@@ -17,7 +22,8 @@ export const styles = StyleSheet.create({
   },
 
   settingsItem: {
-    marginBottom: 30,
+    marginBottom: 20,
+    gap: 10,
   },
 
   settingsBox: {
@@ -30,9 +36,50 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  title: {
+  progressText: {
+    textAlign: "center",
     fontSize: 16,
+    fontFamily: "Montserrat_Medium",
+  },
+
+  cardHeader: {
+    ...GlobalStyles.cardHeader,
+    flexDirection: "column",
+    marginBottom: 10,
+    padding: 0,
+  },
+
+  title: {
+    fontSize: 18,
     fontFamily: "Montserrat_Medium",
     marginBottom: 10,
   },
+
+  textDescription: {
+    ...GlobalStyles.label,
+    fontSize: 16,
+    fontFamily: "Montserrat_Regular",
+  },
+
+  badge: {
+    ...GlobalStyles.badge,
+    width: 100,
+    backgroundColor: colors.warrning,
+  },
+
+  buttonImport: {
+    ...GlobalStyles.button,
+    backgroundColor: "transparent",
+    borderColor: colors.textDescription,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderStyle: "dashed",
+    marginBottom: 20,
+    marginTop: -10,
+  },
+
+  buttonImportText: {
+    ...GlobalStyles.buttonText,
+    color: colors.textDescription,
+  }
 });

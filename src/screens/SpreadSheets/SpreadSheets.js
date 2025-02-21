@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, StatusBar , Modal } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  StatusBar,
+  Modal,
+  TouchableOpacity,
+} from "react-native";
 
 // Icons
 import { AntDesign } from "@expo/vector-icons";
@@ -33,40 +40,57 @@ const SpreadSheets = ({ isVisible, onClose }) => {
       <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
       <View style={GlobalStyles.modalOverlay}>
+        
         <View style={GlobalStyles.modalContent}>
-          <View style={styles.card}>
-            <View style={{ ...GlobalStyles.cardHeader, marginBottom: 20 }}>
-              <Text style={styles.cardTilte}>Planilhas importadas</Text>
+
+          <View style={GlobalStyles.modalContainer}>
+
+            <View style={GlobalStyles.card}>
+
+              <View style={GlobalStyles.cardHeader}>
+                <Text style={styles.cardTilte}>Planilhas</Text>
+                <TouchableOpacity
+                  onPress={onClose}
+                  style={{ ...GlobalStyles.closeButton }}
+                >
+                  <AntDesign name="close" size={28} color={colors.colorIcons} />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.cardBody}>
+                <ScrollView>
+                  {planilhas.length > 0 ? (
+                    planilhas.map((planilha) => (
+                      <CardSpreadSheets
+                        key={planilha.uuid}
+                        uuid={planilha.uuid}
+                        name={planilha.name}
+                        products={planilha.products.length}
+                        date_create={planilha.date_create}
+                      />
+                    ))
+                  ) : (
+                    <Text
+                      style={{
+                        ...GlobalStyles.cardTitle,
+                        fontFamily: "Montserrat_Medium",
+                        fontSize: 18,
+                      }}
+                    >
+                      Nenhum planilha importada !
+                    </Text>
+                  )}
+                </ScrollView>
+              </View>
+
             </View>
 
-            <View style={{ flex: 1 }}>
-              <ScrollView>
-                {planilhas.length > 0 ? (
-                  planilhas.map((planilha) => (
-                    <CardSpreadSheets
-                      key={planilha.uuid}
-                      uuid={planilha.uuid}
-                      name={planilha.name}
-                      products={planilha.products.length}
-                      date_create={planilha.date_create}
-                    />
-                  ))
-                ) : (
-                  <Text
-                    style={{
-                      ...GlobalStyles.cardTitle,
-                      textAlign: "left",
-                      fontSize: 16,
-                    }}
-                  >
-                    😐 Nenhum planilha foi importada !
-                  </Text>
-                )}
-              </ScrollView>
-            </View>
           </View>
+
         </View>
+
       </View>
+
     </Modal>
   );
 };

@@ -7,14 +7,14 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     gap: 15,
     backgroundColor: colors.cardBackground,
-    margin: 10,
+    // margin: 10,
     marginBottom: 15,
     padding: 10,
     borderRadius: 15,
   },
 
   itemWarning: {
-    backgroundColor : colors.warrning,
+    backgroundColor: colors.warrning,
   },
 
   productItemContent: {
@@ -82,5 +82,22 @@ export const styles = StyleSheet.create({
     backgroundColor: "#ced4da",
     padding: 5,
     borderRadius: 5,
+  },
+
+  productBagderQuantity: {
+    backgroundColor: colors.primary,
+    color: "white",
+  },
+
+  productBagderInconsistency: {
+    backgroundColor: colors.warrning,
+  },
+
+  productBagderContainer: {
+    position: "absolute",
+    leeft: 0,
+    top: -20,
+    flexDirection: "row",
+    gap: 10,
   },
 });

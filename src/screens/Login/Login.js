@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import * as Crypto from "expo-crypto";
@@ -19,16 +20,69 @@ import { styles } from "./styles";
 import ModalCustom from "@utils/ModalCustom/Modal";
 
 // Utils
-import { expiresIn, isExpired } from "@utils/timestamp";
-import { decodeToken } from "@utils/token";
-import { Login } from "@services/API";
+import { expiresIn, isExpired } from "@utils/utils";
+import { decodeToken } from "@utils/utils";
+import { requestLogin } from "@services/API";
 
-const LoginScreen = ({ navigation }) => {
-  const [uuid, setUUID] = useState("");
+const InputField = ({
+  label,
+  value,
+  onChangeText,
+  placeholder,
+  keyboardType,
+}) => (
+  <View style={{ marginBottom: 5 }}>
+    <Text style={GlobalStyles.label}>{label}</Text>
+    <TextInput
+      style={GlobalStyles.input}
+      placeholder={placeholder}
+      value={value}
+      onChangeText={onChangeText}
+      keyboardType={keyboardType}
+      autoCapitalize="none"
+    />
+  </View>
+);
+
+const PasswordField = ({
+  value,
+  onChangeText,
+  showPassword,
+  togglePassword,
+}) => (
+  <View style={{ marginBottom: 5 }}>
+    <Text style={GlobalStyles.label}>Sua senha *</Text>
+    <View style={styles.containerShowPassword}>
+      <TextInput
+        style={GlobalStyles.input}
+        placeholder="******"
+        secureTextEntry={!showPassword}
+        value={value}
+        onChangeText={onChangeText}
+        autoCapitalize="none"
+      />
+      <TouchableOpacity
+        style={styles.buttonShowPassword}
+        onPress={togglePassword}
+      >
+        <Text style={styles.buttonShowPasswordText}>
+          {showPassword ? "Ocultar" : "Exibir"} senha
+        </Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+);
+
+export default function Login({ navigation }) {
+  // States
+  const [loading, setLoading] = useState(false);
+  const [uuidDevice, setUUIDDevice] = useState("");
+  const [device, setDevice] = useState(null);
+
+  // Inputs
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+
   const [showModal, setShowModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
   const [message, setMessage] = useState("Faça login para acessar o sistema.");
@@ -37,37 +91,57 @@ const LoginScreen = ({ navigation }) => {
     checkStoredData();
   }, []);
 
+  // Verifica dados armazenados e sessão
   const checkStoredData = async () => {
     try {
-      const isDevice = await AsyncStorage.getItem("isDevice");
-      if (isDevice) {
-        const { expires_in } = JSON.parse(isDevice);
+      const storedDevice = await AsyncStorage.getItem("isDevice");
+
+      if (storedDevice) {
+        const isDevice = JSON.parse(storedDevice);
+        const { expires_in, uuid } = isDevice;
+
+        setDevice(isDevice);
+        setUUIDDevice(uuid);
+
         if (!isExpired(expires_in)) {
           navigation.navigate("Home");
           return;
+        } else {
+          Alert.alert("Atenção", "Sua sessão expirou, faça login novamente.");
+          await AsyncStorage.removeItem("isDevice"); // Remove sessão expirada
         }
       }
+
       await setOrRetrieveUUID();
     } catch (error) {
       console.error("Erro ao acessar AsyncStorage:", error);
     }
   };
 
+  // Define ou recupera UUID do dispositivo
   const setOrRetrieveUUID = async () => {
     try {
-      let uuidDevice = await AsyncStorage.getItem("uuidDevice");
+      let storedUUID = await AsyncStorage.getItem("uuidDevice");
 
-      if (!uuidDevice) {
-        uuidDevice = Crypto.randomUUID();
-        await AsyncStorage.setItem("uuidDevice", uuidDevice);
+      if (!storedUUID) {
+        storedUUID = Crypto.randomUUID();
+        await AsyncStorage.setItem("uuidDevice", storedUUID);
       }
 
-      setUUID(uuidDevice);
+      setUUIDDevice(storedUUID);
     } catch (error) {
-      console.error("Erro ao gerar UUID:", error);
+      console.error("Erro ao manipular UUID:", error);
     }
   };
 
+  // Obtém informações do dispositivo
+  const retrieveDeviceInfo = () => {
+    return device
+      ? device.describe
+      : `${Device.manufacturer} ${Device.brand} ${Device.modelName} ${Device.osName} ${Device.osVersion}`;
+  };
+
+  // Função de login
   const handleLogin = useCallback(async () => {
     if (!email || !password) {
       return showAlert("error", "Atenção", "Preencha todos os campos.");
@@ -81,25 +155,20 @@ const LoginScreen = ({ navigation }) => {
         password
       );
 
-      const deviceInfo = `${Device.manufacturer} ${Device.brand} ${Device.modelName} ${Device.osName} ${Device.osVersion}`;
-
-      const response = await Login(email, hashedPass, uuid, deviceInfo);
+      const deviceInfo = retrieveDeviceInfo();
+      const response = await requestLogin(
+        email,
+        hashedPass,
+        uuidDevice,
+        deviceInfo
+      );
       const data = await response.json();
 
       if (data.token) {
-        const { token, dispositivo } = data;
-        dispositivo.expires_in = expiresIn();
+        await storeLoginData(data.token, data.dispositivo);
 
-        await AsyncStorage.multiSet([
-          ["isToken", token],
-          ["isLogin", "true"],
-          ["isAccount", "premium"],
-          ["isOnboarding", "true"],
-          ["isDevice", JSON.stringify(dispositivo)],
-        ]);
-
-        let { bloqueado } = decodeToken(token);
-        if (bloqueado == 1) {
+        let { bloqueado } = decodeToken(data.token);
+        if (bloqueado === 1) {
           showAlert(
             "error",
             "Login não realizado!",
@@ -120,8 +189,26 @@ const LoginScreen = ({ navigation }) => {
     } finally {
       setLoading(false);
     }
-  }, [email, password, uuid, navigation]);
+  }, [email, password, uuidDevice, navigation]);
 
+  // Armazena os dados do login
+  const storeLoginData = async (token, dispositivo) => {
+    try {
+      dispositivo.expires_in = expiresIn();
+
+      await AsyncStorage.multiSet([
+        ["isToken", token],
+        ["isLogin", "true"],
+        ["isAccount", "premium"],
+        ["isOnboarding", "true"],
+        ["isDevice", JSON.stringify(dispositivo)],
+      ]);
+    } catch (error) {
+      console.error("Erro ao salvar dados do login:", error);
+    }
+  };
+
+  // Exibe alertas
   const showAlert = (type, title, text) => {
     setModalInfo({
       type,
@@ -132,7 +219,6 @@ const LoginScreen = ({ navigation }) => {
     });
     setShowModal(true);
   };
-
   return (
     <ScrollView style={styles.container}>
       <StatusBar style="dark" />
@@ -193,55 +279,4 @@ const LoginScreen = ({ navigation }) => {
       />
     </ScrollView>
   );
-};
-
-const InputField = ({
-  label,
-  value,
-  onChangeText,
-  placeholder,
-  keyboardType,
-}) => (
-  <View style={{ marginBottom: 5 }}>
-    <Text style={GlobalStyles.label}>{label}</Text>
-    <TextInput
-      style={GlobalStyles.input}
-      placeholder={placeholder}
-      value={value}
-      onChangeText={onChangeText}
-      keyboardType={keyboardType}
-      autoCapitalize="none"
-    />
-  </View>
-);
-
-const PasswordField = ({
-  value,
-  onChangeText,
-  showPassword,
-  togglePassword,
-}) => (
-  <View style={{ marginBottom: 5 }}>
-    <Text style={GlobalStyles.label}>Sua senha *</Text>
-    <View style={styles.containerShowPassword}>
-      <TextInput
-        style={GlobalStyles.input}
-        placeholder="******"
-        secureTextEntry={!showPassword}
-        value={value}
-        onChangeText={onChangeText}
-        autoCapitalize="none"
-      />
-      <TouchableOpacity
-        style={styles.buttonShowPassword}
-        onPress={togglePassword}
-      >
-        <Text style={styles.buttonShowPasswordText}>
-          {showPassword ? "Ocultar" : "Exibir"} senha
-        </Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-);
-
-export default LoginScreen;
+}

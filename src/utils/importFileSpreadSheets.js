@@ -10,45 +10,45 @@ import uuid from "react-native-uuid";
 import { Model } from "../services/backend/model";
 
 const saveSheet = async (data) => {
-  let productResult = [];
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    Alert.alert("Erro", "Nenhum dado válido para salvar.");
+    return;
+  }
 
-  const date_create_formart = new Intl.DateTimeFormat("pt-BR")
+  const formattedDate = new Intl.DateTimeFormat("pt-BR")
     .format(new Date())
     .replace(/\//g, "-");
 
-  let sheet = {
+  const sheet = {
     uuid: uuid.v4(),
     date_create: new Date(),
-    name: `Planilha-${date_create_formart}`,
-    products: [],
+    name: `Planilha-${formattedDate}`,
+    products: data.map((item) => ({
+      codebar: item.TMER_CODIGO_BARRAS_UKN || "",
+      name: item.TMER_NOME || "",
+      price: item.TMER_PRECO || 0,
+    })),
   };
 
-  data.forEach((element) => {
-    let productSchema = {
-      codebar: element.TMER_CODIGO_BARRAS_UKN || "",
-      name: element.TMER_NOME || "",
-      price: element.TMER_PRECO || 0,
-    };
-
-    productResult.push(productSchema);
-  });
-
-  sheet.products = productResult;
-
-  Model.SpreadSheets.create(sheet)
-    .then((response) => {
-      Alert.alert("Sucesso", "📄 Planilha salva com sucesso !");
-    })
-    .catch((error) => {
-      console.error(`❌ Erro ao salvar planilha  : ${error} !`);
-    });
+  try {
+    await Model.SpreadSheets.create(sheet);
+    Alert.alert("Sucesso", "📄 Planilha salva com sucesso!");
+  } catch (error) {
+    console.error(`❌ Erro ao salvar planilha: ${error.message}`);
+  }
 };
 
-const importFileSpreadSheets = async (setData, account) => {
+const importFileSpreadSheets = async (
+  setData,
+  account,
+  setImportProcessing,
+  importProcessingText
+) => {
   try {
-    console.time("⏳ Tempo total"); // Marca o tempo inicial
+    setImportProcessing(true);
+    console.time("⏳ Tempo total");
 
-    console.log("📂 Selecionando arquivo...");
+    importProcessingText("📂 Selecionando arquivo...");
     const result = await DocumentPicker.getDocumentAsync({
       type: [
         "application/json",
@@ -59,66 +59,73 @@ const importFileSpreadSheets = async (setData, account) => {
     });
 
     if (result.canceled) {
-      console.log("⚠️ Importação cancelada pelo usuário.");
+      importProcessingText("📂 Importação cancelada.");
       return;
     }
 
-    const fileUri = result.assets[0].uri;
-    const fileType = result.assets[0].mimeType;
-    console.log(`📄 Arquivo selecionado: ${fileType}`);
+    const { uri: fileUri, mimeType: fileType } = result.assets[0];
+    importProcessingText(`📄 Arquivo selecionado: ${fileType}`);
 
-    // ⚡ Lê o arquivo como buffer (evita base64 para melhorar performance)
-    console.time("📥 Leitura do arquivo");
+    // Lê o arquivo como Base64 para otimizar o processamento
+    importProcessingText("📥 Lendo arquivo...");
     const fileBuffer = await FileSystem.readAsStringAsync(fileUri, {
       encoding: FileSystem.EncodingType.Base64,
     });
-    console.timeEnd("📥 Leitura do arquivo");
 
     let parsedData = [];
 
-    // ⚡ Processamento assíncrono com Promise.all
-    if (fileType === "application/json") {
-      console.time("📜 Parsing JSON");
-      parsedData = JSON.parse(fileBuffer);
-      console.timeEnd("📜 Parsing JSON");
-    } else if (fileType === "text/csv") {
-      console.time("📜 Parsing CSV");
-      parsedData = Papa.parse(atob(fileBuffer), { header: true }).data;
-      console.timeEnd("📜 Parsing CSV");
-    } else if (
-      fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-      fileType === "application/vnd.ms-excel"
-    ) {
-      console.time("📜 Parsing XLSX");
-      const workbook = XLSX.read(fileBuffer, { type: "base64" });
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      parsedData = XLSX.utils.sheet_to_json(sheet);
-      console.timeEnd("📜 Parsing XLSX");
+    switch (fileType) {
+      case "application/json":
+        importProcessingText("📄 Lendo JSON...");
+        parsedData = JSON.parse(fileBuffer);
+        break;
+
+      case "text/csv":
+        importProcessingText("📄 Lendo CSV...");
+        parsedData = Papa.parse(Buffer.from(fileBuffer, "base64").toString(), {
+          header: true,
+        }).data;
+        break;
+
+      case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+      case "application/vnd.ms-excel":
+        importProcessingText("📄 Lendo XLSX...");
+        const workbook = XLSX.read(fileBuffer, { type: "base64" });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        parsedData = XLSX.utils.sheet_to_json(sheet);
+        break;
+
+      default:
+        importProcessingText("❌ Tipo de arquivo não suportado.");
+        return;
     }
 
     if (!parsedData.length) {
-      Alert.alert("❌ Nenhum dado encontrado no arquivo!");
+      importProcessingText("📄 Nenhum dado encontrado no arquivo.");
       return;
     }
 
-    // ⚡ Aplica o limite conforme o plano do usuário
+    // Aplica limite conforme plano do usuário
     const maxLimit = account === "free" ? 5000 : 10000;
     if (parsedData.length > maxLimit) {
-      console.warn(`🔻 Reduzindo registros para o limite de ${maxLimit}`);
+      importProcessingText(
+        `📄 Limite de registros excedido. Apenas ${maxLimit} serão importados.`
+      );
       parsedData = parsedData.slice(0, maxLimit);
     }
 
-    console.time("💾 Salvando no banco");
+    importProcessingText("💾 Salvando no banco de dados...");
     await saveSheet(parsedData);
-    console.timeEnd("💾 Salvando no banco");
 
-    console.log("✅ Arquivo processado com sucesso!");
+    importProcessingText("✅ Importação concluída com sucesso!");
     setData(parsedData);
 
-    console.timeEnd("⏳ Tempo total"); // Marca o tempo final
+    console.timeEnd("⏱️ Tempo total de processamento");
   } catch (error) {
-    console.error("❌ Erro ao importar arquivo!", error);
-    Alert.alert("Erro ao importar arquivo!", error.message);
+    importProcessingText("❌ Erro ao importar arquivo!");
+    console.error("❌ Erro ao importar arquivo:", error);
+  } finally {
+    setProgress(false);
   }
 };
 

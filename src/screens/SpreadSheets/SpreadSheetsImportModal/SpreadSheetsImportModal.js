@@ -26,28 +26,20 @@ import { styles } from "./styles";
 import { AntDesign } from "@expo/vector-icons";
 
 const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
-  const navigation = useNavigation();
-  const [toggleSwitch, setToggleSwitch] = useState(false);
-  const textLabelTheme = toggleSwitch ? "dark" : "light";
 
+  // Estados principais
   const [data, setData] = useState([]);
+  const [accountType, setAccountType] = useState("free");
+  const [importProcessingText , setImportProcessingText] = useState("Selecione um arquivo");
+  const [importProcessing, setImportProcessing] = useState(false);
   const [spreadSheetsCount, setSpreadSheetsCount] = useState(0);
-  const [limitAccount, setLimitlimitAccount] = useState("free");
-
-  const [progress, setProgress] = useState(0);
-  const [startingImport, setStartingImport] = useState(true);
-
-  function setTheme() {
-    setToggleSwitch(!toggleSwitch);
-    textLabelTheme === "dark" ? "light" : "dark";
-  }
 
   async function getLimitAccount() {
     const typeAccount = await AsyncStorage.getItem("isAccount");
     if (typeAccount === "premium") {
-      setLimitlimitAccount("premium");
+      setAccountType("premium");
     } else {
-      setLimitlimitAccount("free");
+      setAccountType("free");
     }
   }
 
@@ -67,148 +59,93 @@ const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
   }, []);
 
   return (
-    <>
-      <Modal
-        visible={isVisible}
-        animationType={false}
-        transparent
-        onRequestClose={onClose}
-      >
-        <StatusBar style="auto" backgroundColor={colors.modalCover} />
+    <Modal
+      visible={isVisible}
+      animationType={false}
+      transparent
+      onRequestClose={onClose}
+    >
+      <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
-        <View style={GlobalStyles.modalOverlay}>
-          <View style={GlobalStyles.modalContent}>
-            {startingImport ? (
+      <View style={GlobalStyles.modalOverlay}>
+        <View style={GlobalStyles.modalContent}>
+          <View style={GlobalStyles.modalContainer}>
+            {importProcessing ? (
               <View style={GlobalStyles.card}>
-                <View
-                  style={{
-                    ...GlobalStyles.cardHeader,
-                    flexDirection: "column",
-                    marginBottom: 10,
-                    padding: 0,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      fontFamily: "Montserrat_Bold",
-                      marginBottom: 10,
-                      padding: 0,
-                    }}
-                  >
-                    Convertendo seu arquivo
-                  </Text>
-                  <Text style={GlobalStyles.label}>
+                <View style={styles.cardHeader}>
+                  <Text style={styles.title}> {importProcessingText}</Text>
+                  <Text style={styles.textDescription}>
                     Esse processo levará algum tempo. Por favor, aguarde...
                   </Text>
                 </View>
 
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    margin: "auto",
-                  }}
-                >
-                  <Text
-                    style={{
-                      ...GlobalStyles.badge,
-                      width: 100,
-                      backgroundColor: colors.warrning,
-                    }}
-                  >
-                    A converter
-                  </Text>
-                  <View
-                    style={{
-                      ...styles.progressBar,
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <ActivityIndicator
-                      size="large"
-                      color={colors.textPrimary}
-                    />
-                    <Text style={styles.progressText}>{progress}%</Text>
-                  </View>
-                </View>
+                <Text style={styles.badge}>A converter</Text>
+                <ActivityIndicator size="large" color={colors.textPrimary} />
+            
+                <Text>
+                  {importProcessingText}
+                </Text>
               </View>
             ) : (
               <View style={GlobalStyles.card}>
                 <View style={GlobalStyles.cardHeader}>
-                  <Text style={styles.cardTilte}>Importar planilha</Text>
+                  <Text style={styles.cardTilte}>Importar</Text>
+                  <TouchableOpacity
+                    onPress={onClose}
+                    style={{ ...GlobalStyles.closeButton }}
+                  >
+                    <AntDesign
+                      name="close"
+                      size={28}
+                      color={colors.colorIcons}
+                    />
+                  </TouchableOpacity>
                 </View>
 
                 <ScrollView>
-                  <View style={styles.settingsItem}>
-                    <View>
-                      <Text style={[styles.title]}>
-                        Atenção : {""}
-                        <Text style={{ ...GlobalStyles.small, fontSize: 14 }}>
-                          Antes de importar uma planilha, certifique-se de que
-                          ela está no formato correto.
-                        </Text>
-                      </Text>
+                  <View style={styles.cardBody}>
+                    <Text style={styles.title}>Atenção</Text>
 
-                      <Text style={{ ...GlobalStyles.small, fontSize: 14 }}>
-                        São 3 colunas, com o seguinte formato: (Código de barras
-                        é obrigatório.)
-                      </Text>
+                    <Text style={styles.textDescription}>
+                      Antes de importar uma planilha, certifique-se de que ela
+                      está no formato correto.
+                    </Text>
 
-                      <Text
-                        style={{
-                          ...GlobalStyles.small,
-                          fontSize: 14,
-                          color: colors.textPrimary,
-                        }}
-                      >
-                        COD BARRA | NOME | PREÇO
-                      </Text>
+                    <Text style={styles.textDescription}>
+                      São 3 colunas, com o seguinte formato: (Código de barras é
+                      obrigatório.)
+                    </Text>
 
-                      <TouchableOpacity
-                        onPress={() =>
-                          downloadFile(
-                            "https://estoque.webart3.com/documents/planilha-exemplov1.0.xlsx",
-                            "planilha-exemplov1.0.xlsx"
-                          )
-                        }
-                      >
-                        <Text style={GlobalStyles.link}>
-                          Clique aqui para baixar o modelo !
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
+                    <Text style={styles.textDescription}>
+                      COD BARRA | NOME | PREÇO
+                    </Text>
+
+                    <TouchableOpacity
+                      onPress={() =>
+                        downloadFile(
+                          "https://estoque.webart3.com/documents/planilha-exemplov1.0.xlsx",
+                          "planilha-exemplov1.0.xlsx"
+                        )
+                      }
+                    >
+                      <Text style={GlobalStyles.link}>
+                        Clique aqui para baixar o modelo !
+                      </Text>
+                    </TouchableOpacity>
                   </View>
+                </ScrollView>
 
+                <View style={styles.cardFooter}>
                   <TouchableOpacity
-                    onPress={() =>
-                      importFileSpreadSheets(setData, limitAccount)
-                    }
-                    style={{
-                      ...GlobalStyles.button,
-                      backgroundColor: "transparent",
-                      borderColor: colors.textDescription,
-                      borderWidth: 1,
-                      borderRadius: 10,
-                      borderStyle: "dashed",
-                      marginBottom: 20,
-                      marginTop: -10,
-                    }}
+                    onPress={() => importFileSpreadSheets(setData, accountType , setImportProcessing , setImportProcessingText)}
+                    style={styles.buttonImport}
                   >
                     <MaterialCommunityIcons
                       name="google-spreadsheet"
                       size={24}
                       color={"green"}
                     />
-                    <Text
-                      style={{
-                        ...GlobalStyles.buttonText,
-                        color: colors.textDescription,
-                      }}
-                    >
+                    <Text style={styles.buttonImportText}>
                       Clique e selecione a planilha
                     </Text>
 
@@ -216,57 +153,13 @@ const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
                       Formatos aceitos: .xls, .xlsx, .csv
                     </Text>
                   </TouchableOpacity>
-
-                  {/* Switch */}
-                  <View style={{ ...styles.settingsItem, display: "none" }}>
-                    <View style={{ marginBottom: 20 }}>
-                      <Text style={[styles.title]}>
-                        Suas planilha importadas
-                      </Text>
-                      <Text style={[GlobalStyles.small]}>
-                        Lista de planilhas importadas. Clique para visualizar as
-                        informações.
-                      </Text>
-                    </View>
-
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate("SpreadSheets");
-                      }}
-                      style={{
-                        ...GlobalStyles.button,
-                        backgroundColor: "transparent",
-                        borderColor: colors.textDescription,
-                        borderWidth: 1,
-                        borderRadius: 10,
-                        borderStyle: "dashed",
-                      }}
-                    >
-                      <MaterialCommunityIcons
-                        name="google-spreadsheet"
-                        size={24}
-                        color={"green"}
-                      />
-                      <Text
-                        style={{
-                          ...GlobalStyles.buttonText,
-                          color: colors.textDescription,
-                        }}
-                      >
-                        Gerenciar planilhas importadas
-                      </Text>
-                      <Text style={GlobalStyles.small}>
-                        {spreadSheetsCount} planilha(s) importadas
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </ScrollView>
+                </View>
               </View>
             )}
           </View>
         </View>
-      </Modal>
-    </>
+      </View>
+    </Modal>
   );
 };
 

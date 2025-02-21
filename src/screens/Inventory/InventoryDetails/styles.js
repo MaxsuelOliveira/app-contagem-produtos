@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { GlobalStyles , colors } from "@styles/GlobalStyles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
   card: {
@@ -15,18 +15,17 @@ export const styles = StyleSheet.create({
   },
 
   cardHeader: {
-    width: "95%",
-    marginLeft: "auto",
-    marginRight: "auto",
+    width: "100%",
     marginTop: 15,
-    padding: 20,
-    paddingBottom: 0,
+    padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
   },
 
   cardBody: {
-    marginTop: 0,
     padding: 10,
-    paddingTop: 0,
     paddingBottom: 0,
   },
 
@@ -42,10 +41,14 @@ export const styles = StyleSheet.create({
   },
 
   cardTitle: {
-    fontSize: 20,
-    textAlign: "center",
+    fontSize: 18,
     fontFamily: "Montserrat_Bold",
-    marginBottom :  5
+  },
+
+  title: {
+    fontSize: 18,
+    fontFamily: "Montserrat_Bold",
+    color: "#333",
   },
 
   cardDescription: {
@@ -60,7 +63,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 10,
-    marginBottom : 10
+    marginBottom: 10,
   },
 
   createInventarioInfoItem: {
@@ -137,10 +140,17 @@ export const styles = StyleSheet.create({
   },
 
   label: { ...GlobalStyles.label, fontSize: 12 },
+
+  labelError: {
+    ...GlobalStyles.labelError,
+    marginBottom: 10,
+  },
+
   value: { ...GlobalStyles.value, fontSize: 14 },
+
   menuText: { ...GlobalStyles.menubarText, fontSize: 10 },
 
-  title : {
+  title: {
     fontFamily: "Montserrat_Bold",
     fontSize: 18,
     color: "#333",
@@ -150,34 +160,32 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
-  noProducts : {
+  noProducts: {
     padding: 10,
   },
 
   noProductsText: {
     fontSize: 16,
     fontFamily: "Montserrat_Medium",
-    color: "#333"
+    color: "#333",
   },
 
   input: {
-    borderWidth: 1,
-    borderColor: "#e9ecef",
-    borderRadius: 4,
+    borderBottomWidth: 1,
+    borderColor: colors.borderColor,
     padding: 10,
     height: 40,
-    borderRadius: 20,
     fontFamily: "Montserrat_Regular",
     fontSize: 14,
     color: "#333",
     width: "85%",
   },
 
-  inputActive : {
+  inputActive: {
     display: "flex",
   },
 
-  buttonSearch : {
+  buttonSearch: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -185,6 +193,72 @@ export const styles = StyleSheet.create({
     width: 40,
     backgroundColor: colors.primary,
     borderRadius: 15,
-  }
+  },
 
+  headerContent: {
+    flex: 1,
+    alignItems: "center",
+  },
+
+  modalOptionsCard: {
+    ...GlobalStyles.card,
+
+    borderRadius: 10,
+    marginRight: 0,
+    borderTopStartRadius: 10,
+    borderEndStartRadius: 10,
+  },
+
+  form: {
+    backgroundColor: colors.primaryBackground,
+    padding: 10,
+    paddingBottom: 15,
+    borderRadius: 10,
+    margin: 10,
+    marginBottom: 20,
+  },
+
+  formSearch: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: colors.backgroundItem,
+    padding: 10,
+    margin: 10,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+
+  formItem: {
+    flexDirection: "row",
+    width: "100%",
+    gap: 10,
+    marginBottom: 10,
+  },
+
+  optionsButtonContent: {
+    flexDirection: "row",
+    marginBottom: 20,
+    justifyContent: "space-between",
+    borderBottomColor: colors.colorIcons,
+    borderBottomWidth: 1,
+    paddingBottom: 20,
+  },
+
+  optionTitle: {
+    ...GlobalStyles.cardTitle,
+    fontSize: 16,
+    margin : 0,
+    color: "#333",
+    flex: 1,
+    textAlign: "center",
+    marginTop: 0,
+  },
+
+  optionCardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    width : "100%",
+    margin : 0,
+    padding: 0, 
+  },
 });

@@ -5,15 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 // Styles
 import { styles } from "./styles";
 
-export function setStatus(status) {
-  if (status === "progress") {
-    return "Em progresso";
-  } else if (status === "done") {
-    return "Finalizado";
-  } else {
-    return "Desconhecido";
-  }
-}
+import { setStatus } from "@utils/utils";
 
 const CardItemInventory = ({
   uuid,

@@ -20,8 +20,9 @@ import { styles } from "./styles";
 
 // Backend
 import { Controller } from "@services/backend/controller";
+import { TextInput } from "react-native-gesture-handler";
 
-const InventorySettingssModal = ({ isVisible, onClose, uuidInventory }) => {
+const InventorySettingsModal = ({ isVisible, onClose, uuidInventory }) => {
   const [loading, setLoading] = useState(false);
   const [planilhaLength, setPlanilhaLength] = useState(false);
   const [isBuyWithSpreadsheet, setIsBuyWithSpreadsheet] = useState(false);
@@ -39,6 +40,26 @@ const InventorySettingssModal = ({ isVisible, onClose, uuidInventory }) => {
     setAdditionalFields((previousState) => {
       return !previousState;
     });
+
+  const updateSettings = () => {
+    setLoading(true);
+
+    Controller.Inventory.updateCompareInSpreadSheets(
+      uuidInventory,
+      isBuyWithSpreadsheet
+    )
+      .then((inventory) => {
+        setTimeout(() => {
+          setLoading(false);
+        }, 300);
+        onClose();
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+        Alert.alert("Houve um erro ao atualizar inventário !", error);
+      });
+  };
 
   useEffect(() => {
     Controller.SpreadSheets.count()
@@ -65,25 +86,6 @@ const InventorySettingssModal = ({ isVisible, onClose, uuidInventory }) => {
       });
   }, []);
 
-  const updateSettings = () => {
-    setLoading(true);
-
-    Controller.Inventory.updateCompareInSpreadSheets(
-      uuidInventory,
-      isBuyWithSpreadsheet
-    )
-      .then((inventory) => {
-        setTimeout(() => {
-          setLoading(false);
-        }, 300);
-        onClose();
-      })
-      .catch((error) => {
-        setLoading(false);
-        Alert.alert("Erro atualizar inventorio !" + error);
-      });
-  };
-
   return (
     <Modal
       visible={isVisible}
@@ -95,85 +97,146 @@ const InventorySettingssModal = ({ isVisible, onClose, uuidInventory }) => {
 
       <View style={GlobalStyles.modalOverlay}>
         <View style={GlobalStyles.modalContent}>
-          <View style={GlobalStyles.card}>
-            <View style={GlobalStyles.cardHeader}>
-              <Text style={styles.cardTitle}>Configurações do inventário</Text>
-              <TouchableOpacity
-                onPress={onClose}
-                style={GlobalStyles.closeButton}
-              >
-                <AntDesign name="close" size={28} color={colors.colorIcons} />
-              </TouchableOpacity>
+          <View style={GlobalStyles.modalContainer}>
+            <View style={GlobalStyles.card}>
+              <View style={GlobalStyles.cardHeader}>
+                <Text style={styles.cardTitle}>Configurações</Text>
+                <TouchableOpacity
+                  onPress={onClose}
+                  style={GlobalStyles.closeButton}
+                >
+                  <AntDesign name="close" size={28} color={colors.colorIcons} />
+                </TouchableOpacity>
+              </View>
+
+              <ScrollView style={styles.cardBody}>
+                <View style={styles.grid}>
+                  <Text style={styles.title}>Comparação de produtos.</Text>
+                  <View style={styles.section}>
+                    <Text style={styles.label}>
+                      Ao habilitar, Só será possível adicionar produtos que
+                      constam nas planilhas importadas.
+                    </Text>
+
+                    <View style={styles.settingsItem}>
+                      <Text style={styles.value}>
+                        {isBuyWithSpreadsheet ? "Habilitado" : "Desabilitado"}
+                      </Text>
+
+                      <Switch
+                        trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
+                        thumbColor={
+                          isBuyWithSpreadsheet ? "#4d8eea" : "#bfbfbf"
+                        }
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleSwitchSpreadsheet}
+                        value={isBuyWithSpreadsheet}
+                      />
+                    </View>
+                  </View>
+                </View>
+
+                <View style={styles.grid}>
+                  <Text style={styles.title}>Edição de produtos.</Text>
+                  <View style={styles.section}>
+                    <Text style={styles.label}>
+                      Ao habilitar, será possível editar campos adicionais dos
+                      produtos.
+                    </Text>
+
+                    <View style={styles.settingsItem}>
+                      <Text style={styles.value}>
+                        {additionalFields ? "Editável" : "Não editável"}
+                      </Text>
+
+                      <Switch
+                        trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
+                        thumbColor={additionalFields ? "#4d8eea" : "#bfbfbf"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleSwitchAdditionalFields}
+                        value={additionalFields}
+                      />
+                    </View>
+                  </View>
+                </View>
+
+                <View style={styles.grid}>
+                  <Text style={styles.title}>Quantidade padrão.</Text>
+
+                  <View style={styles.section}>
+                    <Text style={styles.label}>
+                      O valor padrão para quantidade de produtos.
+                    </Text>
+
+                    <View
+                      style={{
+                        ...styles.settingsItem,
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <View
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          width: "50%",
+                          gap: 0,
+                          height: 50,
+                        }}
+                      >
+                        <Text style={styles.value}>
+                          {additionalFields ? "Habilitado" : "Não Habilitado"}
+                        </Text>
+
+                        <Switch
+                          trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
+                          thumbColor={additionalFields ? "#4d8eea" : "#bfbfbf"}
+                          ios_backgroundColor="#3e3e3e"
+                          onValueChange={toggleSwitchAdditionalFields}
+                          value={additionalFields}
+                        />
+                      </View>
+
+                      <View
+                        style={{
+                          flexDirection: "column",
+                          alignItems: "flex-end",
+                          width: "50%",
+                        }}
+                      >
+                        <Text style={styles.label}>Qnt:</Text>
+                        <TextInput
+                          style={{
+                            ...GlobalStyles.input,
+                            width: 55,
+                            height: 35,
+                            fontSize: 16,
+                            textAlign: "center",
+                          }}
+                          placeholder="0"
+                          // value={defaultQuantity}
+                          // onChangeText={setDefaultQuantity}
+                          keyboardType="numeric"
+                        />
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </ScrollView>
+
+              <View style={GlobalStyles.cardFooter}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => updateSettings()}
+                >
+                  {loading ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <Text style={GlobalStyles.buttonText}>Salvar</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
             </View>
-
-            <ScrollView style={styles.cardBody}>
-              <View style={styles.grid}>
-                <Text style={styles.title}>Comparação de produtos.</Text>
-                <View style={styles.section}>
-                  <Text style={styles.label}>
-                    Ao habilitar, Só será possível adicionar produtos que
-                    constam nas planilhas importadas.
-                  </Text>
-
-                  <View style={styles.settingsItem}>
-                    <Text style={styles.value}>
-                      {isBuyWithSpreadsheet ? "Habilitado" : "Desabilitado"}
-                    </Text>
-
-                    <Switch
-                      trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
-                      thumbColor={isBuyWithSpreadsheet ? "#4d8eea" : "#bfbfbf"}
-                      ios_backgroundColor="#3e3e3e"
-                      onValueChange={toggleSwitchSpreadsheet}
-                      value={isBuyWithSpreadsheet}
-                    />
-                  </View>
-
-                  {planilhaLength ? (
-                    <Text style={{ ...styles.value, marginTop: 10 }}>
-                      Atenção ! Nenhuma planilha importada para habilitar essa
-                      função.
-                    </Text>
-                  ) : null}
-                </View>
-              </View>
-
-              <View style={styles.grid}>
-                <Text style={styles.title}>Campos adicionais.</Text>
-                <View style={styles.section}>
-                  <Text style={styles.label}>
-                    Ao habilitar, os campos adicionais serão exibidos na tela de
-                    cadastro de produtos, os campos são nome do produto e preço
-                    .
-                  </Text>
-
-                  <View style={styles.settingsItem}>
-                    <Text style={styles.value}>
-                      {additionalFields ? "Exibindo" : "Não exibindo"}
-                    </Text>
-
-                    <Switch
-                      trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
-                      thumbColor={additionalFields ? "#4d8eea" : "#bfbfbf"}
-                      ios_backgroundColor="#3e3e3e"
-                      onValueChange={toggleSwitchAdditionalFields}
-                      value={additionalFields}
-                    />
-                  </View>
-                </View>
-              </View>
-
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => updateSettings()}
-              >
-                {loading ? (
-                  <ActivityIndicator size="small" color="#fff" />
-                ) : (
-                  <Text style={GlobalStyles.buttonText}>Salvar</Text>
-                )}
-              </TouchableOpacity>
-            </ScrollView>
           </View>
         </View>
       </View>
@@ -181,4 +244,4 @@ const InventorySettingssModal = ({ isVisible, onClose, uuidInventory }) => {
   );
 };
 
-export default InventorySettingssModal;
+export default InventorySettingsModal;

@@ -1,25 +1,36 @@
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
-import React, { useState, useEffect, useCallback } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  Switch,
+  ActivityIndicator,
+} from "react-native";
+
+import uuid from "react-native-uuid";
 
 // Icons
+import Entypo from "@expo/vector-icons/Entypo";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 
 // Styles
-import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
+import { GlobalStyles, colors } from "@styles/GlobalStyles";
 
-// Ultis
-import { setStatus } from "../../../components/CardInvetory/CardInventory";
+import { isProductLimitReached } from "@utils/utils";
 
 // Components
 import ProductInventoryCardDetails from "../../Products/ProductInventoryCardDetails/ProductInventoryCardDetails";
 import ProductUpdateModal from "../../Products/ProductUpdateModal/ProductUpdateModal";
-import InventorySettingsModal from "../InventorySettingsModal/InventorySettingsModal";
-import InventoryExportModal from "../InventoryExportModal/InventoryExportModal";
+
+// Screens
+import OptionsInventory from "./OptionsInventory";
 
 // Backend
 import { Controller } from "@services/backend/controller";
@@ -29,174 +40,427 @@ export default function InventoryDetails() {
   const navigation = useNavigation();
   const route = useRoute();
 
-  const {
-    uuid,
-    name,
-    describe,
-    products,
-    status,
-    date_create,
-    date_end,
-    compare_in_spreadsheet,
-    compare_price,
-    inputs_hability,
-  } = route.params;
+  const { uuid: uuidInventory, name, describe } = route.params;
 
-  const date_create_formart = new Intl.DateTimeFormat("pt-BR").format(
-    new Date(date_create)
-  );
-
-  const [remover, setRemover] = useState(false);
-  const [selectedProducts, setSelectedProducts] = useState([]);
-  const [isProductUpdateModal, setProductUpdateModal] = useState(false);
-  const [isModalVisibleSettings, setModalVisibleSettings] = useState(false);
-  const [isModalVisibleExport, setModalVisibleExport] = useState(false);
-  const [productsInventory, setProductsInventory] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  // Estados principais
   const [refresh, setRefresh] = useState(0);
-  const [activeSearch, setActiveSearch] = useState(false);
+  const [remover, setRemover] = useState(false);
+  const [itemsSelectedForDeletion, setItemsSelectedForDeletion] = useState([]);
 
+  const [modalProductUpdate, setModalProductUpdate] = useState(false);
+  const [modalOptions, setModalOptions] = useState(false);
+  const [productsInventory, setProductsInventory] = useState([]);
+  const [productSelected, setProductSelected] = useState(null);
+
+  const [limit, setLimit] = useState(500);
+  const [selectedInventory, setSelectedInventory] = useState(null);
+
+  const [product, setProduct] = useState(false);
+  const [productsImported, setProductsImported] = useState([]);
+
+  // Estados para entrada de dados e status
+  const [loading, setLoading] = useState(false);
+  const [formMessage, setFormMessage] = useState("Informe o código de barras");
+
+  const [codebar, setCodebar] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [inconsistency, setInconsistency] = useState(false);
+  const [compare, setCompare] = useState(false);
+
+  // Estados para pesquisa
   const [search, setSearch] = useState("");
+  const [contentSearchProduct, setContentSearchProduct] = useState(false);
 
-  const filteredProducts = productsInventory.filter(
-    (item) =>
-      item.name?.toLowerCase().includes(search.toLowerCase()) ||
-      item.codebar?.toLowerCase().includes(search.toLowerCase())
-  );
+  // Estados para controle de foco
+  const [focusInCodebar, setFocusInCodebar] = useState(true);
+  const [focusInQuantity, setFocusInQuantity] = useState(false);
+  const [quantityLabel, setQuantityLabel] = useState(false);
 
-  const [limitProducts, setLimitProducts] = useState(500);
+  const codebarInputRef = useRef(null);
+  const quantityInputRef = useRef(null);
 
+  // Manipula edição do produto
   const handleEditProduct = (product) => {
-    setSelectedProduct(product);
-    setProductUpdateModal(true);
-  };
-
-  function toggleProdutoSelecionado(uuid) {
-    let check = false;
-
-    setSelectedProducts((prev) => {
-      const produtoIndex = prev.findIndex((produto) => produto.uuid === uuid);
-
-      if (produtoIndex !== -1) {
-        const novaLista = prev.filter((produto) => produto.uuid !== uuid);
-        check = false;
-        return novaLista;
-      } else {
-        check = true;
-        return [...prev, { uuid }];
-      }
-    });
-
-    return { check, id: uuid };
-  }
-
-  const handleNavigateToProductCreate = () => {
-    if (!uuid || compare_in_spreadsheet === undefined) {
-      console.error("Erro: uuid ou compare_in_spreadsheet não definidos.");
-      return;
-    }
-
-    navigation.navigate("ProductCreate", {
-      uuid_inventory: uuid,
-      compare_in_spreadsheet: compare_in_spreadsheet,
-    });
-  };
-
-  const getAccount = async () => {
-    const account = await AsyncStorage.getItem("isAccount");
-    if (account === "premium") {
-      setLimitProducts(false);
-    } else {
-      setLimitProducts(500);
-    }
+    setProductSelected(product);
+    setModalProductUpdate(true);
   };
 
   useFocusEffect(
     useCallback(() => {
-      setRefresh((prev) => prev + 1);
+      setRefresh((prevRefresh) => prevRefresh + 1);
     }, [])
   );
 
+  // Alterna seleção de um produto na lista
+  const toggleProdutoSelecionado = (uuid) => {
+    setItemsSelectedForDeletion((prev) => {
+      if (!prev || !Array.isArray(prev)) {
+        return [{ uuid }]; // Garante que seja um array válido ao iniciar
+      }
+
+      const existe = prev.some((produto) => produto.uuid === uuid);
+
+      if (existe) {
+        return prev.filter((produto) => produto.uuid !== uuid); // Remove o item se já existir
+      } else {
+        return [...prev, { uuid }]; // Adiciona o item se não existir
+      }
+    });
+  };
+
+  // Obtém conta e define limite de produtos
+  const getAccount = async () => {
+    const account = await AsyncStorage.getItem("isAccount");
+    setLimit(account === "premium" ? false : 500);
+  };
+
+  // Obtém conta ao montar o componente
   useEffect(() => {
     getAccount();
-  }, []);
+  }, [uuidInventory]);
 
+  // Obtém produtos do inventário
   useEffect(() => {
-    Controller.Inventory.getProducts(uuid).then((products) => {
-      setProductsInventory(products);
-    });
-  }, [refresh]);
+    Controller.Inventory.getProducts(uuidInventory)
+      .then((response) => {
+        console.log("Produtos do inventário:", response);
+        if (response) {
+          setProductsInventory(response);
+        }
+      })
+      .catch((error) => {
+        console.error("Erro ao obter produtos do inventário:", error);
+      });
+  }, [refresh, uuidInventory]);
+
+  // Obtém inventário e planilha, se necessário
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [inventory] = await Controller.Inventory.getUUID(uuidInventory);
+
+        if (!inventory) {
+          console.warn("Nenhum inventário encontrado!");
+          return;
+        }
+
+        const { compare_in_spreadsheet } = inventory;
+        setSelectedInventory(inventory);
+        setCompare(compare_in_spreadsheet);
+
+        if (compare_in_spreadsheet) {
+          const response = await Controller.SpreadSheets.getAll();
+
+          if (!response) {
+            console.warn("Nenhuma planilha encontrada!");
+            return;
+          }
+
+          const produtos = response.flatMap(({ products }) =>
+            products.map(({ codebar, name, price }) => ({
+              codebar: codebar.trim(),
+              name,
+              price,
+            }))
+          );
+
+          setProductsImported(produtos);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar os dados:", error);
+      }
+    };
+
+    fetchData();
+  }, [modalOptions, uuidInventory]); // Agora uuidInventory é uma dependência
+
+  // useEffect(() => {
+  //   console.log("Estado atualizado:", itemsSelectedForDeletion);
+  // }, [itemsSelectedForDeletion]);
+
+  // Valida e busca produto na planilha
+  const checkProductSpreadsheet = (codebarInput) => {
+    const trimmedCodebar = codebarInput.trim();
+    setCodebar(trimmedCodebar);
+    setFocusInQuantity(true);
+
+    if (!trimmedCodebar) {
+      setFormMessage("Código de barras é obrigatório.");
+      resetValues();
+      return;
+    }
+
+    if (compare) {
+      const product = productsImported.find(
+        ({ codebar }) => codebar === trimmedCodebar
+      );
+
+      if (product) {
+        setProduct(true);
+        setDescription(product.name);
+        setPrice(product.price.toString());
+        setFormMessage("Produto encontrado!");
+        return;
+      }
+      setProduct(false);
+      setFormMessage("Produto não encontrado na planilha importada!");
+    } else {
+      setFormMessage("Código de barras informado :)");
+    }
+  };
+
+  // Manipula alteração de quantidade
+  const handleQuantityChange = (text) => {
+    setQuantity(text.replace(/[^0-9]/g, ""));
+    setQuantityLabel(!text);
+  };
+
+  // Reseta os valores dos campos de entrada
+  const resetValues = () => {
+    setCodebar("");
+    setQuantity("");
+    setDescription("");
+    setPrice("");
+    setInconsistency(false);
+  };
+
+  const productCustomDelete = () => {
+    Alert.alert("Apagar", "Deseja apagar os produtos?", [
+      {
+        text: "Cancelar",
+        style: "cancel",
+      },
+      {
+        text: "Apagar",
+        onPress: () => {
+          Controller.Product.deleteProducts(itemsSelectedForDeletion);
+          setRefresh(refresh + 1);
+          setItemsSelectedForDeletion([]);
+          setRemover(false);
+        },
+      },
+    ]);
+  };
+
+  function updateProduct(product) {
+    let sumQuantity = parseFloat(quantity) + parseFloat(product.quantity);
+    let update = {
+      uuid: product.uuid,
+      codebar: product.codebar,
+      quantity: sumQuantity,
+      name: product.name,
+      price: product.price,
+      inconsistency: product.inconsistency,
+      date_create: new Date(),
+    };
+
+    Controller.Product.update(uuidInventory, update)
+      .then((response) => {
+        setFormMessage("Produto atualizado com sucesso!");
+      })
+      .catch((error) => {
+        setFormMessage(`Não foi possível continuar, erro: ${error}`);
+      });
+  }
+
+  // Função para verificar se o produto  já existe no inventário
+  const isProductExist = (codebar) => {
+    if (productsInventory.some((product) => product.codebar === codebar)) {
+      return productsInventory.find((product) => product.codebar === codebar);
+    }
+  };
+
+  const createProduct = () => {
+    if (!codebar) return setFormMessage("Código de barras é obrigatório.");
+    if (!quantity) {
+      setQuantityLabel(true);
+      return setFormMessage("Quantidade é obrigatória, por favor preencha.");
+    }
+
+    if (isProductLimitReached(selectedInventory.products, limit)) {
+      setFormMessage(`Limite de produtos atingido. Máximo: ${limit}.`);
+      return;
+    }
+
+    if (compare && !product) {
+      return setFormMessage("Produto não encontrado na planilha importada!");
+    }
+
+    const productExist = isProductExist(codebar);
+    if (productExist) {
+      updateProduct(productExist);
+      setFormMessage("Produto já existe no inventário, vamos atualizar?");
+      return;
+    }
+
+    const newProduct = {
+      uuid: uuid.v4(),
+      codebar,
+      quantity: parseFloat(quantity) || 0,
+      name: description,
+      price: parseFloat(price) || 0,
+      inconsistency,
+      date_create: new Date(),
+    };
+
+    console.log("Novo produto:", newProduct);
+
+    setLoading(true);
+    setFormMessage("Adicionando produto...");
+
+    Controller.Product.create(uuidInventory, newProduct)
+      .then(() => {
+        resetValues();
+        setFormMessage("Produto adicionado com sucesso!");
+        setProduct(false);
+        setRefresh((prev) => prev + 1);
+      })
+      .catch((err) =>
+        setFormMessage(
+          err.message || "Houve um erro ao adicionar produto, tente novamente."
+        )
+      )
+      .finally(() => {
+        setTimeout(() => {
+          setLoading(false);
+          codebarInputRef.current?.focus();
+        }, 300);
+      });
+  };
+
+  // Filtra produtos pelo nome ou código de barras
+  const filteredProducts = productsInventory.filter(
+    ({ name, codebar }) =>
+      name?.toLowerCase().includes(search.toLowerCase()) ||
+      codebar?.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <View style={styles.card}>
-      <View style={{ ...styles.cardHeader }}>
-        <Text style={styles.cardTitle}>{name}</Text>
-        {describe ? (
-          <Text style={{ ...styles.cardDescription, marginBottom: 10 }}>
-            {describe}
-          </Text>
-        ) : null}
+      <View style={styles.cardHeader}>
+        <TouchableOpacity
+          style={GlobalStyles.btnHeader}
+          onPress={() => navigation.goBack()}
+        >
+          <Entypo name="chevron-left" size={24} color={"black"} />
+        </TouchableOpacity>
 
-        <View style={styles.createInventarioInfo}>
-          {activeSearch ? (
-            <TextInput
-              placeholder="Pesquisar"
-              style={[
-                styles.input,
-                activeSearch === true ? styles.inputActive : null,
-              ]}
-              value={search}
-              onChangeText={setSearch}
-            ></TextInput>
-          ) : (
-            <>
-              <View style={styles.createInventarioInfoItem}>
-                <Text style={styles.label}>Status</Text>
-                <Text style={styles.value}>{setStatus(status)}</Text>
-              </View>
+        <View style={styles.headerContent}>
+          <Text style={styles.cardTitle}>{name}</Text>
 
-              <View style={styles.createInventarioInfoItem}>
-                <Text style={styles.label}>Item(s)</Text>
-                {limitProducts !== false ? (
-                  <Text style={styles.value}>
-                    {products.length}{" "}
-                    {limitProducts ? `de ${limitProducts}` : ""}
-                  </Text>
-                ) : (
-                  <Text style={styles.value}>
-                    {products.length} {limitProducts ? "" : "de *"}
-                  </Text>
-                )}
-              </View>
-
-              <View style={styles.createInventarioInfoItem}>
-                <Text style={styles.label}>
-                  {status === "done" ? "Finalizado em" : "Criado em"}
-                </Text>
-                <Text style={styles.value}>{date_create_formart}</Text>
-              </View>
-            </>
+          {describe && (
+            <Text style={{ ...styles.cardDescription, marginBottom: 10 }}>
+              {describe}
+            </Text>
           )}
+        </View>
 
-          <TouchableOpacity
-            style={styles.buttonSearch}
-            onPress={() => setActiveSearch(!activeSearch)}
-          >
-            <AntDesign name="search1" size={22} color="#fff" />
+        <TouchableOpacity
+          style={GlobalStyles.btnHeader}
+          onPress={() => setModalOptions(true)}
+        >
+          <SimpleLineIcons name="options-vertical" size={20} color={"black"} />
+        </TouchableOpacity>
+      </View>
+
+      {contentSearchProduct ? (
+        <View style={styles.formSearch}>
+          <TextInput
+            placeholder="Pesquisar"
+            style={styles.input}
+            value={search}
+            onChangeText={setSearch}
+          />
+          <TouchableOpacity onPress={() => setContentSearchProduct(false)}>
+            <AntDesign name="close" size={24} color={colors.colorIcons} />
           </TouchableOpacity>
         </View>
-      </View>
+      ) : (
+        <View style={styles.form}>
+          <View style={styles.formItem}>
+            <View style={{ width: "75%" }}>
+              <Text style={GlobalStyles.label}>Código de barras*</Text>
+              <TextInput
+                ref={codebarInputRef}
+                style={{
+                  ...GlobalStyles.input,
+                  fontSize: 16,
+                  backgroundColor: "white",
+                }}
+                maxLength={150}
+                value={codebar}
+                autoFocus={focusInCodebar}
+                onChangeText={checkProductSpreadsheet}
+                keyboardType="numeric"
+                returnKeyType="done"
+                onSubmitEditing={() => quantityInputRef.current?.focus()}
+                placeholder="Código de barras"
+              />
+              {loading ? (
+                <ActivityIndicator size="small" color="blue" />
+              ) : (
+                <Text style={styles.labelError}>{formMessage}</Text>
+              )}
+            </View>
+
+            <View style={{ width: 80 }}>
+              <Text style={GlobalStyles.label}>Qnt*</Text>
+              <TextInput
+                ref={quantityInputRef}
+                style={{
+                  ...GlobalStyles.input,
+                  fontSize: 16,
+                  backgroundColor: "white",
+                }}
+                maxLength={255}
+                keyboardType="numeric"
+                value={quantity}
+                autoFocus={focusInQuantity}
+                onChangeText={handleQuantityChange}
+                onSubmitEditing={createProduct}
+                returnKeyType="done"
+                placeholder="0"
+              />
+            </View>
+          </View>
+
+          {/* Nome do produto encontrado no spreadsheet SEM EDICAO */}
+          {compare && product && description && <Text>{description}</Text>}
+
+          {/* Valor do produto encontrado no spreadsheet SEM EDICAO */}
+          {compare && product && price !== undefined && (
+            <Text>{price.toString()}</Text>
+          )}
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "100%",
+              marginTop: 0,
+            }}
+          >
+            <Text style={GlobalStyles.label}>Inconsistência ?</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={styles.label}>{inconsistency ? "Sim" : "Não"}</Text>
+              <Switch value={inconsistency} onValueChange={setInconsistency} />
+            </View>
+          </View>
+        </View>
+      )}
 
       <ScrollView style={styles.cardBody}>
         {filteredProducts.length > 0 ? (
           filteredProducts.map((item) => (
             <ProductInventoryCardDetails
               key={item.uuid}
-              uuid_inventory={uuid}
+              uuidInventory={uuid}
               uuid={item.uuid}
               codebar={item.codebar}
               quantity={item.quantity}
-              name={item.name ? item.name : ""}
+              name={item.name || ""}
               price={item.price}
               inconsistency={item.inconsistency}
               onEdit={handleEditProduct}
@@ -212,84 +476,35 @@ export default function InventoryDetails() {
         )}
       </ScrollView>
 
-      <View style={{ ...GlobalStyles.menubar }}>
-        {selectedProducts.length === 0 ? (
+      {/* Menu Bar de Ações */}
+      <View style={{ ...GlobalStyles.menubar, display: "none" }}>
+        {itemsSelectedForDeletion.length > 0 && (
           <TouchableOpacity
             style={GlobalStyles.menubarItem}
-            onPress={() => setModalVisibleExport(true)}
-          >
-            <AntDesign name="export" size={26} color={colors.colorIcons} />
-            <Text style={styles.menuText}>Exportar</Text>
-          </TouchableOpacity>
-        ) : null}
-
-        {status === "progress" && selectedProducts.length === 0 ? (
-          <>
-            <TouchableOpacity
-              testID="add-product-button"
-              style={[GlobalStyles.menubarItem]}
-              onPress={handleNavigateToProductCreate}
-            >
-              <AntDesign name="plus" size={26} color={colors.colorIcons} />
-              <Text style={styles.menuText}>Adicionar</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[GlobalStyles.menubarItem]}
-              onPress={() => setModalVisibleSettings(true)}
-            >
-              <AntDesign name="setting" size={26} color={colors.colorIcons} />
-              <Text style={styles.menuText}>Configurações</Text>
-            </TouchableOpacity>
-          </>
-        ) : null}
-
-        {selectedProducts.length ? (
-          <TouchableOpacity
-            style={GlobalStyles.menubarItem}
-            onPress={() =>
-              Alert.alert("Apagar", "Deseja apagar os produtos?", [
-                {
-                  text: "Cancelar",
-                  style: "cancel",
-                },
-                {
-                  text: "Apagar",
-                  onPress: () => {
-                    Controller.Product.deleteProducts(selectedProducts);
-                    setRefresh(refresh + 1);
-                    setSelectedProducts([]);
-                    setRemover(false);
-                  },
-                },
-              ])
-            }
+            onPress={productCustomDelete}
           >
             <AntDesign name="delete" size={26} color={colors.colorIcons} />
             <Text style={styles.menuText}>
-              Apagar ({selectedProducts.length})
+              Apagar ({itemsSelectedForDeletion.length})
             </Text>
           </TouchableOpacity>
-        ) : null}
+        )}
       </View>
 
+      {/* Modal de Atualização de Produto */}
       <ProductUpdateModal
-        isVisible={isProductUpdateModal}
-        onClose={() => setProductUpdateModal(false)}
-        product={selectedProduct}
-        uuidInventory={uuid}
+        isVisible={modalProductUpdate}
+        onClose={() => setModalProductUpdate(false)}
+        product={productSelected}
+        uuidInventory={uuidInventory}
       />
 
-      <InventoryExportModal
-        isVisible={isModalVisibleExport}
-        onClose={() => setModalVisibleExport(false)}
-        uuidInventory={uuid}
-      />
-
-      <InventorySettingsModal
-        isVisible={isModalVisibleSettings}
-        onClose={() => setModalVisibleSettings(false)}
-        uuidInventory={uuid}
+      {/* Opções de Inventário */}
+      <OptionsInventory
+        isVisible={modalOptions}
+        onClose={() => setModalOptions(false)}
+        uuidInventory={uuidInventory}
+        searchProduct={() => setContentSearchProduct(true)}
       />
     </View>
   );

@@ -7,9 +7,14 @@ export const styles = StyleSheet.create({
     marginTop: 0,
   },
 
-  card : {
+  card: {
     ...GlobalStyles.card,
-    minHeight: "50%",
+  },
+
+  cardBody: {
+    flex: 1,
+    gap: 10,
+    marginBottom: 10,
   },
 
   settingsItem: {

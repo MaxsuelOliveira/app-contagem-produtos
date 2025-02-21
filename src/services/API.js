@@ -1,4 +1,4 @@
-const Login = async (email, password, uuid, device) => {
+const requestLogin = async (email, password, uuid, device) => {
   return await fetch("https://coletor.webart3.com/login/empresa", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -11,4 +11,4 @@ const Login = async (email, password, uuid, device) => {
   });
 };
 
-export { Login };
+export { requestLogin };

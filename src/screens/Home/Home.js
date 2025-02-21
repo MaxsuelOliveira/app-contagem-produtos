@@ -23,8 +23,8 @@ import LogoutModal from "../Login/LogoutModal/LogoutModal";
 
 // Backend
 import { Controller } from "@services/backend/controller";
-import { decodeToken } from "@utils/token";
-import { getDateExpire, isExpired } from "@utils/timestamp";
+import { decodeToken } from "@utils/utils";
+import { getDateExpire, isExpired } from "@utils/utils";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -129,13 +129,7 @@ const Home = () => {
           </View>
 
           <TouchableOpacity
-            style={{
-              backgroundColor: colors.backgroundItem,
-              padding: 5,
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 10,
-            }}
+            style={styles.buttonSettings}
             onPress={() => navigation.navigate("Settings")}
           >
             <MaterialIcons
@@ -143,12 +137,11 @@ const Home = () => {
               size={26}
               color={colors.colorIcons}
             />
-            {/* <Text style={GlobalStyles.menubarText}>Configurações</Text> */}
           </TouchableOpacity>
         </View>
 
         <View style={styles.header}>
-          <View style={{ ...styles.inventoryCategories }}>
+          <View style={styles.inventoryCategories}>
             <TouchableOpacity
               style={[
                 styles.category,
@@ -255,14 +248,23 @@ const Home = () => {
           )}
         </ScrollView>
 
-        <View style={{ ...GlobalStyles.menubar }}>
+        <View
+          style={{ ...GlobalStyles.menubar, backgroundColor: "transparent" }}
+        >
           <TouchableOpacity
-            testID="add-product-button"
-            style={[GlobalStyles.menubarItem]}
+            style={{
+              ...GlobalStyles.menubarItem,
+              minWidth: 70,
+              minHeight: 70,
+              backgroundColor: colors.primary,
+              borderRadius: 20,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
             onPress={() => setModalVisible(true)}
           >
-            <AntDesign name="plus" size={26} color={colors.colorIcons} />
-            <Text style={GlobalStyles.menubarText}>Adicionar</Text>
+            <AntDesign name="plus" size={28} color={"#fff"} />
           </TouchableOpacity>
         </View>
       </View>

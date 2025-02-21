@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors, GlobalStyles } from "@styles/GlobalStyles";
 
 export const styles = StyleSheet.create({
   profileContainer: {
@@ -18,8 +19,8 @@ export const styles = StyleSheet.create({
   },
 
   profileImage: {
-    width: 80,
-    height: 80,
+    width: 50,
+    height: 50,
     resizeMode: "contain",
     backgroundColor: "#f0f0f0",
     borderRadius: 50,
@@ -31,5 +32,27 @@ export const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  hr: { ...GlobalStyles.hr, marginBottom: 10, paddingBottom: 10 },
+
+  buttonLogout: {
+    ...GlobalStyles.button,
+    marginTop: 10,
+    backgroundColor: colors.danger,
+  },
+
+  card: {
+    ...GlobalStyles.card,
+    backgroundColor: "#fff",
+    borderRadius: 0,
+    minHeight: "100%",
+  },
+
+  cardTitle: {
+    ...GlobalStyles.cardTitle,
+    marginTop: 0,
+    flex: 1,
+    textAlign: "center",
   },
 });

@@ -3,6 +3,8 @@ import { Model } from "./model.js";
 export const Controller = {
   Inventory: {
     create: async (data) => {
+
+
       return Model.Inventory.create(data)
         .then((inventario) => {
           return inventario;
@@ -141,7 +143,6 @@ export const Controller = {
       return Model.Product.deleteProducts(uuid_inventory, products)
         .then((inventario) => {
           console.log("Apagando multiplos produtos" + products.lenght);
-          console.log(inventario);
           return inventario;
         })
         .catch((error) => {

@@ -43,6 +43,7 @@ export const InventoryItemsSchema = {
     name: "string",
     price: "double",
     inconsistency: "bool",
+    date_create: "date?",
   },
 };
 
@@ -54,12 +55,12 @@ export const realmConfig = {
     InventorySchema,
     InventoryItemsSchema,
   ],
-  schemaVersion: 8, // Atualize a versão para 5
+  schemaVersion: 10, // Atualize a versão para 5
   migration: (oldRealm, newRealm) => {
     console.log("⚠️ Migração detectada.");
 
     // Verificar se a versão do banco de dados é anterior à versão atual
-    if (oldRealm.schemaVersion < 5) {
+    if (oldRealm.schemaVersion < 9) {
       // Corrigido para 5
       const oldObjects = oldRealm.objects("Inventory");
 
@@ -78,6 +79,18 @@ export const realmConfig = {
           products: oldInventory.products || [], // Correção para 'produtos'
           compare_in_spreadsheet:  oldInventory.verificar_produto_planilha || false, // Correção para 'verificar_produto_planilha'
           compare_price: oldInventory.verificar_preco || false, // Correção para 'verificar_preco'
+        });
+
+        oldInventory.products.forEach((oldProduct) => {
+          newRealm.create("Itens", {
+            uuid: oldProduct.uuid,
+            codebar: oldProduct.codebar,
+            quantity: oldProduct.quantity,
+            name: oldProduct.name,
+            price: oldProduct.price,
+            inconsistency: oldProduct.inconsistency || false, // Correção para 'inconsistency'
+            date_create: oldProduct.date_create || new Date(), // Correção para 'date_create'
+          });
         });
       });
 

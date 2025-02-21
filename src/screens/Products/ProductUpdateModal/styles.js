@@ -29,9 +29,32 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
 
+  sectionCheck: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+
   checkbox: {
     marginRight: 10,
     borderWidth: 1,
     borderRadius: 5,
   },
+
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+    width: "100%",
+    gap: 10,
+  },
+
+  buttonDelete: {
+    ...GlobalStyles.button,
+    width: "100",
+    backgroundColor: colors.danger,
+  },
+
+  buttonUpdate: { ...GlobalStyles.button, flex: 1 },
 });

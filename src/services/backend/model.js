@@ -121,9 +121,7 @@ export const Model = {
           success: false,
         };
       }
-
-      const inventory = inventories[0];
-      const sortedProducts = inventory.products.sorted("codebar", false);
+      const sortedProducts = inventories[0].products.sorted("date_create", true);
       return sortedProducts;
     },
   },

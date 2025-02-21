@@ -86,8 +86,8 @@ export const styles = StyleSheet.create({
   },
 
   inventoryItemText: {
-    fontSize: 16,
-    fontFamily: "Montserrat_Regular",
+    fontSize: 18,
+    fontFamily: "Montserrat_Bold",
     margin: 10,
   },
 
@@ -117,5 +117,13 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     flex: 1,
     textAlign: "left",
+  },
+
+  buttonSettings: {
+    backgroundColor: colors.backgroundItem,
+    padding: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
   },
 });

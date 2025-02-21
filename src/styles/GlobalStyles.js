@@ -87,7 +87,7 @@ const GlobalStyles = StyleSheet.create({
     borderRadius: 5,
     color: colors.inputColor,
     fontFamily: "Montserrat_Medium",
-    fontSize: 15,
+    fontSize: 16,
     height: 48,
     marginBottom: 10,
     paddingLeft: 8,
@@ -102,7 +102,7 @@ const GlobalStyles = StyleSheet.create({
   },
 
   label: {
-    fontFamily: "Montserrat_Medium",
+    fontFamily: "Montserrat_Bold",
     color: colors.textPrimary,
     marginBottom: 3,
     fontSize: 14,
@@ -181,17 +181,22 @@ const GlobalStyles = StyleSheet.create({
     paddingTop: 10,
   },
 
+  modalContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+    margin: 10,
+  },
+
   card: {
     backgroundColor: colors.cardBackground,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
     padding: 20,
     elevation: 5,
-    minHeight: "40vh",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
+    minHeight: 300,
+    borderRadius: 20,
+    width: "100%",
+    gap: 10,
   },
 
   cardHeader: {
@@ -208,12 +213,14 @@ const GlobalStyles = StyleSheet.create({
     flex: 1,
     color: colors.textPrimary,
     marginTop: 20,
-    position : "relative",
+    position: "relative",
   },
 
   cardBody: {
     marginTop: 10,
   },
+
+  cardFooter: {},
 
   closeButton: {
     width: 30,
@@ -286,6 +293,16 @@ const GlobalStyles = StyleSheet.create({
     borderColor: colors.borderColor,
     borderType: "solid",
     width: "100%",
+  },
+
+  btnHeader: {
+    width: 40,
+    height: 40,
+    backgroundColor: colors.primaryBackground,
+    borderRadius: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

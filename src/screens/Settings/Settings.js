@@ -7,6 +7,7 @@ import { ScrollView, Switch } from "react-native-gesture-handler";
 
 // Icons
 import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
 
 // Backend
 import { Controller } from "@services/backend/controller";
@@ -20,8 +21,11 @@ import { styles } from "./styles";
 
 const Settings = () => {
   const navigation = useNavigation();
-  const [toggleSwitch, setToggleSwitch] = useState(false);
-  const textLabelTheme = toggleSwitch ? "dark" : "light";
+  const [themeSwitch, setThemeSwitch] = useState(false);
+  const textLabelTheme = themeSwitch ? "Escuro" : "Claro";
+
+  const [cam, setCam] = useState(false);
+  const textLabelCamera = cam ? "Ligado" : "Desligado";
 
   const [data, setData] = useState([]);
   const [spreadSheetsCount, setSpreadSheetsCount] = useState(0);
@@ -30,8 +34,13 @@ const Settings = () => {
   const [account, setAccount] = useState(false);
 
   function setTheme() {
-    setToggleSwitch(!toggleSwitch);
+    setThemeSwitch(!themeSwitch);
     textLabelTheme === "dark" ? "light" : "dark";
+  }
+
+  function setCamera() {
+    setCam(!cam);
+    textLabelCamera === "Ligado" ? "Desligado" : "Ligado";
   }
 
   async function getAccount() {
@@ -62,13 +71,20 @@ const Settings = () => {
     <View style={styles.settingsContainer}>
       <StatusBar style="auto" backgroundColor="#ffffff" />
 
-      <View style={styles.cardHeader}>
-        <Text style={styles.cardTilte}>Configurações</Text>
+      <View style={GlobalStyles.cardHeader}>
+        <TouchableOpacity
+          style={GlobalStyles.btnHeader}
+          onPress={() => navigation.goBack()}
+        >
+          <Entypo name="chevron-left" size={24} color={"black"} />
+        </TouchableOpacity>
+        <Text style={styles.cardTitle}>Configurações</Text>
       </View>
 
       <ScrollView>
         <View style={styles.settingsItem}>
           <Text style={styles.title}>Tema do app</Text>
+
           <View style={styles.settingsBox}>
             <Text style={styles.label}>{textLabelTheme}</Text>
             <Switch
@@ -76,35 +92,21 @@ const Settings = () => {
               thumbColor={true ? "#4d8eea" : "#bfbfbf"}
               ios_backgroundColor="#3e3e3e"
               onValueChange={setTheme}
-              value={toggleSwitch}
+              value={themeSwitch}
             />
           </View>
         </View>
 
         <View style={styles.settingsItem}>
-          <Text style={styles.title}>Habilitar camera</Text>
+          <Text style={styles.title}>Habilitar Câmera</Text>
           <View style={styles.settingsBox}>
-            <Text style={styles.label}>{textLabelTheme}</Text>
+            <Text style={styles.label}>{textLabelCamera}</Text>
             <Switch
               trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
               thumbColor={true ? "#4d8eea" : "#bfbfbf"}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={setTheme}
-              value={toggleSwitch}
-            />
-          </View>
-        </View>
-
-        <View style={styles.settingsItem}>
-          <Text style={styles.title}>Som de bip</Text>
-          <View style={styles.settingsBox}>
-            <Text style={styles.label}>{textLabelTheme}</Text>
-            <Switch
-              trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
-              thumbColor={true ? "#4d8eea" : "#bfbfbf"}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={setTheme}
-              value={toggleSwitch}
+              onValueChange={setCamera}
+              value={cam}
             />
           </View>
         </View>
@@ -123,7 +125,7 @@ const Settings = () => {
               </Text>
             </View>
 
-            <AntDesign name="right" size={24} color="black" />
+            <AntDesign name="right" size={22} color={colors.colorIcons} />
           </TouchableOpacity>
         </View>
 
@@ -141,7 +143,7 @@ const Settings = () => {
               </Text>
             </View>
 
-            <AntDesign name="right" size={24} color="black" />
+            <AntDesign name="right" size={22} color={colors.colorIcons} />
           </TouchableOpacity>
         </View>
       </ScrollView>

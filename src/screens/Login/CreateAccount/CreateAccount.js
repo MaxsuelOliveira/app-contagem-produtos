@@ -8,7 +8,7 @@ import Checkbox from "expo-checkbox";
 import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
 
-import { FormattingInputs } from "@utils/inputFormat";
+import { FormattingInputs } from "@utils/utils";
 
 const CreateAccount = () => {
   const [loading, setLoading] = useState(false);
@@ -64,8 +64,6 @@ const CreateAccount = () => {
       phone: phone,
       password: "estoqueFácil123",
     };
-
-    console.log("Bussines: ", bussines);
   }
 
   return (

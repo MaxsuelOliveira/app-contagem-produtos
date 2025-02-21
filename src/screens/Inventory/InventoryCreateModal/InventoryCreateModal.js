@@ -7,7 +7,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 
 // Icons
@@ -86,71 +86,84 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
       <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
       <View style={GlobalStyles.modalOverlay}>
+
         <View style={GlobalStyles.modalContent}>
-          <View style={GlobalStyles.card}>
-            <View style={GlobalStyles.cardHeader}>
-              <Text style={styles.cardTitle}>Novo inventário</Text>
-              <TouchableOpacity
-                onPress={onClose}
-                style={GlobalStyles.closeButton}
-              >
-                <AntDesign name="close" size={28} color={colors.colorIcons} />
-              </TouchableOpacity>
-            </View>
 
-            <View style={GlobalStyles.cardBody}>
-              <Text style={GlobalStyles.label}>Nome do inventário*</Text>
+          <View style={GlobalStyles.modalContainer}>
 
-              <TextInput
-                style={GlobalStyles.input}
-                placeholder="Digite o nome do inventário"
-                maxLength={150}
-                value={name}
-                autoFocus={focusInName}
-                onChangeText={setName}
-              />
+            <View style={GlobalStyles.card}>
 
-              {isError ? (
-                <View style={{ marginBottom: 10 }}>
-                  <Text
-                    style={{
-                      ...GlobalStyles.label,
-                      color: colors.textDescription,
-                    }}
-                  >
-                    {error}
+              <View style={GlobalStyles.cardHeader}>
+                <Text style={styles.cardTitle}>Novo inventário</Text>
+                <TouchableOpacity
+                  onPress={onClose}
+                  style={GlobalStyles.closeButton}
+                >
+                  <AntDesign name="close" size={28} color={colors.colorIcons} />
+                </TouchableOpacity>
+              </View>
+
+              <View style={GlobalStyles.cardBody}>
+                <Text style={GlobalStyles.label}>Nome do inventário*</Text>
+
+                <TextInput
+                  style={GlobalStyles.input}
+                  placeholder="Digite o nome do inventário"
+                  maxLength={150}
+                  value={name}
+                  autoFocus={focusInName}
+                  onChangeText={setName}
+                />
+
+                {isError ? (
+                  <View style={{ marginBottom: 10 }}>
+                    <Text
+                      style={{
+                        ...GlobalStyles.label,
+                        color: colors.textDescription,
+                      }}
+                    >
+                      {error}
+                    </Text>
+                  </View>
+                ) : null}
+
+                <Text style={GlobalStyles.label}>Descrição do inventário</Text>
+                <TextInput
+                  style={styles.textarea}
+                  placeholder="Digite uma descrição"
+                  maxLength={255}
+                  multiline
+                  value={description}
+                  onChangeText={setDescription}
+                />
+              </View>
+
+              <View style={GlobalStyles.cardFooter}>
+                <TouchableOpacity
+                  style={GlobalStyles.button}
+                  onPress={() => {
+                    createInventory();
+                  }}
+                >
+                  <Text style={GlobalStyles.buttonText}>
+                    {loading ? (
+                      <ActivityIndicator size="small" color="#fff" />
+                    ) : (
+                      <Text style={styles.buttonText}>Adicionar</Text>
+                    )}
                   </Text>
-                </View>
-              ) : null}
+                </TouchableOpacity>
+              </View>
 
-              <Text style={GlobalStyles.label}>Descrição do inventário</Text>
-              <TextInput
-                style={styles.textarea}
-                placeholder="Digite uma descrição para o inventário"
-                maxLength={255}
-                multiline
-                value={description}
-                onChangeText={setDescription}
-              />
-
-              <TouchableOpacity
-                style={GlobalStyles.button}
-                onPress={() => {
-                  createInventory();
-                }}
-              >
-                <Text style={GlobalStyles.buttonText}>
-                  {loading ? (
-                    <ActivityIndicator size="small" color="#fff" />
-                  ) : (
-                    <Text style={styles.buttonText}>Adicionar</Text>
-                  )}
-                </Text>
-              </TouchableOpacity>
             </View>
+
           </View>
+
         </View>
+
       </View>
+      
     </Modal>
   );
 };

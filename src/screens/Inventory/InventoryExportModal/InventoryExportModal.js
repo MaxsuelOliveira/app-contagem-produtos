@@ -105,53 +105,56 @@ const InventoryExportModal = ({ isVisible, onClose, uuidInventory }) => {
       <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
       <View style={GlobalStyles.modalOverlay}>
-
         <View style={GlobalStyles.modalContent}>
-
-          <View style={GlobalStyles.card}>
-
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>Exportar inventário</Text>
-              <TouchableOpacity
-                onPress={onClose}
-                style={GlobalStyles.closeButton}
-              >
-                <AntDesign name="close" size={28} color={colors.colorIcons} />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.cardBody}>
-
-              <View style={styles.grid}>
-
-                <Text style={styles.value}>
-                  A planilha seguira o modelo abaixo, clique para {""}
-                  <Text
-                    onPress={() =>
-                      downloadFile(
-                        "https://estoque.webart3.com/documents/planilha-exemplov1.0.xlsx",
-                        "planilha-exemplov1.0.xlsx"
-                      )
-                    }
-                    style={GlobalStyles.link}
-                  >
-                    baixar o modelo.
-                  </Text>
-                </Text>
-
-                <Text style={styles.label}>
-                  Ao exportar o inventário, o mesmo será finalizado. Deseja
-                  continuar ?
-                </Text>
-
+          <View style={GlobalStyles.modalContainer}>
+            <View style={GlobalStyles.card}>
+              <View style={styles.cardHeader}>
+                <Text style={styles.cardTitle}>Exportar inventário</Text>
+                <TouchableOpacity
+                  onPress={onClose}
+                  style={GlobalStyles.closeButton}
+                >
+                  <AntDesign name="close" size={28} color={colors.colorIcons} />
+                </TouchableOpacity>
               </View>
 
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => shareSpreadSheet(products, uuidInventory, navigation)}
-                disabled={false}>
-                <Text style={GlobalStyles.buttonText}>Exporta Inventário</Text>
-              </TouchableOpacity>
+              <View style={styles.cardBody}>
+                <View style={styles.grid}>
+                  <Text style={styles.value}>
+                    A planilha seguira o modelo abaixo, clique para {""}
+                    <Text
+                      onPress={() =>
+                        downloadFile(
+                          "https://estoque.webart3.com/documents/planilha-exemplov1.0.xlsx",
+                          "planilha-exemplov1.0.xlsx"
+                        )
+                      }
+                      style={GlobalStyles.link}
+                    >
+                      baixar o modelo.
+                    </Text>
+                  </Text>
+
+                  <Text style={styles.label}>
+                    Ao exportar o inventário, o mesmo será finalizado. Deseja
+                    continuar ?
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.cardFooter}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() =>
+                    shareSpreadSheet(products, uuidInventory, navigation)
+                  }
+                  disabled={false}
+                >
+                  <Text style={GlobalStyles.buttonText}>
+                    Exporta Inventário
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>

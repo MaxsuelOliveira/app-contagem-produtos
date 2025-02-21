@@ -8,16 +8,13 @@ export const styles = StyleSheet.create({
     marginTopp: 0,
   },
 
-  section: {},
-
   textJustify: {
     textAlign: "justify",
   },
 
   label: {
     ...GlobalStyles.label,
-    // marginBottom: 10,
-    color : colors.textDescription,
+    color: colors.textDescription,
     fontFamily: "Montserrat_Regular",
     fontSize: 14,
   },

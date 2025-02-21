@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, Alert } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -8,23 +8,30 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignupBanner from "../../components/Banner/Banner";
 
 // Styles
-import { GlobalStyles } from "@styles/GlobalStyles";
+import { colors, GlobalStyles } from "@styles/GlobalStyles";
 import { styles } from "./styles";
 
-import { decodeToken, isTokenExpired } from "@utils/token";
+import { decodeToken, isTokenExpired } from "@utils/utils";
+import { AntDesign } from "@expo/vector-icons";
 
 const Profile = () => {
   const navigation = useNavigation();
   const [profile, setProfile] = useState({});
+  const [device, setDevice] = useState({});
   const [isLogin, setIsLogin] = useState(false);
 
   async function getToken() {
     const isToken = await AsyncStorage.getItem("isToken");
+    const isDevice = await AsyncStorage.getItem("isDevice");
 
     if (isToken) {
       const decoded = decodeToken(isToken);
       setProfile(decoded);
       setIsLogin(true);
+
+      if (isDevice) {
+        setDevice(JSON.parse(isDevice));
+      }
       return;
     }
     setIsLogin(false);
@@ -32,35 +39,56 @@ const Profile = () => {
 
   useEffect(() => {
     getToken();
-  }, []);
+  }, [isLogin]);
 
   return (
-    <View style={styles.profileContainer}>
-      <StatusBar style="dark" backgroundColor="transparent" />
+    <View>
+      <StatusBar style="auto" backgroundColor="#ffffff" />
 
-      {isLogin ? (
-        <View>
-          <View style={GlobalStyles.cardHeader}>
-            <Text style={GlobalStyles.cardTitle}>Seu perfil</Text>
+      <View style={styles.card}>
+        <View style={{ ...GlobalStyles.cardHeader, marginTop: 10 }}>
+          <TouchableOpacity
+            style={GlobalStyles.btnHeader}
+            onPress={() => navigation.goBack()}
+          >
+            <AntDesign name="arrowleft" size={28} color={colors.colorIcons} />
+          </TouchableOpacity>
+          <Text style={{ ...styles.cardTitle, marginLeft: -50 }}>Perfil</Text>
+        </View>
+
+        {isLogin ? (
+          <ScrollView style={{ flex: 1 }}>
+            <Image
+              source={{ uri: "https://placehold.co/150x150" }}
+              style={styles.profileImage}
+            />
+
+            <ProfileItem label="Nome Fantasia" value={profile.nome} />
+            <ProfileItem label="CNPJ" value={profile.cpf_cnpj} />
+            <ProfileItem label="Email" value={profile.email} />
+            <ProfileItem label="Telefone" value={profile.telefone} />
+
+            <View style={styles.hr}></View>
+
+            <ProfileItem label="UUID" value={device.uuid} />
+            <ProfileItem label="Dispositivo" value={device.describe} />
+
+            <TouchableOpacity
+              style={styles.buttonLogout}
+              onPress={() => navigation.navigate("Login")}
+            >
+              <Text style={GlobalStyles.buttonText}>Sair</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        ) : (
+          <View style={styles.SignupBanner}>
+            <SignupBanner
+              onLogin={() => navigation.navigate("Login")}
+              createAccount={() => navigation.navigate("CreateAccount")}
+            />
           </View>
-
-          <Image
-            source={{ uri: "https://placehold.co/150x150" }}
-            style={styles.profileImage}
-          />
-          <ProfileItem label="Nome Fantasia" value={profile.nome} />
-          <ProfileItem label="CNPJ" value={profile.cpf_cnpj} />
-          <ProfileItem label="Email" value={profile.email} />
-          <ProfileItem label="Telefone" value={profile.telefone} />
-        </View>
-      ) : (
-        <View style={styles.SignupBanner}>
-          <SignupBanner
-            onLogin={() => navigation.navigate("Login")}
-            createAccount={() => navigation.navigate("CreateAccount")}
-          />
-        </View>
-      )}
+        )}
+      </View>
     </View>
   );
 };

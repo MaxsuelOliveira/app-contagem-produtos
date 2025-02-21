@@ -6,8 +6,9 @@ export const styles = StyleSheet.create({
     ...GlobalStyles.cardHeader,
   },
 
-  cardTilte: {
+  cardTitle: {
     ...GlobalStyles.cardTitle,
+    marginTop : 0,
   },
 
   settingsContainer: {
@@ -20,7 +21,7 @@ export const styles = StyleSheet.create({
   },
 
   settingsItem: {
-    marginBottom: 30,
+    marginBottom: 10,
   },
 
   settingsBox: {
@@ -49,13 +50,13 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     borderRadius: 5,
+    padding : 0,
   },
 
   hr: {
     ...GlobalStyles.hr,
     width: "100%",
-    marginTop: 0,
-    marginBottom: 20,
+    marginBottom: 10,
     paddingVertical : 5
   },
   

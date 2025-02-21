@@ -5,8 +5,9 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 // Styles
 import { GlobalStyles, colors } from "@styles/GlobalStyles";
 import { styles } from "./styles";
-import Checkbox from "expo-checkbox";
-import { FormattingInputs } from "@utils/inputFormat";
+
+// Ultis
+import { FormattingInputs } from "@utils/utils";
 
 const RecoverPassword = () => {
   const [loading, setLoading] = useState(false);
@@ -36,8 +37,6 @@ const RecoverPassword = () => {
       email: email,
       email_confirm: emailConfirm,
     };
-
-    console.log("Bussines: ", bussines);
   }
 
   return (

@@ -21,7 +21,6 @@ import InventoryDetails from "@screens/Inventory/InventoryDetails/InventoryDetai
 import Settings from "@screens/Settings/Settings";
 import CreateAccount from "@screens/Login/CreateAccount/CreateAccount";
 import RecoverPassword from "@screens/Login/RecoverPassword/RecoverPassword";
-import ProductCreate from "@screens/Products/ProductCreate/ProductCreate";
 
 const Stack = createStackNavigator();
 
@@ -107,12 +106,6 @@ export default function App() {
         <Stack.Screen
           name="Settings"
           component={Settings}
-          options={{ headerShown: false }}
-        />
-
-        <Stack.Screen
-          name="ProductCreate"
-          component={ProductCreate}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

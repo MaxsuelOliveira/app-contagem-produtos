@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 
 // Icons
@@ -98,146 +99,141 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
       <StatusBar style="auto" backgroundColor={colors.modalCover} />
 
       <View style={GlobalStyles.modalOverlay}>
+
         <View style={GlobalStyles.modalContent}>
-          <View style={GlobalStyles.card}>
-            <View style={GlobalStyles.cardHeader}>
-              <Text style={styles.cardTilte}>Atualizar produto</Text>
-              <TouchableOpacity
-                onPress={onClose}
-                style={GlobalStyles.closeButton}
-              >
-                <AntDesign name="close" size={28} color={colors.colorIcons} />
-              </TouchableOpacity>
-            </View>
 
-            {/* Formulário */}
-            <View style={styles.cardBody}>
-              <View style={{ ...styles.grid, width: "60%" }}>
-                <View>
-                  <Text style={GlobalStyles.label}>Código de barras*</Text>
-                  <TextInput
-                    style={GlobalStyles.input}
-                    placeholder=""
-                    focusable={true}
-                    value={codebar}
-                    onChangeText={setCodebar}
-                    keyboardType="numeric"
-                    placeholderTextColor="gray"
-                  />
-                </View>
-              </View>
+          <View style={GlobalStyles.modalContainer}>
 
-              <View style={{ ...styles.grid, width: "35%" }}>
-                <View>
-                  <Text style={GlobalStyles.label}>Quantidade*</Text>
-                  <TextInput
-                    style={GlobalStyles.input}
-                    placeholder=""
-                    keyboardType="numeric"
-                    placeholderTextColor="gray"
-                    value={quantity}
-                    onChangeText={setQuantity}
-                  />
-                </View>
-              </View>
+            <View style={{...GlobalStyles.card , minHeight : 500}}>
 
-              <View style={{ ...styles.grid, width: "100%" }}>
-                <View>
-                  <Text style={GlobalStyles.label}>Nome do produto</Text>
-                  <TextInput
-                    style={GlobalStyles.input}
-                    placeholder="..."
-                    maxLength={255}
-                    keyboardType="default"
-                    placeholderTextColor="gray"
-                    value={name}
-                    onChangeText={setName}
-                    multiline={true}
-                  />
-                </View>
-              </View>
-
-              <View style={{ ...styles.grid, width: "100%" }}>
-                <View>
-                  <Text style={GlobalStyles.label}>Preço R$</Text>
-                  <TextInput
-                    style={GlobalStyles.input}
-                    placeholder="..."
-                    maxLength={255}
-                    keyboardType="decimal-pad"
-                    placeholderTextColor="gray"
-                    value={price}
-                    onChangeText={setPrice}
-                  />
-                </View>
-              </View>
-
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <View style={{ width: "75%" }}>
-                  <Text style={GlobalStyles.label}>
-                    Alguma inconsistência no produto?
-                  </Text>
-                  <Text style={GlobalStyles.small}>
-                    Exemplo: Produto com valor diferente do que está na
-                    etiqueta.
-                  </Text>
-                </View>
-
-                <View style={{ flexDirection: "column", alignItems: "center" }}>
-                  <Switch
-                    value={inconsistency}
-                    onValueChange={setInconsistency}
-                  />
-                  <Text style={GlobalStyles.small}>
-                    {inconsistency ? "Sim" : "Não"}
-                  </Text>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop: 20,
-                  width: "100%",
-                  gap: 10,
-                }}
-              >
+              <View style={GlobalStyles.cardHeader}>
+                <Text style={styles.cardTilte}>Atualizar produto</Text>
                 <TouchableOpacity
-                  style={{
-                    ...GlobalStyles.button,
-                    width: "100",
-                    backgroundColor: colors.danger,
-                  }}
-                  onPress={() => deleteProduct()}
+                  onPress={onClose}
+                  style={GlobalStyles.closeButton}
                 >
-                  <Text style={GlobalStyles.buttonText}>Excluir</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={{ ...GlobalStyles.button, flex: 1 }}
-                  onPress={() => updateProduct()}
-                >
-                  <Text style={GlobalStyles.buttonText}>
-                    {loading ? (
-                      <ActivityIndicator size="small" color="#fff" />
-                    ) : (
-                      <Text style={styles.buttonText}>Atualizar</Text>
-                    )}
-                  </Text>
+                  <AntDesign name="close" size={28} color={colors.colorIcons} />
                 </TouchableOpacity>
               </View>
+
+              <ScrollView style={{ flex: 1 }}>
+                <View style={styles.cardBody}>
+                  <View style={{ ...styles.grid, width: "60%" }}>
+                    <Text style={{ ...GlobalStyles.label, marginBottom: -5 }}>
+                      Código de barras*
+                    </Text>
+                    <TextInput
+                      style={GlobalStyles.input}
+                      placeholder=""
+                      focusable={true}
+                      value={codebar}
+                      onChangeText={setCodebar}
+                      keyboardType="numeric"
+                      placeholderTextColor="gray"
+                    />
+                  </View>
+
+                  <View style={{ ...styles.grid, width: "35%" }}>
+                    <Text style={{ ...GlobalStyles.label, marginBottom: -5 }}>
+                      Quantidade*
+                    </Text>
+                    <TextInput
+                      style={GlobalStyles.input}
+                      placeholder=""
+                      keyboardType="numeric"
+                      placeholderTextColor="gray"
+                      value={quantity}
+                      onChangeText={setQuantity}
+                    />
+                  </View>
+
+                  <View style={{ ...styles.grid, width: "100%" }}>
+                    <Text style={{ ...GlobalStyles.label, marginBottom: -5 }}>
+                      Nome do produto
+                    </Text>
+                    <TextInput
+                      style={GlobalStyles.input}
+                      placeholder="..."
+                      maxLength={255}
+                      keyboardType="default"
+                      placeholderTextColor="gray"
+                      value={name}
+                      onChangeText={setName}
+                      multiline={true}
+                    />
+                  </View>
+
+                  <View style={{ ...styles.grid, width: "100%" }}>
+                    <Text style={{ ...GlobalStyles.label, marginBottom: -5 }}>
+                      Preço R$
+                    </Text>
+                    <TextInput
+                      style={GlobalStyles.input}
+                      placeholder="R$ 0,00"
+                      maxLength={255}
+                      keyboardType="decimal-pad"
+                      placeholderTextColor="gray"
+                      value={price}
+                      onChangeText={setPrice}
+                    />
+                  </View>
+
+                  <View style={styles.sectionCheck}>
+                    <View style={{ width: "75%" }}>
+                      <Text style={{ ...GlobalStyles.label }}>
+                        Alguma inconsistência no produto?
+                      </Text>
+                      <Text style={GlobalStyles.small}>
+                        Exemplo: Produto com valor diferente do que está na
+                        etiqueta.
+                      </Text>
+                    </View>
+
+                    <View
+                      style={{ flexDirection: "column", alignItems: "center" }}
+                    >
+                      <Switch
+                        value={inconsistency}
+                        onValueChange={setInconsistency}
+                      />
+                      <Text style={GlobalStyles.small}>
+                        {inconsistency ? "Sim" : "Não"}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                      style={styles.buttonDelete}
+                      onPress={() => deleteProduct()}
+                    >
+                      <Text style={GlobalStyles.buttonText}>Excluir</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={styles.buttonUpdate}
+                      onPress={() => updateProduct()}
+                    >
+                      <Text style={GlobalStyles.buttonText}>
+                        {loading ? (
+                          <ActivityIndicator size="small" color="#fff" />
+                        ) : (
+                          <Text style={styles.buttonText}>Atualizar</Text>
+                        )}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </ScrollView>
+
             </View>
+
           </View>
+
         </View>
+
       </View>
+      
     </Modal>
   );
 };

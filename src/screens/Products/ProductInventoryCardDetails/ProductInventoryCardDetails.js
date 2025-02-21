@@ -3,6 +3,7 @@ import React, { useState } from "react";
 
 // Styles
 import { styles } from "./styles";
+import { colors } from "@styles/GlobalStyles";
 
 const ProductInventoryCardDetails = ({
   uuid_inventory,
@@ -15,17 +16,15 @@ const ProductInventoryCardDetails = ({
   onEdit,
   onSelected,
 }) => {
-  const [id, setId] = useState(uuid);
-  const [isCheck, setIsCheck] = useState(false);
+  const [productMarket, setProductMarket] = useState(false);
 
   const truncatedName = name.length > 20 ? name.substring(0, 20) + "..." : name;
   const tructedCodebar =
     codebar.length > 14 ? codebar.substring(0, 14) + "..." : codebar;
   const priceFormatted = price ? `R$ ${price}` : 0;
-  const inconsistencyText = inconsistency ? "Sim" : "Não";
 
   const handleEdit = () => {
-    const productData = {
+    const product = {
       uuid,
       codebar,
       quantity: quantity.toString(),
@@ -33,13 +32,12 @@ const ProductInventoryCardDetails = ({
       price,
       inconsistency,
     };
-    onEdit(productData);
+    onEdit(product);
   };
 
   const handleLongPress = () => {
-    let { check, id } = onSelected(uuid);
-    setId(id);
-    setIsCheck(check);
+    onSelected(uuid);
+    setProductMarket(!productMarket);
   };
 
   return (
@@ -52,15 +50,25 @@ const ProductInventoryCardDetails = ({
         style={{
           ...styles.productItem,
           ...(inconsistency ? null : {}),
-          ...(isCheck ? styles.productItemSelected : {}),
+          ...(productMarket ? styles.productItemSelected : {}),
         }}
       >
         <View style={styles.productItemContent}>
-
-        <View style={{position : 'absolute', leeft: 0, top: -20, flexDirection : 'row' , gap : 10}}>
-          <Text style={styles.productBagder}>{quantity}x</Text>
-          {inconsistency ? (<Text style={[styles.productBagder , styles.itemWarning]}>Inconsistência</Text>) : null}
-        </View>
+          <View style={styles.productBagderContainer}>
+            <Text style={[styles.productBagder, styles.productBagderQuantity]}>
+              {quantity}x
+            </Text>
+            {inconsistency && (
+              <Text
+                style={[
+                  styles.productBagder,
+                  styles.productBagderInconsistency,
+                ]}
+              >
+                Inconsistência
+              </Text>
+            )}
+          </View>
 
           <View style={styles.productItemContainer}>
             <InventoryDetail label="Código de barras" value={tructedCodebar} />
@@ -80,7 +88,7 @@ const ProductInventoryCardDetails = ({
 const InventoryDetail = ({ label, value }) => (
   <View style={styles.productItemContainerItem}>
     <Text style={styles.productLabel}>{label}</Text>
-    <Text style={styles.productValue}>{value}</Text>
+    <Text style={styles.productValue}>{value ? value.toString() : "N/A"}</Text>
   </View>
 );
 
