@@ -30,7 +30,7 @@ import ProductInventoryCardDetails from "../../Products/ProductInventoryCardDeta
 import ProductUpdateModal from "../../Products/ProductUpdateModal/ProductUpdateModal";
 
 // Screens
-import OptionsInventory from "./OptionsInventory";
+import OptionsInventory from "./InventoryOptions";
 
 // Backend
 import { Controller } from "@services/backend/controller";
@@ -470,13 +470,12 @@ export default function InventoryDetails() {
         ) : (
           <View style={styles.noProducts}>
             <Text style={styles.noProductsText}>
-              Nenhum produto encontrado.
+              Nenhum produto encontrado na lista de inventário.
             </Text>
           </View>
         )}
       </ScrollView>
 
-      {/* Menu Bar de Ações */}
       <View style={{ ...GlobalStyles.menubar, display: "none" }}>
         {itemsSelectedForDeletion.length > 0 && (
           <TouchableOpacity
@@ -491,7 +490,6 @@ export default function InventoryDetails() {
         )}
       </View>
 
-      {/* Modal de Atualização de Produto */}
       <ProductUpdateModal
         isVisible={modalProductUpdate}
         onClose={() => setModalProductUpdate(false)}
@@ -499,7 +497,6 @@ export default function InventoryDetails() {
         uuidInventory={uuidInventory}
       />
 
-      {/* Opções de Inventário */}
       <OptionsInventory
         isVisible={modalOptions}
         onClose={() => setModalOptions(false)}

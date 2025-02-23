@@ -44,9 +44,10 @@ export const styles = StyleSheet.create({
 
   cardHeader: {
     ...GlobalStyles.cardHeader,
-    flexDirection: "column",
+    flexDirection: "row",
     marginBottom: 10,
     padding: 0,
+    justifyContent : "flex-end"
   },
 
   title: {
@@ -63,7 +64,9 @@ export const styles = StyleSheet.create({
 
   badge: {
     ...GlobalStyles.badge,
-    width: 100,
+    maxWidth: "auto",
+  minWidth: 'auto',
+    paddingHorizontal: 10,
     backgroundColor: colors.warrning,
   },
 

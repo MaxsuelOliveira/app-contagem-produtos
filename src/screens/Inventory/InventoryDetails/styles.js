@@ -172,6 +172,7 @@ export const styles = StyleSheet.create({
 
   input: {
     borderBottomWidth: 1,
+    backgroundColor: "transparent",
     borderColor: colors.borderColor,
     padding: 10,
     height: 40,
@@ -221,7 +222,7 @@ export const styles = StyleSheet.create({
   formSearch: {
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: colors.backgroundItem,
+    backgroundColor: colors.inputBackground,
     padding: 10,
     margin: 10,
     borderRadius: 10,

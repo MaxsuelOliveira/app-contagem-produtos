@@ -21,9 +21,9 @@ import { styles } from "./Styles";
 
 const slides = [
   {
-    title: "Controle Total do\nSeu Estoque",
+    title: "Contagem de estoque",
     description:
-      "Gerencie seus produtos sem limites! Adicione, edite e acompanhe seu estoque com facilidade e precisão.",
+      "Faça contagens pelo celular, tablet ou coletor de dados",
   },
   {
     title: "Verificação Rápida \ne Precisa",
@@ -38,7 +38,7 @@ const slides = [
   {
     title: "Teste o App!",
     description:
-      "Experimente todas as funcionalidades. Se gostar, faça seu cadastro e tenha acesso completo!",
+      "Teste o App e descubra como ele pode ajudar a otimizar seu controle de estoque.",
   },
 ];
 

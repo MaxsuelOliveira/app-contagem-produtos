@@ -14,7 +14,7 @@ import { styles } from "./styles";
 import InventorySettingsModal from "../InventorySettingsModal/InventorySettingsModal";
 import InventoryExportModal from "../InventoryExportModal/InventoryExportModal";
 
-const OptionsInventory = ({
+const InventoryOptions = ({
   isVisible,
   onClose,
   uuidInventory,
@@ -106,4 +106,4 @@ function OptionsTouchableOpacity({ callback, title, icon }) {
   );
 }
 
-export default OptionsInventory;
+export default InventoryOptions;

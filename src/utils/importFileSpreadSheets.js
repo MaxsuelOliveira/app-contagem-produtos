@@ -3,52 +3,120 @@ import * as FileSystem from "expo-file-system";
 import XLSX from "xlsx";
 import Papa from "papaparse";
 import { Buffer } from "buffer";
-import { Alert } from "react-native";
 import uuid from "react-native-uuid";
 
 // Backend
-import { Model } from "../services/backend/model";
+import { Model } from "@services/backend/model";
 
-const saveSheet = async (data) => {
+const saveSheet = async (fileName, data, setTitle, setDescription) => {
   if (!data || !Array.isArray(data) || data.length === 0) {
-    Alert.alert("Erro", "Nenhum dado válido para salvar.");
+    setTitle("❌ Erro ao salvar planilha!");
+    setDescription("Não foi possível salvar a planilha.");
     return;
   }
-
-  const formattedDate = new Intl.DateTimeFormat("pt-BR")
-    .format(new Date())
-    .replace(/\//g, "-");
 
   const sheet = {
     uuid: uuid.v4(),
     date_create: new Date(),
-    name: `Planilha-${formattedDate}`,
+    name: fileName,
     products: data.map((item) => ({
-      codebar: item.TMER_CODIGO_BARRAS_UKN || "",
-      name: item.TMER_NOME || "",
-      price: item.TMER_PRECO || 0,
+      codebar: item?.TMER_CODIGO_BARRAS_UKN ?? item?.[0] ?? "",
+      name: item?.TMER_NOME ?? item?.[1] ?? "Produto sem nome",
+      price: item?.TMER_PRECO ?? item?.[2] ?? 0.0,
     })),
   };
 
   try {
     await Model.SpreadSheets.create(sheet);
-    Alert.alert("Sucesso", "📄 Planilha salva com sucesso!");
+    setTitle("✅ Planilha salva com sucesso!");
+    setDescription("A planilha foi salva com sucesso no banco de dados.");
   } catch (error) {
-    console.error(`❌ Erro ao salvar planilha: ${error.message}`);
+    setTitle("❌ Erro ao salvar planilha!");
+    setDescription("Não foi possível salvar a planilha.");
+    console.error(error);
   }
 };
 
 const importFileSpreadSheets = async (
   setData,
   account,
-  setImportProcessing,
-  importProcessingText
+  setProcessing,
+  setLoading,
+  setTitle,
+  setDescription
 ) => {
-  try {
-    setImportProcessing(true);
-    console.time("⏳ Tempo total");
+  function importCancel() {
+    setLoading(false);
+    setProcessing(false);
+    setTitle("📂 Importação cancelada.");
+    setDescription("A importação foi cancelada.");
+  }
 
-    importProcessingText("📂 Selecionando arquivo...");
+  async function importing(fileType, fileName, fileBuffer) {
+    let parsedData = [];
+    const timeStart = Date.now();
+
+    switch (fileType) {
+      case "application/json":
+        setTitle("📄 Lendo JSON...");
+        setDescription("Identificando o arquivo JSON, aguarde...");
+        parsedData = JSON.parse(fileBuffer);
+        break;
+
+      case "text/csv":
+        setTitle("📄 Lendo CSV...");
+        setDescription("Identificando o arquivo CSV, aguarde...");
+        parsedData = Papa.parse(Buffer.from(fileBuffer, "base64").toString(), {
+          header: true,
+        }).data;
+        break;
+
+      case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+      case "application/vnd.ms-excel":
+        setTitle("📄 Lendo XLSX...");
+        setDescription("Identificando o arquivo XLSX, aguarde...");
+        const workbook = XLSX.read(fileBuffer, { type: "base64" });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        parsedData = XLSX.utils.sheet_to_json(sheet);
+        break;
+
+      default:
+        setTitle("📄 Arquivo não reconhecido");
+        setDescription("Formato do arquivo inválido. Selecione um válido.");
+        return;
+    }
+
+    if (!parsedData.length) {
+      setLoading(false);
+      setTitle("Nenhum dado encontrado");
+      setDescription("O arquivo não contém dados válidos.");
+      return;
+    }
+
+    const maxLimit = account === "free" ? 100 : 1000000000;
+    if (parsedData.length > maxLimit) {
+      setTitle("Limite de importação excedido");
+      setDescription(
+        `O limite é de ${maxLimit} registros. Seu arquivo possui ${parsedData.length}.`
+      );
+      parsedData = parsedData.slice(0, maxLimit);
+    }
+
+    setLoading(false);
+    setTitle("✅ Importação concluída!");
+    setDescription("O arquivo foi importado com sucesso.");
+    await saveSheet(fileName, parsedData, setTitle, setDescription);
+
+    setData(parsedData);
+
+    const timeElapsed = Date.now() - timeStart;
+    console.log(
+      `⏱️ Tempo de processamento: ${(timeElapsed / 1000 / 60).toFixed(3)}min`
+    );
+  }
+
+  try {
+    setProcessing(true);
     const result = await DocumentPicker.getDocumentAsync({
       type: [
         "application/json",
@@ -59,73 +127,35 @@ const importFileSpreadSheets = async (
     });
 
     if (result.canceled) {
-      importProcessingText("📂 Importação cancelada.");
+      importCancel();
       return;
     }
 
     const { uri: fileUri, mimeType: fileType } = result.assets[0];
-    importProcessingText(`📄 Arquivo selecionado: ${fileType}`);
+    const fileName = result.assets[0].name;
+    setLoading(true);
+    setProcessing(true);
 
-    // Lê o arquivo como Base64 para otimizar o processamento
-    importProcessingText("📥 Lendo arquivo...");
+    setTitle("📄 Arquivo selecionado");
+    setDescription("O arquivo foi selecionado. Processando...");
+
     const fileBuffer = await FileSystem.readAsStringAsync(fileUri, {
       encoding: FileSystem.EncodingType.Base64,
     });
 
-    let parsedData = [];
+    const fileSizeInBytes = (fileBuffer.length * 3) / 4;
+    const fileSizeInMB = fileSizeInBytes / (1024 * 1024).toFixed(2);
 
-    switch (fileType) {
-      case "application/json":
-        importProcessingText("📄 Lendo JSON...");
-        parsedData = JSON.parse(fileBuffer);
-        break;
+    setTitle("📄 Importando arquivo...");
+    setDescription("O arquivo está sendo importado. \nPor Favor Aguarde ! Não  feche o aplicativo.");
 
-      case "text/csv":
-        importProcessingText("📄 Lendo CSV...");
-        parsedData = Papa.parse(Buffer.from(fileBuffer, "base64").toString(), {
-          header: true,
-        }).data;
-        break;
-
-      case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-      case "application/vnd.ms-excel":
-        importProcessingText("📄 Lendo XLSX...");
-        const workbook = XLSX.read(fileBuffer, { type: "base64" });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        parsedData = XLSX.utils.sheet_to_json(sheet);
-        break;
-
-      default:
-        importProcessingText("❌ Tipo de arquivo não suportado.");
-        return;
-    }
-
-    if (!parsedData.length) {
-      importProcessingText("📄 Nenhum dado encontrado no arquivo.");
-      return;
-    }
-
-    // Aplica limite conforme plano do usuário
-    const maxLimit = account === "free" ? 5000 : 10000;
-    if (parsedData.length > maxLimit) {
-      importProcessingText(
-        `📄 Limite de registros excedido. Apenas ${maxLimit} serão importados.`
-      );
-      parsedData = parsedData.slice(0, maxLimit);
-    }
-
-    importProcessingText("💾 Salvando no banco de dados...");
-    await saveSheet(parsedData);
-
-    importProcessingText("✅ Importação concluída com sucesso!");
-    setData(parsedData);
-
-    console.timeEnd("⏱️ Tempo total de processamento");
+    await importing(fileType, fileName, fileBuffer);
   } catch (error) {
-    importProcessingText("❌ Erro ao importar arquivo!");
+    setLoading(false);
+    setProcessing(false);
+    setTitle("❌ Erro ao importar arquivo!");
+    setDescription("Ocorreu um erro ao importar o arquivo. Tente novamente.");
     console.error("❌ Erro ao importar arquivo:", error);
-  } finally {
-    setProgress(false);
   }
 };
 
