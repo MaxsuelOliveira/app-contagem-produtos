@@ -20,7 +20,7 @@ const LogoutModal = ({ isVisible, onClose, uuidInventory }) => {
   return (
     <Modal
       visible={isVisible}
-      animationType="fade"
+      animationType="none"
       transparent
       onRequestClose={onClose}
     >

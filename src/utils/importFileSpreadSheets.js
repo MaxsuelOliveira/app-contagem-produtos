@@ -146,8 +146,12 @@ const importFileSpreadSheets = async (
     const fileSizeInBytes = (fileBuffer.length * 3) / 4;
     const fileSizeInMB = fileSizeInBytes / (1024 * 1024).toFixed(2);
 
-    setTitle("📄 Importando arquivo...");
-    setDescription("O arquivo está sendo importado. \nPor Favor Aguarde ! Não  feche o aplicativo.");
+    setTimeout(() => {
+      setTitle("📄 Importando arquivo...");
+      setDescription(
+        "O arquivo está sendo importado. \nPor Favor Aguarde ! Não  feche o aplicativo."
+      );
+    }, 1000);
 
     await importing(fileType, fileName, fileBuffer);
   } catch (error) {

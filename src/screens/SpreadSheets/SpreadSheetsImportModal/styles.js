@@ -51,15 +51,17 @@ export const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: "Montserrat_Medium",
     marginBottom: 10,
+    textAlign : "center"
   },
 
   textDescription: {
     ...GlobalStyles.label,
     fontSize: 16,
     fontFamily: "Montserrat_Regular",
+    textAlign: "center",
   },
 
   badge: {

@@ -44,7 +44,7 @@ function ModalCustom({ isVisible, onClose, dataModal }) {
   return (
     <Modal
       visible={isVisible}
-      animationType="fade"
+      animationType="none"
       transparent
       onRequestClose={onClose}
     >

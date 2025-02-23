@@ -92,7 +92,7 @@ const ProductUpdateModal = ({ isVisible, onClose, product, uuidInventory }) => {
   return (
     <Modal
       visible={isVisible}
-      animationType="fade"
+      animationType="none"
       transparent
       onRequestClose={onClose}
     >

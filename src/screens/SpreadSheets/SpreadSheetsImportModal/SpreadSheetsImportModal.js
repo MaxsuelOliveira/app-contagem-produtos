@@ -152,7 +152,7 @@ const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
         <View style={GlobalStyles.modalContent}>
           <View style={GlobalStyles.modalContainer}>
             {processing ? (
-              <View style={GlobalStyles.card}>
+              <View style={{...GlobalStyles.card, maxHeight : 120}}>
                 <View style={styles.cardHeader}>
                   {loading ? null : (
                     <TouchableOpacity
