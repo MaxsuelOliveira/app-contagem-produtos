@@ -58,9 +58,9 @@ const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
 
   function FileImport() {
     return (
-      <View style={GlobalStyles.card}>
+      <View style={{ ...GlobalStyles.card }}>
         <View style={GlobalStyles.cardHeader}>
-          <Text style={styles.cardTilte}>Importar</Text>
+          <Text style={styles.cardTilte}>Importação de produtos</Text>
           <TouchableOpacity
             onPress={onClose}
             style={{ ...GlobalStyles.closeButton }}
@@ -71,8 +71,6 @@ const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
 
         <ScrollView>
           <View style={styles.cardBody}>
-            <Text style={styles.title}>Atenção</Text>
-
             <Text style={styles.textDescription}>
               Antes de importar uma planilha, certifique-se de que ela está no
               formato correto.
@@ -83,7 +81,9 @@ const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
               obrigatório.)
             </Text>
 
-            <Text style={styles.textDescription}>COD BARRA | NOME | PREÇO</Text>
+            <Text style={styles.textDescription}>
+              CODIGO BARRA | NOME | PREÇO
+            </Text>
 
             <TouchableOpacity
               onPress={() =>
@@ -93,7 +93,7 @@ const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
                 )
               }
             >
-              <Text style={GlobalStyles.link}>
+              <Text style={{ ...GlobalStyles.link, marginBottom: 10 }}>
                 Clique aqui para baixar o modelo !
               </Text>
             </TouchableOpacity>
@@ -142,7 +142,7 @@ const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
   return (
     <Modal
       visible={isVisible}
-      animationType="none" // Em vez de false
+      animationType="fade"
       transparent
       onRequestClose={onClose}
     >
@@ -152,7 +152,7 @@ const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
         <View style={GlobalStyles.modalContent}>
           <View style={GlobalStyles.modalContainer}>
             {processing ? (
-              <View style={{...GlobalStyles.card, maxHeight : 120}}>
+              <View style={{ ...GlobalStyles.card, maxHeight: 120 }}>
                 <View style={styles.cardHeader}>
                   {loading ? null : (
                     <TouchableOpacity
@@ -176,7 +176,14 @@ const SpreadSheetsImportModal = ({ isVisible, onClose }) => {
                   <Text style={styles.textDescription}>{description}</Text>
 
                   {loading && (
-                    <ActivityIndicator size="large" color={colors.colorIcons} />
+                    <>
+                      <ActivityIndicator
+                        size="large"
+                        color={colors.colorIcons}
+                        style={{ marginBottom: 10 }}
+                      />
+                      <Text style={styles.progressText}>Aguarde a importação...</Text>
+                    </>
                   )}
                 </View>
               </View>

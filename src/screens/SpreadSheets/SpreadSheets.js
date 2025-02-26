@@ -26,6 +26,9 @@ const SpreadSheets = ({ isVisible, onClose }) => {
 
   useEffect(() => {
     Controller.SpreadSheets.getAll().then((response) => {
+      console.log("📄 Planilhas:", response[9].products);
+      
+
       setPlanilhas(response);
     });
   }, []);
@@ -75,9 +78,10 @@ const SpreadSheets = ({ isVisible, onClose }) => {
                         ...GlobalStyles.cardTitle,
                         fontFamily: "Montserrat_Medium",
                         fontSize: 18,
+                        textAlign: "start",
                       }}
                     >
-                      Nenhum planilha importada !
+                      Nenhuma planilha importada !
                     </Text>
                   )}
                 </ScrollView>

@@ -24,13 +24,16 @@ import { TextInput } from "react-native-gesture-handler";
 
 const InventorySettingsModal = ({ isVisible, onClose, uuidInventory }) => {
   const [loading, setLoading] = useState(false);
-  const [planilhaLength, setPlanilhaLength] = useState(false);
+  const [SpreadsheetLength, setSpreadsheetLength] = useState(false);
+
   const [isBuyWithSpreadsheet, setIsBuyWithSpreadsheet] = useState(false);
   const [additionalFields, setAdditionalFields] = useState(false);
+  const [defaultQuantity, setDefaultQuantity] = useState(0);
+  const [defaultQuantityEnabled, setDefaultQuantityEnabled] = useState(false);
 
   const toggleSwitchSpreadsheet = () =>
     setIsBuyWithSpreadsheet((previousState) => {
-      if (planilhaLength) {
+      if (SpreadsheetLength) {
         return false;
       }
       return !previousState;
@@ -41,17 +44,30 @@ const InventorySettingsModal = ({ isVisible, onClose, uuidInventory }) => {
       return !previousState;
     });
 
+  const toggleSwitchQuantity = () =>
+    setDefaultQuantityEnabled((previousState) => {
+      return !previousState;
+    });
+
   const updateSettings = () => {
     setLoading(true);
 
-    Controller.Inventory.updateCompareInSpreadSheets(
-      uuidInventory,
-      isBuyWithSpreadsheet
-    )
+    const properties = {
+      compare_in_spreadsheet: isBuyWithSpreadsheet,
+      compare_price: isBuyWithSpreadsheet,
+      compare_quantity: defaultQuantityEnabled,
+      quantity_default: parseInt(defaultQuantity),
+      inputs_habilitated: additionalFields,
+    };
+
+    Controller.Inventory.updateProperties(uuidInventory, properties)
       .then((inventory) => {
+        console.log(inventory);
+
         setTimeout(() => {
           setLoading(false);
         }, 300);
+
         onClose();
       })
       .catch((error) => {
@@ -61,25 +77,37 @@ const InventorySettingsModal = ({ isVisible, onClose, uuidInventory }) => {
       });
   };
 
+  function setInventory() {
+    Controller.Inventory.getUUID(uuidInventory)
+      .then((inventory) => {
+        const {
+          quantity_default,
+          compare_quantity,
+          compare_in_spreadsheet,
+          inputs_habilitated,
+        } = inventory[0].properties;
+        setDefaultQuantity(quantity_default);
+        setDefaultQuantityEnabled(compare_quantity);
+        setIsBuyWithSpreadsheet(compare_in_spreadsheet);
+        setAdditionalFields(inputs_habilitated);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  useEffect(() => {
+    setInventory();
+  }, []);
+
   useEffect(() => {
     Controller.SpreadSheets.count()
       .then((total) => {
         if (total == 0) {
-          setPlanilhaLength(true);
+          setSpreadsheetLength(true);
           return;
         }
-        setPlanilhaLength(false);
-      })
-      .catch((error) => {
-        return Promise.reject(error);
-      });
-  }, []);
-
-  useEffect(() => {
-    Controller.Inventory.getUUID(uuidInventory)
-      .then((inventory) => {
-        inventory = inventory[0];
-        setIsBuyWithSpreadsheet(inventory.compare_in_spreadsheet);
+        setSpreadsheetLength(false);
       })
       .catch((error) => {
         return Promise.reject(error);
@@ -89,7 +117,7 @@ const InventorySettingsModal = ({ isVisible, onClose, uuidInventory }) => {
   return (
     <Modal
       visible={isVisible}
-      animationType="none"
+      animationType="fade"
       transparent
       onRequestClose={onClose}
     >
@@ -118,7 +146,7 @@ const InventorySettingsModal = ({ isVisible, onClose, uuidInventory }) => {
                       constam nas planilhas importadas.
                     </Text>
 
-                    <View style={styles.settingsItem}>
+                    <View style={styles.settingsContent}>
                       <Text style={styles.value}>
                         {isBuyWithSpreadsheet ? "Habilitado" : "Desabilitado"}
                       </Text>
@@ -144,7 +172,7 @@ const InventorySettingsModal = ({ isVisible, onClose, uuidInventory }) => {
                       produtos.
                     </Text>
 
-                    <View style={styles.settingsItem}>
+                    <View style={styles.settingsContent}>
                       <Text style={styles.value}>
                         {additionalFields ? "Editável" : "Não editável"}
                       </Text>
@@ -170,55 +198,39 @@ const InventorySettingsModal = ({ isVisible, onClose, uuidInventory }) => {
 
                     <View
                       style={{
-                        ...styles.settingsItem,
+                        ...styles.settingsContent,
                         justifyContent: "space-between",
                       }}
                     >
-                      <View
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "flex-start",
-                          width: "50%",
-                          gap: 0,
-                          height: 50,
-                        }}
-                      >
+                      <View style={styles.settingsItem}>
                         <Text style={styles.value}>
-                          {additionalFields ? "Habilitado" : "Não Habilitado"}
+                          {defaultQuantityEnabled
+                            ? "Habilitado"
+                            : "Não Habilitado"}
                         </Text>
 
                         <Switch
                           trackColor={{ false: "#bfbfbf", true: "#4d8eea" }}
-                          thumbColor={additionalFields ? "#4d8eea" : "#bfbfbf"}
+                          thumbColor={
+                            defaultQuantityEnabled ? "#4d8eea" : "#bfbfbf"
+                          }
                           ios_backgroundColor="#3e3e3e"
-                          onValueChange={toggleSwitchAdditionalFields}
-                          value={additionalFields}
+                          onValueChange={toggleSwitchQuantity}
+                          value={defaultQuantityEnabled}
                         />
                       </View>
-
-                      <View
-                        style={{
-                          flexDirection: "column",
-                          alignItems: "flex-end",
-                          width: "50%",
-                        }}
-                      >
-                        <Text style={styles.label}>Qnt:</Text>
-                        <TextInput
-                          style={{
-                            ...GlobalStyles.input,
-                            width: 55,
-                            height: 35,
-                            fontSize: 16,
-                            textAlign: "center",
-                          }}
-                          placeholder="0"
-                          // value={defaultQuantity}
-                          // onChangeText={setDefaultQuantity}
-                          keyboardType="numeric"
-                        />
-                      </View>
+                      {defaultQuantityEnabled && (
+                        <View style={{}}>
+                          <Text style={styles.label}>Qnt Padrão:</Text>
+                          <TextInput
+                            style={styles.inputQnt}
+                            placeholder="0"
+                            value={defaultQuantity}
+                            onChangeText={setDefaultQuantity}
+                            keyboardType="numeric"
+                          />
+                        </View>
+                      )}
                     </View>
                   </View>
                 </View>
@@ -232,7 +244,7 @@ const InventorySettingsModal = ({ isVisible, onClose, uuidInventory }) => {
                   {loading ? (
                     <ActivityIndicator size="small" color="#fff" />
                   ) : (
-                    <Text style={GlobalStyles.buttonText}>Salvar</Text>
+                    <Text style={GlobalStyles.buttonText}>Atualizar</Text>
                   )}
                 </TouchableOpacity>
               </View>

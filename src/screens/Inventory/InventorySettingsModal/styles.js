@@ -19,9 +19,18 @@ export const styles = StyleSheet.create({
     fontSize: 14,
   },
 
-  settingsItem: {
+  settingsContent: {
     flexDirection: "row",
     alignItems: "center",
+  },
+
+  settingsItem: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    width: "50%",
+    gap: 0,
+    height: 50,
   },
 
   value: {
@@ -52,5 +61,12 @@ export const styles = StyleSheet.create({
     ...GlobalStyles.cardTitle,
     marginTop: 0,
     fontSize: 17,
+  },
+
+  inputQnt: {
+    ...GlobalStyles.input,
+    height: 35,
+    fontSize: 16,
+    textAlign: "center",
   },
 });

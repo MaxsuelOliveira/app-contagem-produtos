@@ -26,7 +26,7 @@ const InventoryOptions = ({
   return (
     <Modal
       visible={isVisible}
-      animationType="none"
+      animationType="fade"
       transparent
       onRequestClose={onClose}
     >

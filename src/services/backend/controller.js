@@ -3,8 +3,6 @@ import { Model } from "./model.js";
 export const Controller = {
   Inventory: {
     create: async (data) => {
-
-
       return Model.Inventory.create(data)
         .then((inventario) => {
           return inventario;
@@ -84,13 +82,10 @@ export const Controller = {
         });
     },
 
-    updateCompareInSpreadSheets: async (uuid, compare_in_spreadsheet) => {
-      return Model.Inventory.updateCompareInSpreadSheets(
-        uuid,
-        compare_in_spreadsheet
-      )
-        .then((inventario) => {
-          return inventario;
+    updateProperties: async (uuid, properties) => {
+      return Model.Inventory.updateProperties(uuid, properties)
+        .then((inventory) => {
+          return inventory;
         })
         .catch((error) => {
           return Promise.reject(error);
@@ -99,8 +94,8 @@ export const Controller = {
 
     export: async (uuid_inventory) => {
       return Model.Inventory.export(uuid_inventory)
-        .then((produtosExportados) => {
-          return produtosExportados;
+        .then((products) => {
+          return products;
         })
         .catch((error) => {
           return Promise.reject(error);
@@ -165,7 +160,7 @@ export const Controller = {
     remove: async (id_spreadsheet) => {
       return Model.SpreadSheets.remove(id_spreadsheet)
         .then(() => {
-          return;
+          return true;
         })
         .catch((error) => {
           return Promise.reject(error);

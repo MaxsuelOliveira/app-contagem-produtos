@@ -61,8 +61,13 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
       date_create: new Date(),
       date_end: new Date(),
       products: [],
-      compare_in_spreadsheet: false,
-      compare_price: false,
+      properties: {
+        compare_in_spreadsheet: false,
+        compare_price: false,
+        compare_quantity: false,
+        quantity_default: 0,
+        inputs_habilitated: false,
+      },
     };
 
     Controller.Inventory.create(inventory)
@@ -79,7 +84,7 @@ const ModalInventoryCreate = ({ isVisible, onClose }) => {
   return (
     <Modal
       visible={isVisible}
-      animationType="none"
+      animationType="fade"
       transparent
       onRequestClose={onClose}
     >

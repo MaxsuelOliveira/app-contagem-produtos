@@ -19,11 +19,7 @@ const saveSheet = async (fileName, data, setTitle, setDescription) => {
     uuid: uuid.v4(),
     date_create: new Date(),
     name: fileName,
-    products: data.map((item) => ({
-      codebar: item?.TMER_CODIGO_BARRAS_UKN ?? item?.[0] ?? "",
-      name: item?.TMER_NOME ?? item?.[1] ?? "Produto sem nome",
-      price: item?.TMER_PRECO ?? item?.[2] ?? 0.0,
-    })),
+    products: data,
   };
 
   try {
@@ -36,6 +32,54 @@ const saveSheet = async (fileName, data, setTitle, setDescription) => {
     console.error(error);
   }
 };
+
+
+/**
+ * Converte planilha Excel para JSON
+ */
+const parseExcel = (fileBuffer) => {
+  const workbook = XLSX.read(fileBuffer, { type: "base64" });
+  const sheet = workbook.Sheets[workbook.SheetNames[0]];
+  
+  console.log("📄 Dados brutos do Excel:", sheet);
+
+  let parsedData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+  console.log("🔍 Dados extraídos do Excel:", parsedData);
+
+  if (!Array.isArray(parsedData) || parsedData.length < 2) {
+    console.error("❌ Erro: Planilha vazia ou formato incorreto!");
+    return [];
+  }
+
+  // Verificar a quantidade de colunas
+  const expectedColumns = 1;
+  const actualColumns = parsedData[0].length;
+  if (actualColumns !== expectedColumns) {
+    console.error(
+      `❌ Erro: Quantidade de colunas incorreta. Esperado: ${expectedColumns}, Encontrado: ${actualColumns}`
+    );
+    return [];
+  }
+
+  // Verifica cada linha processada
+  const processedData = parsedData.slice(1).map((row, index) => {
+    console.log(`📊 Linha ${index + 2}:`, row);
+
+    return {
+      codebar: row[0] ? row[0].toString().trim() : "",  
+      name: row[3] ? row[3].toString().trim() : "SEM NOME",  
+      price: row[4] ? parseFloat(row[4]) || 0.0 : 0.0,  
+    };
+  });
+
+  console.log("✅ Dados processados:", processedData);
+
+  return processedData;
+};
+
+
+
 
 const importFileSpreadSheets = async (
   setData,
@@ -75,9 +119,11 @@ const importFileSpreadSheets = async (
       case "application/vnd.ms-excel":
         setTitle("📄 Lendo XLSX...");
         setDescription("Identificando o arquivo XLSX, aguarde...");
-        const workbook = XLSX.read(fileBuffer, { type: "base64" });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        parsedData = XLSX.utils.sheet_to_json(sheet);
+        // const workbook = XLSX.read(fileBuffer, { type: "base64" });
+        // const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        // // parsedData = XLSX.utils.sheet_to_json(sheet);
+        // parsedData = XLSX.utils.sheet_to_json(sheet, { header: 0 });
+        parsedData = parseExcel(fileBuffer);
         break;
 
       default:

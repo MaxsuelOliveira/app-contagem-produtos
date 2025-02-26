@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "colletor",
+    "name": "Estoque Fácil",
     "slug": "colletor",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -42,8 +42,8 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "cameraPermission": "Permitir que $(PRODUCT_NAME) acesse sua câmera",
+          "microphonePermission": "Permitir que $(PRODUCT_NAME) acesse seu microfone",
           "recordAudioAndroid": true
         }
       ]

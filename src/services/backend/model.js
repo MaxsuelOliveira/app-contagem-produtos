@@ -1,5 +1,5 @@
 import Realm from "realm";
-import { realmConfig } from "./conn.js";
+import { realmConfig } from "../schemas/database";
 
 const createRealm = async () => {
   const realm = await Realm.open(realmConfig);
@@ -49,7 +49,7 @@ export const Model = {
       return inventory;
     },
 
-    updateCompareInSpreadSheets: async (uuid, compare_in_spreadsheet) => {
+    updateProperties: async (uuid, properties) => {
       const realm = await createRealm();
       const inventories = realm
         .objects("Inventory")
@@ -59,7 +59,7 @@ export const Model = {
       }
       const inventory = inventories[0];
       realm.write(() => {
-        inventory.compare_in_spreadsheet = compare_in_spreadsheet;
+        inventory.properties = properties;
       });
       return inventory;
     },
@@ -121,7 +121,10 @@ export const Model = {
           success: false,
         };
       }
-      const sortedProducts = inventories[0].products.sorted("date_create", true);
+      const sortedProducts = inventories[0].products.sorted(
+        "date_create",
+        true
+      );
       return sortedProducts;
     },
   },
@@ -240,10 +243,14 @@ export const Model = {
   SpreadSheets: {
     create: async (spreadsheet) => {
       const realm = await createRealm();
-      realm.write(() => {
-        realm.create("SpreadSheets", spreadsheet);
-      });
-      return spreadsheet;
+      try {
+        realm.write(() => {
+          realm.create("SpreadSheets", spreadsheet);
+        });
+        return spreadsheet;
+      } catch (error) {
+        return error;
+      }
     },
 
     remove: async (id_spreadsheet) => {

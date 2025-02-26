@@ -125,7 +125,6 @@ export default function InventoryDetails() {
   useEffect(() => {
     Controller.Inventory.getProducts(uuidInventory)
       .then((response) => {
-        console.log("Produtos do inventário:", response);
         if (response) {
           setProductsInventory(response);
         }
@@ -137,48 +136,38 @@ export default function InventoryDetails() {
 
   // Obtém inventário e planilha, se necessário
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [inventory] = await Controller.Inventory.getUUID(uuidInventory);
+    (async () => {
+      const [inventory] = await Controller.Inventory.getUUID(uuidInventory);
 
-        if (!inventory) {
-          console.warn("Nenhum inventário encontrado!");
+      if (!inventory) {
+        console.warn("Nenhum inventário encontrado!");
+        return;
+      }
+
+      const { compare_in_spreadsheet, quantity_default } = inventory;
+      setSelectedInventory(inventory);
+      setCompare(compare_in_spreadsheet);
+
+      if (compare_in_spreadsheet) {
+        const response = await Controller.SpreadSheets.getAll();
+
+        if (!response) {
+          console.warn("Nenhuma planilha encontrada!");
           return;
         }
 
-        const { compare_in_spreadsheet } = inventory;
-        setSelectedInventory(inventory);
-        setCompare(compare_in_spreadsheet);
+        const produtos = response.flatMap(({ products }) =>
+          products.map(({ codebar, name, price }) => ({
+            codebar: codebar.trim(),
+            name,
+            price,
+          }))
+        );
 
-        if (compare_in_spreadsheet) {
-          const response = await Controller.SpreadSheets.getAll();
-
-          if (!response) {
-            console.warn("Nenhuma planilha encontrada!");
-            return;
-          }
-
-          const produtos = response.flatMap(({ products }) =>
-            products.map(({ codebar, name, price }) => ({
-              codebar: codebar.trim(),
-              name,
-              price,
-            }))
-          );
-
-          setProductsImported(produtos);
-        }
-      } catch (error) {
-        console.error("Erro ao buscar os dados:", error);
+        setProductsImported(produtos);
       }
-    };
-
-    fetchData();
-  }, [modalOptions, uuidInventory]); // Agora uuidInventory é uma dependência
-
-  // useEffect(() => {
-  //   console.log("Estado atualizado:", itemsSelectedForDeletion);
-  // }, [itemsSelectedForDeletion]);
+    })();
+  }, [modalOptions, uuidInventory]);
 
   // Valida e busca produto na planilha
   const checkProductSpreadsheet = (codebarInput) => {
@@ -305,8 +294,6 @@ export default function InventoryDetails() {
       date_create: new Date(),
     };
 
-    console.log("Novo produto:", newProduct);
-
     setLoading(true);
     setFormMessage("Adicionando produto...");
 
@@ -427,11 +414,19 @@ export default function InventoryDetails() {
           </View>
 
           {/* Nome do produto encontrado no spreadsheet SEM EDICAO */}
-          {compare && product && description && <Text>{description}</Text>}
+          {compare && product && description && (
+            <View style={{ marginBottom: 10 }}>
+              <Text style={GlobalStyles.label}>Nome do produto</Text>
+              <Text style={GlobalStyles.value}>{description}</Text>
+            </View>
+          )}
 
           {/* Valor do produto encontrado no spreadsheet SEM EDICAO */}
           {compare && product && price !== undefined && (
-            <Text>{price.toString()}</Text>
+            <View style={{ marginBottom: 10 }}>
+              <Text style={GlobalStyles.label}>Preço</Text>
+              <Text style={GlobalStyles.value}>R$ {price.toString()}</Text>
+            </View>
           )}
 
           <View
