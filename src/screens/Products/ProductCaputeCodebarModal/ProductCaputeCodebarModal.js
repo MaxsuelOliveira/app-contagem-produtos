@@ -16,7 +16,11 @@ import { styles } from "./Styles";
 import { AntDesign } from "@expo/vector-icons";
 import { GlobalStyles } from "@styles/GlobalStyles";
 
-export default function App({ isVisible, onClose, setCodebar }) {
+export default function ProductCaputeCodebarModal({
+  isVisible,
+  onClose,
+  onBarcodeScanned,
+}) {
   const [facing, setFacing] = useState("back");
   const [permission, requestPermission] = useCameraPermissions();
   const [scannedData, setScannedData] = useState(null);
@@ -27,10 +31,10 @@ export default function App({ isVisible, onClose, setCodebar }) {
 
   function handleBarcodeScanned({ data }) {
     setScannedData(data);
-    setCodebar(data);
+    onBarcodeScanned(data);
     setTimeout(() => {
       onClose();
-      setCodebar("");
+      // onBarcodeScanned("");
     }, 500);
   }
 
@@ -40,7 +44,7 @@ export default function App({ isVisible, onClose, setCodebar }) {
         {!permission && (
           <View style={styles.centeredView}>
             <ActivityIndicator size="large" color="#0000ff" />
-            <Text style={styles.message}>Carregando permissões...</Text>
+            <Text style={styles.message}>Carregando permissão...</Text>
           </View>
         )}
 

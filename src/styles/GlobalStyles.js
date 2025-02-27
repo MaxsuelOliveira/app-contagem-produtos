@@ -1,67 +1,82 @@
 import { StyleSheet } from "react-native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const theme = (options) => {
-  if (options) {
+const theme = (darkMode) => {
+  if (darkMode) {
     return {
       primary: "#0d6efd",
-      primaryTextEmphasis: "#052c65",
-      secondaryTextEmphasis: "#2b2f32",
-      successTextEmphasis: "#0a3622",
-      infoTextEmphasis: "#055160",
-      warningTextEmphasis: "#664d03",
-      dangerTextEmphasis: "#58151c",
-      lightTextEmphasis: "#495057",
-      darkTextEmphasis: "#495057",
-      primaryBgSubtle: "#cfe2ff",
-      secondaryBgSubtle: "#e2e3e5",
-      successBgSubtle: "#d1e7dd",
-
-      inputBorderColor: "#f3f2f2",
-      inputBackground: "#f3f2f2",
-      inputColor: "#212529",
-      cardBackground: "#f8f9fa",
-      primaryBackground: "#f8f9fa",
-      textPrimary: "#212529",
-      textSecondary: "#6c757d",
-      // buttonBackground: "#122238",
-      buttonBackground: "#0d6efd",
-      borderColor: "#f8f9fa",
-      menubarBackground: "#f3f2f2",
-      menubarText: "#000000",
-      textDescription: "#646363",
-      colorIcons: "#adb5bd",
-      modalCover: "rgba(18, 34, 56, 0.65)",
-      backgroundItem: "#ecebeb",
       danger: "#dc3545",
       warrning: "#ffc107",
-    };
-  } else {
-    return {
-      primary: "#0d6efd",
-      inputBorderColor: "#ffffff",
-      inputBackground: "transparent",
+
+      primaryTextEmphasis: "#a1c8ff",
+      secondaryTextEmphasis: "#adb5bd",
+      successTextEmphasis: "#198754",
+      infoTextEmphasis: "#0dcaf0",
+      warningTextEmphasis: "#ffc107",
+      dangerTextEmphasis: "#dc3545",
+      lightTextEmphasis: "#ced4da",
+      darkTextEmphasis: "#f8f9fa",
+      primaryBgSubtle: "#031b42",
+      secondaryBgSubtle: "#1c1e21",
+      successBgSubtle: "#0a3622",
+      inputBorderColor: "#495057",
+      inputBackground: "#212529",
       inputColor: "#f8f9fa",
-      cardBackground: "#19273a",
-      primaryBackground: "#122238",
-      textPrimary: "#ffffff",
+      cardBackground: "#2b2f32",
+      primaryBackground: "#121212",
+      textPrimary: "#f8f9fa",
       textSecondary: "#adb5bd",
-      buttonBackground: "#0b5ed7",
-      inputBackground: "#162940",
-      borderColor: "#e2e3e5",
-      menubarBackground: "#132237",
-      menubarText: "#f8f9fa",
-      textDescription: "#646363",
-      colorIcons: "#d1e7dd",
-      modalCover: "rgba(18, 34, 56, 0.65)",
-      backgroundItem: "rgb(12 22 35)",
-      danger: "#dc3545",
-      warrning: "#d0ff00",
+      buttonBackground: "#0d6efd",
+      borderColor: "#343a40",
+      menubarBackground: "#1e1e1e",
+      menubarText: "#ffffff",
+      textDescription: "#868e96",
+      colorIcons: "#adb5bd",
+      modalCover: "rgba(18, 34, 56, 0.85)",
+      backgroundItem: "#292b2c",
+      inventoryCategories: "#1e1e1e",
     };
   }
+
+  return {
+    primary: "#0d6efd",
+    primaryTextEmphasis: "#052c65",
+    secondaryTextEmphasis: "#2b2f32",
+    successTextEmphasis: "#0a3622",
+    infoTextEmphasis: "#055160",
+    warningTextEmphasis: "#664d03",
+    dangerTextEmphasis: "#58151c",
+    lightTextEmphasis: "#495057",
+    darkTextEmphasis: "#495057",
+    primaryBgSubtle: "#cfe2ff",
+    secondaryBgSubtle: "#e2e3e5",
+    successBgSubtle: "#d1e7dd",
+
+    inputBorderColor: "#f3f2f2",
+    inputBackground: "#f3f2f2",
+    inputColor: "#212529",
+    cardBackground: "#f8f9fa",
+    primaryBackground: "#f8f9fa",
+    textPrimary: "#212529",
+    textSecondary: "#6c757d",
+    // buttonBackground: "#122238",
+    buttonBackground: "#0d6efd",
+    borderColor: "#f8f9fa",
+    menubarBackground: "#f3f2f2",
+    menubarText: "#000000",
+    textDescription: "#646363",
+    colorIcons: "#adb5bd",
+    modalCover: "rgba(18, 34, 56, 0.65)",
+    backgroundItem: "#ecebeb",
+    danger: "#dc3545",
+    warrning: "#ffc107",
+  };
 };
 
-const colors = theme(true);
+// const darkMode = (await AsyncStorage.getItem("darkMode")) || false;
+// const colors = theme(darkMode);
+const colors = theme(false);
 
 const GlobalStyles = StyleSheet.create({
   container: {

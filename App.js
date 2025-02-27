@@ -94,6 +94,7 @@ export default function App() {
         <Stack.Screen
           name="InventoryDetails"
           component={InventoryDetails}
+          
           options={{ headerShown: false }}
         />
 

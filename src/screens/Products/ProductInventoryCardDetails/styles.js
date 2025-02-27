@@ -85,7 +85,7 @@ export const styles = StyleSheet.create({
   },
 
   productBagderQuantity: {
-    backgroundColor: colors.primary,
+    backgroundColor: "#515460",
     color: "white",
   },
 

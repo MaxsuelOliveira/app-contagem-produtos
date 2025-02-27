@@ -82,6 +82,7 @@ export default function Login({ navigation }) {
   // Inputs
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
@@ -108,7 +109,7 @@ export default function Login({ navigation }) {
           return;
         } else {
           Alert.alert("Atenção", "Sua sessão expirou, faça login novamente.");
-          await AsyncStorage.removeItem("isDevice"); // Remove sessão expirada
+          await AsyncStorage.removeItem("isDevice"); 
         }
       }
 

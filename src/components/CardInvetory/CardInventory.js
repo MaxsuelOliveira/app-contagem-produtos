@@ -33,13 +33,6 @@ const CardItemInventory = ({
       uuid: uuid,
       name: name,
       describe: describe,
-      products: products,
-      status: status,
-      date_create: date_create.toString(),
-      date_end: date_end.toString(),
-      compare_in_spreadsheet: compare_in_spreadsheet,
-      compare_price: compare_price,
-      inputs_hability: inputs_hability,
     });
   };
 

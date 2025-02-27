@@ -232,7 +232,8 @@ export const styles = StyleSheet.create({
   formItem: {
     flexDirection: "row",
     width: "100%",
-    gap: 10,
+    gap: 15,
+    // justifyContent: "space-between",
     marginBottom: 10,
   },
 
@@ -248,7 +249,7 @@ export const styles = StyleSheet.create({
   optionTitle: {
     ...GlobalStyles.cardTitle,
     fontSize: 16,
-    margin : 0,
+    margin: 0,
     color: "#333",
     flex: 1,
     textAlign: "center",
@@ -258,8 +259,20 @@ export const styles = StyleSheet.create({
   optionCardHeader: {
     flexDirection: "row",
     alignItems: "center",
-    width : "100%",
-    margin : 0,
-    padding: 0, 
+    width: "100%",
+    margin: 0,
+    padding: 0,
+  },
+
+  btnCamera: {
+    ...GlobalStyles.btnHeader,
+    backgroundColor: "#e3e3e3",
+    maxWidth: 40,
+    maxHeight: 40,
+    minWidth: 40,
+    minHeight: 40,
+    padding: 5,
+    marginTop: 20,
+    borderRadius: 10,
   },
 });

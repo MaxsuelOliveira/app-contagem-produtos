@@ -29,9 +29,9 @@ export const styles = StyleSheet.create({
   },
 
   SignupBanner: {
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    // height: "100%",
+    // justifyContent: "center",
+    // alignItems: "center",
   },
 
   hr: { ...GlobalStyles.hr, marginBottom: 10, paddingBottom: 10 },

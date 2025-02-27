@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   inventoryCategories: {
     padding: 5,
     borderRadius: 120,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: colors.inventoryCategories,
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 5,
@@ -76,7 +76,7 @@ export const styles = StyleSheet.create({
   inventoryContainer: {
     flex: 1,
     padding: 10,
-    paddingTop: 0,
+    paddingTop: 10,
   },
 
   inventoryItem: {

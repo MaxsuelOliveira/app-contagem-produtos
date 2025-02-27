@@ -33,32 +33,25 @@ const saveSheet = async (fileName, data, setTitle, setDescription) => {
   }
 };
 
-
 /**
  * Converte planilha Excel para JSON
  */
 const parseExcel = (fileBuffer) => {
-  const workbook = XLSX.read(fileBuffer, { type: "base64" });
+  try {
+    
+    const workbook = XLSX.read(fileBuffer, { type: "base64" });
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
-  
+
+  // Verificar a quantidade de colunas
+  const expectedColumns = 3; // Código de barras, Nome, Preço
+  const actualColumns = parsedData[0].length;
   console.log("📄 Dados brutos do Excel:", sheet);
 
   let parsedData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
   console.log("🔍 Dados extraídos do Excel:", parsedData);
 
   if (!Array.isArray(parsedData) || parsedData.length < 2) {
     console.error("❌ Erro: Planilha vazia ou formato incorreto!");
-    return [];
-  }
-
-  // Verificar a quantidade de colunas
-  const expectedColumns = 1;
-  const actualColumns = parsedData[0].length;
-  if (actualColumns !== expectedColumns) {
-    console.error(
-      `❌ Erro: Quantidade de colunas incorreta. Esperado: ${expectedColumns}, Encontrado: ${actualColumns}`
-    );
     return [];
   }
 
@@ -67,19 +60,22 @@ const parseExcel = (fileBuffer) => {
     console.log(`📊 Linha ${index + 2}:`, row);
 
     return {
-      codebar: row[0] ? row[0].toString().trim() : "",  
-      name: row[3] ? row[3].toString().trim() : "SEM NOME",  
-      price: row[4] ? parseFloat(row[4]) || 0.0 : 0.0,  
+      codebar: row[0] ? row[0].toString().trim() : "",
+      name: row[1] ? row[1].toString().trim() : "SEM NOME",
+      price: row[2] ? parseFloat(row[2]) || 0.0 : 0.0,
     };
   });
 
   console.log("✅ Dados processados:", processedData);
 
   return processedData;
+
+  } catch (error) {
+  
+    console.error("❌ Erro ao processar planilha Excel:", error);
+    
+  }
 };
-
-
-
 
 const importFileSpreadSheets = async (
   setData,
@@ -192,12 +188,10 @@ const importFileSpreadSheets = async (
     const fileSizeInBytes = (fileBuffer.length * 3) / 4;
     const fileSizeInMB = fileSizeInBytes / (1024 * 1024).toFixed(2);
 
-    setTimeout(() => {
-      setTitle("📄 Importando arquivo...");
-      setDescription(
-        "O arquivo está sendo importado. \nPor Favor Aguarde ! Não  feche o aplicativo."
-      );
-    }, 1000);
+    setTitle("📄 Importando arquivo...");
+    setDescription(
+      "O arquivo está sendo importado. \nPor Favor Aguarde ! Não  feche o aplicativo."
+    );
 
     await importing(fileType, fileName, fileBuffer);
   } catch (error) {

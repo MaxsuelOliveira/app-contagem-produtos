@@ -94,24 +94,20 @@ const Home = () => {
   };
 
   const checkStoredData = async () => {
-    try {
-      const isDevice = await AsyncStorage.getItem("isDevice");
-      if (isDevice) {
-        const { expires_in } = JSON.parse(isDevice);
+    const isDevice = await AsyncStorage.getItem("isDevice");
+    if (isDevice) {
+      const { expires_in } = JSON.parse(isDevice);
 
-        if (isExpired(expires_in)) {
-          Alert.alert("Sessão expirada", "Faça login novamente.");
-          return;
-        }
+      if (isExpired(expires_in)) {
+        Alert.alert("Sessão expirada", "Faça login novamente.");
+        return;
       }
-    } catch (error) {
-      console.error("Erro ao acessar AsyncStorage:", error);
     }
   };
 
   return (
     <View style={GlobalStyles.container}>
-      <StatusBar style="auto" backgroundColor="transparent" />
+      <StatusBar style="" backgroundColor="transparent" />
 
       <View style={styles.containerInvetoryList}>
         <View style={styles.headerProfile}>
