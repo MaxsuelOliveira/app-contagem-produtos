@@ -33,47 +33,44 @@ const saveSheet = async (fileName, data, setTitle, setDescription) => {
   }
 };
 
-/**
- * Converte planilha Excel para JSON
- */
 const parseExcel = (fileBuffer) => {
   try {
-    
     const workbook = XLSX.read(fileBuffer, { type: "base64" });
-  const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    let parsedData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-  // Verificar a quantidade de colunas
-  const expectedColumns = 3; // Código de barras, Nome, Preço
-  const actualColumns = parsedData[0].length;
-  console.log("📄 Dados brutos do Excel:", sheet);
+    if (!Array.isArray(parsedData) || parsedData.length < 2) {
+      console.error("❌ Erro: Planilha vazia ou formato incorreto!");
+      return [];
+    }
 
-  let parsedData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-  console.log("🔍 Dados extraídos do Excel:", parsedData);
+    // Lendo a primeira linha como cabeçalho
+    const headerRow = parsedData[0].map((h) =>
+      h.toString().trim().toLowerCase()
+    );
 
-  if (!Array.isArray(parsedData) || parsedData.length < 2) {
-    console.error("❌ Erro: Planilha vazia ou formato incorreto!");
-    return [];
-  }
+    // Verificando se as colunas esperadas estão presentes
+    // const codebarIndex = headerRow.findIndex((h) =>h.includes("TMER_CODIGO_BARRAS_UKN"));
+    // const nameIndex = headerRow.findIndex((h) => h.includes("TMER_NOME"));
+    // const priceIndex = headerRow.findIndex((h) =>h.includes("TMER_PRECO_VENDA"));
 
-  // Verifica cada linha processada
-  const processedData = parsedData.slice(1).map((row, index) => {
-    console.log(`📊 Linha ${index + 2}:`, row);
+    // if (codebarIndex === -1 || nameIndex === -1 || priceIndex === -1) {
+    //   console.error("❌ Erro: Colunas esperadas não encontradas!");
+    //   return [];
+    // }
 
-    return {
-      codebar: row[0] ? row[0].toString().trim() : "",
-      name: row[1] ? row[1].toString().trim() : "SEM NOME",
-      price: row[2] ? parseFloat(row[2]) || 0.0 : 0.0,
-    };
-  });
+    const processedData = parsedData.slice(1).map((row, index) => {
+      return {
+        codebar: row[0] ? row[0].toString().trim() : "",
+        name: row[1] ? row[1].toString().trim() : "SEM NOME",
+        price: row[2] ? parseFloat(row[2]) || 0.0 : 0.0,
+      };
+    });
 
-  console.log("✅ Dados processados:", processedData);
-
-  return processedData;
-
+    return processedData;
   } catch (error) {
-  
     console.error("❌ Erro ao processar planilha Excel:", error);
-    
+    return [];
   }
 };
 
@@ -85,47 +82,52 @@ const importFileSpreadSheets = async (
   setTitle,
   setDescription
 ) => {
-  function importCancel() {
-    setLoading(false);
-    setProcessing(false);
-    setTitle("📂 Importação cancelada.");
-    setDescription("A importação foi cancelada.");
-  }
+  try {
+    setProcessing(true);
+    const result = await DocumentPicker.getDocumentAsync({
+      type: [
+        "application/json",
+        "text/csv",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.ms-excel",
+      ],
+    });
 
-  async function importing(fileType, fileName, fileBuffer) {
+    if (result.canceled) {
+      setLoading(false);
+      setProcessing(false);
+      setTitle("📂 Importação cancelada.");
+      setDescription("A importação foi cancelada.");
+      return;
+    }
+
+    const { uri: fileUri, mimeType: fileType } = result.assets[0];
+    const fileName = result.assets[0].name;
+    setLoading(true);
+    setProcessing(true);
+
+    setTitle("📄 Arquivo selecionado");
+    setDescription("O arquivo foi selecionado. Processando...");
+
+    const fileBuffer = await FileSystem.readAsStringAsync(fileUri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
     let parsedData = [];
-    const timeStart = Date.now();
+    console.log("Tipo de arquivo:", fileType);
 
-    switch (fileType) {
-      case "application/json":
-        setTitle("📄 Lendo JSON...");
-        setDescription("Identificando o arquivo JSON, aguarde...");
-        parsedData = JSON.parse(fileBuffer);
-        break;
-
-      case "text/csv":
-        setTitle("📄 Lendo CSV...");
-        setDescription("Identificando o arquivo CSV, aguarde...");
-        parsedData = Papa.parse(Buffer.from(fileBuffer, "base64").toString(), {
-          header: true,
-        }).data;
-        break;
-
-      case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-      case "application/vnd.ms-excel":
-        setTitle("📄 Lendo XLSX...");
-        setDescription("Identificando o arquivo XLSX, aguarde...");
-        // const workbook = XLSX.read(fileBuffer, { type: "base64" });
-        // const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        // // parsedData = XLSX.utils.sheet_to_json(sheet);
-        // parsedData = XLSX.utils.sheet_to_json(sheet, { header: 0 });
-        parsedData = parseExcel(fileBuffer);
-        break;
-
-      default:
-        setTitle("📄 Arquivo não reconhecido");
-        setDescription("Formato do arquivo inválido. Selecione um válido.");
-        return;
+    if (fileType.includes("json")) {
+      parsedData = JSON.parse(fileBuffer);
+    } else if (fileType.includes("csv")) {
+      parsedData = Papa.parse(Buffer.from(fileBuffer, "base64").toString(), {
+        header: true,
+      }).data;
+    } else if (
+      fileType ===
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+      fileType === "application/vnd.ms-excel"
+    ) {
+      parsedData = parseExcel(fileBuffer);
     }
 
     if (!parsedData.length) {
@@ -148,52 +150,7 @@ const importFileSpreadSheets = async (
     setTitle("✅ Importação concluída!");
     setDescription("O arquivo foi importado com sucesso.");
     await saveSheet(fileName, parsedData, setTitle, setDescription);
-
     setData(parsedData);
-
-    const timeElapsed = Date.now() - timeStart;
-    console.log(
-      `⏱️ Tempo de processamento: ${(timeElapsed / 1000 / 60).toFixed(3)}min`
-    );
-  }
-
-  try {
-    setProcessing(true);
-    const result = await DocumentPicker.getDocumentAsync({
-      type: [
-        "application/json",
-        "text/csv",
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "application/vnd.ms-excel",
-      ],
-    });
-
-    if (result.canceled) {
-      importCancel();
-      return;
-    }
-
-    const { uri: fileUri, mimeType: fileType } = result.assets[0];
-    const fileName = result.assets[0].name;
-    setLoading(true);
-    setProcessing(true);
-
-    setTitle("📄 Arquivo selecionado");
-    setDescription("O arquivo foi selecionado. Processando...");
-
-    const fileBuffer = await FileSystem.readAsStringAsync(fileUri, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
-
-    const fileSizeInBytes = (fileBuffer.length * 3) / 4;
-    const fileSizeInMB = fileSizeInBytes / (1024 * 1024).toFixed(2);
-
-    setTitle("📄 Importando arquivo...");
-    setDescription(
-      "O arquivo está sendo importado. \nPor Favor Aguarde ! Não  feche o aplicativo."
-    );
-
-    await importing(fileType, fileName, fileBuffer);
   } catch (error) {
     setLoading(false);
     setProcessing(false);

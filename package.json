@@ -29,7 +29,6 @@
     "expo-document-picker": "~13.0.3",
     "expo-file-system": "~18.0.9",
     "expo-font": "^13.0.3",
-    "expo-linear-gradient": "~14.0.2",
     "expo-sharing": "~13.0.1",
     "expo-sqlite": "~15.1.2",
     "expo-status-bar": "~2.0.0",
@@ -53,7 +52,6 @@
   "devDependencies": {
     "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
-    "metro-react-native-babel-preset": "^0.77.0",
     "typescript": "^5.3.3"
   },
   "private": true

@@ -26,9 +26,7 @@ const SpreadSheets = ({ isVisible, onClose }) => {
 
   useEffect(() => {
     Controller.SpreadSheets.getAll().then((response) => {
-      console.log("📄 Planilhas:", response[9].products);
-      
-
+      console.log("📄 Planilhas:", response[0].products);
       setPlanilhas(response);
     });
   }, []);
